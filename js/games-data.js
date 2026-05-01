@@ -79,7 +79,7 @@ const GAMES = [
     description: 'Defend Earth from waves of descending aliens! Shoot fast and dodge enemy fire in this iconic arcade shooter.',
     category: 'action',
     thumbnail: 'linear-gradient(135deg, #2c3e50 0%, #8e44ad 100%)',
-    file: 'games/space-invaders.html',
+    file: 'games/invaders.html',
     difficulty: 'Hard',
     emoji: '👾'
   }

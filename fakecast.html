@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Lab | ☕ Shane Maynard</title>
-  <meta name="description" content="Browser-based arcade, puzzle, and strategy games built with vanilla JS and HTML5 Canvas.">
+  <title>FakeCast | ☕ xwing</title>
+  <meta name="description" content="AI-generated daily podcasts on Agentic AI tools and specialty coffee. Two hosts, zero filters, entirely synthetic.">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <nav class="navbar" id="navbar">
-    <a href="index.html" class="navbar__brand">☕ Shane Maynard</a>
+    <a href="index.html" class="navbar__brand">☕ xwing</a>
     <div class="navbar__hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </div>
@@ -18,34 +18,58 @@
       <a href="index.html">Home</a>
       <a href="index.html#about">About</a>
       <a href="index.html#blog">Blog</a>
-      <a href="games.html" class="active">Games</a>
-      <a href="fakecast.html">FakeCast</a>
+      <a href="games.html">Games</a>
+      <a href="fakecast.html" class="active">FakeCast</a>
       <a href="index.html#contact">Contact</a>
     </div>
   </nav>
 
-  <div class="games-page">
-    <div class="games-page__header">
-      <h1>🕹️ Game Lab</h1>
-      <p>Browser-based arcade, puzzles, strategy &amp; classics — all handcrafted with vanilla JS</p>
+  <div class="fakecast-page">
+    <div class="fakecast-page__header">
+      <div class="fakecast-page__icon">🎙️</div>
+      <h1>FakeCast</h1>
+      <p>AI-generated daily podcasts. Two hosts, zero filters, entirely synthetic.</p>
+      <p class="fakecast-page__sub">New episodes drop every morning at 2 AM ET — because robots don't sleep.</p>
     </div>
 
-    <div class="filter-bar" id="filter-bar">
-      <button class="filter-btn active" data-category="all">All</button>
-      <button class="filter-btn" data-category="puzzle">Puzzle</button>
-      <button class="filter-btn" data-category="action">Action</button>
-      <button class="filter-btn" data-category="strategy">Strategy</button>
-      <button class="filter-btn" data-category="classic">Classic</button>
+    <!-- Show Tabs -->
+    <div class="fakecast-tabs">
+      <button class="fakecast-tab active" data-show="ai">
+        <span class="fakecast-tab__emoji">🤖</span>
+        <span class="fakecast-tab__title">It's Just You and Me..... And AI</span>
+      </button>
+      <button class="fakecast-tab" data-show="coffee">
+        <span class="fakecast-tab__emoji">☕</span>
+        <span class="fakecast-tab__title">The Daily Grind</span>
+      </button>
     </div>
 
-    <div class="games-grid" id="games-container">
-      <!-- Games rendered dynamically -->
+    <!-- AI Show Section -->
+    <div class="fakecast-show active" id="show-ai">
+      <div class="fakecast-show__header">
+        <h2>🤖 It's Just You and Me..... And AI</h2>
+        <p>Your daily dose of Agentic AI news — OpenCode, GitHub Copilot CLI, Codex, Claude Code, foundation models, and open source breakthroughs. Hosted by <strong>Alex</strong> and <strong>Jordan</strong>, two digital voices who may or may not pass the Turing test.</p>
+      </div>
+      <div class="episodes-grid" id="episodes-ai"></div>
+    </div>
+
+    <!-- Coffee Show Section -->
+    <div class="fakecast-show" id="show-coffee">
+      <div class="fakecast-show__header">
+        <h2>☕ The Daily Grind</h2>
+        <p>Specialty coffee news from around the globe — new roasts, brewing gear, café culture, and bean science. Hosted by <strong>Milo</strong> and <strong>Riley</strong>, who definitely run on espresso.</p>
+      </div>
+      <div class="episodes-grid" id="episodes-coffee"></div>
+    </div>
+
+    <div class="fakecast-footer-note">
+      <p>🎧 Episodes are generated daily at 2 AM ET using Azure AI Speech DragonHD voices with emotional speech detection. No humans were caffeinated in the making of this podcast.</p>
     </div>
   </div>
 
   <footer class="footer" id="contact">
     <div class="footer__inner">
-      <div class="footer__brand">☕ Shane Maynard</div>
+      <div class="footer__brand">☕ xwing</div>
       <p class="footer__tagline">Coffee-fueled AI enthusiast &amp; developer</p>
       <div class="footer__socials">
         <a href="https://github.com/xwing316" target="_blank" rel="noopener" class="footer__social-link" aria-label="GitHub">
@@ -63,7 +87,8 @@
     </div>
   </footer>
 
-  <script src="js/games-data.js"></script>
-  <script src="js/games-renderer.js"></script>
+  <script src="js/fakecast-data.js"></script>
+  <script src="js/fakecast-renderer.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
