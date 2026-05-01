@@ -17,17 +17,22 @@
     position: relative;
     padding: 20px;
   }
-  a.back {
-    position: absolute;
-    top: 16px;
-    left: 20px;
-    color: #00ff88;
+  a.back-link {
+    position: fixed;
+    top: 20px;
+    left: 24px;
+    color: #00D4AA;
     text-decoration: none;
     font-size: 14px;
-    transition: opacity .2s;
-    z-index: 10;
+    font-weight: 500;
+    transition: color 0.2s, transform 0.2s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  a.back:hover { opacity: .7; }
+  a.back-link:hover { color: #C4A882; transform: translateX(-3px); }
+  a.back-link svg { width: 16px; height: 16px; }
   #hud {
     width: 640px;
     max-width: 100vw;
@@ -92,7 +97,10 @@
 </style>
 </head>
 <body>
-<a href="../games.html" class="back">← Games</a>
+<a href="../games.html" class="back-link">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+  Games
+</a>
 
 <div id="hud">
   <div>SCORE: <span id="scoreEl">0</span></div>

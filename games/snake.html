@@ -16,16 +16,22 @@
     min-height: 100vh;
     padding: 20px;
   }
-  a.back {
-    position: absolute;
-    top: 16px;
-    left: 20px;
+  a.back-link {
+    position: fixed;
+    top: 20px;
+    left: 24px;
     color: #00D4AA;
     text-decoration: none;
     font-size: 14px;
-    transition: opacity .2s;
+    font-weight: 500;
+    transition: color 0.2s, transform 0.2s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  a.back:hover { opacity: .7; }
+  a.back-link:hover { color: #C4A882; transform: translateX(-3px); }
+  a.back-link svg { width: 16px; height: 16px; }
   h1 {
     font-size: 28px;
     font-weight: 700;
@@ -130,7 +136,10 @@
 </head>
 <body>
 
-<a class="back" href="../games.html">← Games</a>
+<a href="../games.html" class="back-link">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+  Games
+</a>
 <h1>🐍 Snake</h1>
 <div class="scores">
   <div>Score: <strong id="score">0</strong></div>
