@@ -19,9 +19,9 @@ function renderGames() {
 
   if (filtered.length === 0) {
     container.innerHTML = `
-      <div class="no-games">
-        <span class="no-games-emoji">🔍</span>
-        <p>No games found. Try a different filter or search term.</p>
+      <div style="text-align:center;padding:3rem 1rem;grid-column:1/-1;">
+        <span style="font-size:3rem;display:block;margin-bottom:1rem;">🔍</span>
+        <p style="color:var(--text-secondary);">No games found. Try a different filter.</p>
       </div>`;
     return;
   }
@@ -42,12 +42,10 @@ function renderGames() {
 function getFilteredGames() {
   let games = [...GAMES];
 
-  // Filter by category
   if (currentCategory !== 'all') {
     games = games.filter(g => g.category === currentCategory);
   }
 
-  // Filter by search term
   if (currentSearch.trim()) {
     const term = currentSearch.toLowerCase().trim();
     games = games.filter(g =>
@@ -57,17 +55,12 @@ function getFilteredGames() {
     );
   }
 
-  // Sort
   games.sort((a, b) => {
     switch (currentSort) {
-      case 'name':
-        return a.title.localeCompare(b.title);
-      case 'difficulty':
-        return (DIFFICULTY_ORDER[a.difficulty] || 0) - (DIFFICULTY_ORDER[b.difficulty] || 0);
-      case 'category':
-        return a.category.localeCompare(b.category) || a.title.localeCompare(b.title);
-      default:
-        return 0;
+      case 'name': return a.title.localeCompare(b.title);
+      case 'difficulty': return (DIFFICULTY_ORDER[a.difficulty] || 0) - (DIFFICULTY_ORDER[b.difficulty] || 0);
+      case 'category': return a.category.localeCompare(b.category) || a.title.localeCompare(b.title);
+      default: return 0;
     }
   });
 
@@ -79,26 +72,25 @@ function getFilteredGames() {
 // -------------------------------------------
 function createGameCard(game, index) {
   const card = document.createElement('article');
-  card.className = 'game-card fade-in';
+  card.className = 'game-card';
   card.style.animationDelay = `${index * 0.05}s`;
   card.dataset.category = game.category;
-  card.dataset.difficulty = game.difficulty;
 
   const difficultyClass = game.difficulty.toLowerCase();
 
   card.innerHTML = `
-    <div class="game-thumbnail" style="background: ${game.thumbnail};">
-      <span class="game-emoji">${game.emoji}</span>
+    <div class="game-card__thumbnail-wrapper" style="background: ${game.thumbnail};">
+      <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3rem;z-index:1;text-shadow:0 2px 10px rgba(0,0,0,0.3);">${game.emoji}</span>
+      <span class="game-card__badge">${game.difficulty}</span>
     </div>
-    <div class="game-info">
-      <h3 class="game-title">${game.title}</h3>
-      <p class="game-description">${game.description}</p>
-      <div class="game-tags">
-        <span class="tag category-tag">${GAME_CATEGORIES[game.category]?.icon || ''} ${game.category}</span>
-        <span class="tag difficulty-tag ${difficultyClass}">${game.difficulty}</span>
+    <div class="game-card__content">
+      <h3 class="game-card__title">${game.title}</h3>
+      <p class="game-card__description">${game.description}</p>
+      <div class="game-card__tech">
+        <span class="game-card__tech-tag">${GAME_CATEGORIES[game.category]?.icon || ''} ${game.category}</span>
       </div>
+      <a href="${game.file}" class="game-card__play-btn">▶ Play</a>
     </div>
-    <a href="${game.file}" class="play-btn" title="Play ${game.title}">▶ Play</a>
   `;
 
   return card;
@@ -110,7 +102,6 @@ function createGameCard(game, index) {
 function filterByCategory(category) {
   currentCategory = category;
 
-  // Update active filter button
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.category === category);
   });
@@ -132,7 +123,6 @@ function searchGames(query) {
 function sortGames(sortBy) {
   currentSort = sortBy;
 
-  // Update active sort button
   document.querySelectorAll('.sort-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.sort === sortBy);
   });
@@ -144,24 +134,20 @@ function sortGames(sortBy) {
 // Initialize renderer & bind events
 // -------------------------------------------
 function initGamesRenderer() {
-  // Render initial game cards
   renderGames();
 
-  // Bind filter buttons
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       filterByCategory(btn.dataset.category);
     });
   });
 
-  // Bind sort buttons/select
   document.querySelectorAll('.sort-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       sortGames(btn.dataset.sort);
     });
   });
 
-  // Bind sort dropdown (if using <select>)
   const sortSelect = document.getElementById('sort-select');
   if (sortSelect) {
     sortSelect.value = currentSort;
@@ -170,7 +156,6 @@ function initGamesRenderer() {
     });
   }
 
-  // Bind search input
   const searchInput = document.getElementById('game-search');
   if (searchInput) {
     let debounceTimer;

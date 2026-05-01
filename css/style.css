@@ -756,6 +756,43 @@ code {
   transform: translateY(0);
 }
 
+/* ── Filter Bar ─────────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.filter-btn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+  border-color: var(--border-accent);
+  color: var(--ai-cyan);
+  background: rgba(0, 212, 170, 0.06);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--ai-cyan), var(--ai-teal));
+  color: var(--bg-primary);
+  border-color: transparent;
+  box-shadow: 0 2px 10px rgba(0, 212, 170, 0.25);
+}
+
 /* ── 9. Footer ─────────────────────────────────────────────── */
 .footer {
   position: relative;
