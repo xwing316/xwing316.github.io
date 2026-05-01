@@ -915,6 +915,113 @@ button {
   }
 }
 
+/* ── Games Toolbar ──────────────────────────────────────────────────── */
+.games-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--max-w);
+  margin: 0 auto var(--space-lg);
+  padding: 0 var(--space-md);
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.games-count {
+  font-size: 0.85rem;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}
+
+.games-sort {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.games-sort:hover,
+.games-sort:focus {
+  border-color: var(--cyan);
+  outline: none;
+}
+
+.games-sort option {
+  background: var(--bg-elevated);
+  color: var(--text-soft);
+}
+
+/* ── Games Pagination ────────────────────────────────────────────────── */
+.games-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: var(--cyan-dim);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pagination-page {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-page:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+}
+
+.pagination-page.active {
+  background: var(--cyan);
+  color: var(--bg);
+  border-color: transparent;
+  box-shadow: 0 2px 10px var(--cyan-glow);
+}
+
 /* ── FakeCast Page ─────────────────────────────────────────── */
 .fakecast-page {
   max-width: 840px;

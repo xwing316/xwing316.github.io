@@ -1,10 +1,12 @@
 // ============================================
-// games-renderer.js — Render & filter game cards
+// games-renderer.js — Render, filter & paginate game cards
 // ============================================
 
 let currentCategory = 'all';
 let currentSearch = '';
-let currentSort = 'name';
+let currentSort = 'newest';
+let currentPage = 1;
+const PER_PAGE = 6;
 
 function renderGames() {
   const container = document.getElementById('games-container');
@@ -13,23 +15,33 @@ function renderGames() {
   const filtered = getFilteredGames();
   container.innerHTML = '';
 
+  const countEl = document.getElementById('games-count');
+  if (countEl) countEl.textContent = `${filtered.length} game${filtered.length !== 1 ? 's' : ''}`;
+
   if (filtered.length === 0) {
     container.innerHTML = `
       <div style="text-align:center;padding:3rem 1rem;grid-column:1/-1;">
         <span style="font-size:3rem;display:block;margin-bottom:1rem;">🔍</span>
         <p style="color:var(--text-faint);">No games found. Try a different filter.</p>
       </div>`;
+    renderPagination(0);
     return;
   }
 
-  const fragment = document.createDocumentFragment();
+  // Paginate
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  currentPage = Math.min(currentPage, totalPages);
+  const start = (currentPage - 1) * PER_PAGE;
+  const pageGames = filtered.slice(start, start + PER_PAGE);
 
-  filtered.forEach((game, index) => {
+  const fragment = document.createDocumentFragment();
+  pageGames.forEach((game, index) => {
     const card = createGameCard(game, index);
     fragment.appendChild(card);
   });
 
   container.appendChild(fragment);
+  renderPagination(totalPages);
 }
 
 function getFilteredGames() {
@@ -53,6 +65,7 @@ function getFilteredGames() {
       case 'name': return a.title.localeCompare(b.title);
       case 'difficulty': return (DIFFICULTY_ORDER[a.difficulty] || 0) - (DIFFICULTY_ORDER[b.difficulty] || 0);
       case 'category': return a.category.localeCompare(b.category) || a.title.localeCompare(b.title);
+      case 'newest': return (b.createdAt || '').localeCompare(a.createdAt || '');
       default: return 0;
     }
   });
@@ -84,8 +97,43 @@ function createGameCard(game, index) {
   return card;
 }
 
+function renderPagination(totalPages) {
+  let pagination = document.getElementById('games-pagination');
+  if (!pagination) {
+    pagination = document.createElement('div');
+    pagination.id = 'games-pagination';
+    pagination.className = 'games-pagination';
+    const container = document.getElementById('games-container');
+    if (container && container.parentNode) {
+      container.parentNode.insertBefore(pagination, container.nextSibling);
+    }
+  }
+
+  if (totalPages <= 1) {
+    pagination.innerHTML = '';
+    return;
+  }
+
+  let html = `<button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">← Prev</button>`;
+  html += `<div class="pagination-pages">`;
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="pagination-page ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+  }
+  html += `</div>`;
+  html += `<button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next →</button>`;
+
+  pagination.innerHTML = html;
+}
+
+function goToPage(page) {
+  currentPage = page;
+  renderGames();
+  document.getElementById('games-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function filterByCategory(category) {
   currentCategory = category;
+  currentPage = 1;
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.category === category);
   });
@@ -94,11 +142,13 @@ function filterByCategory(category) {
 
 function searchGames(query) {
   currentSearch = query;
+  currentPage = 1;
   renderGames();
 }
 
 function sortGames(sortBy) {
   currentSort = sortBy;
+  currentPage = 1;
   renderGames();
 }
 

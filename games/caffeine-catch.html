@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caffeine Catch</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+  a.back-link {
+    position: fixed;
+    top: 20px;
+    left: 24px;
+    color: #00D4AA;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s, transform 0.2s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  a.back-link:hover { color: #C4A882; transform: translateX(-3px); }
+  a.back-link svg { width: 16px; height: 16px; }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    color: #C4A882;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #8b949e;
+    margin-bottom: 12px;
+  }
+  .scores {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+  .scores span { color: #8b949e; }
+  .scores strong { color: #00D4AA; font-weight: 600; }
+  canvas {
+    border: 2px solid #30363d;
+    border-radius: 6px;
+    background: #161b22;
+    display: block;
+    max-width: 100%;
+    touch-action: none;
+  }
+  .controls {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  button {
+    background: #21262d;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  button:hover { background: #30363d; border-color: #8b949e; }
+  button.primary { background: #00D4AA22; border-color: #00D4AA55; color: #00D4AA; }
+  button.primary:hover { background: #00D4AA33; }
+  .instructions {
+    margin-top: 14px;
+    color: #8b949e;
+    font-size: 13px;
+    text-align: center;
+    max-width: 420px;
+    line-height: 1.5;
+  }
+  .legend {
+    margin-top: 10px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 12px;
+    color: #8b949e;
+  }
+  .legend span { display: flex; align-items: center; gap: 4px; }
+  .game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(13,17,23,0.95);
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 28px 36px;
+    display: none;
+    z-index: 10;
+  }
+  .game-over h2 { font-size: 22px; margin-bottom: 8px; color: #e6edf3; }
+  .game-over p { color: #8b949e; margin-bottom: 16px; font-size: 14px; }
+  .canvas-wrap { position: relative; }
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    .scores { gap: 16px; font-size: 13px; }
+    .instructions { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<a href="../games.html" class="back-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Back to Games
+</a>
+
+<h1>☕ Caffeine Catch</h1>
+<p class="subtitle">Catch the good stuff. Dodge the decaf.</p>
+
+<div class="scores">
+  <span>Score: <strong id="score">0</strong></span>
+  <span>High: <strong id="high">0</strong></span>
+  <span>Level: <strong id="level">1</strong></span>
+</div>
+
+<div class="canvas-wrap">
+  <canvas id="game" width="400" height="520"></canvas>
+  <div class="game-over" id="over">
+    <h2>Spilled It! ☕</h2>
+    <p>Final Score: <strong id="final">0</strong></p>
+    <button class="primary" onclick="startGame()">Play Again</button>
+  </div>
+</div>
+
+<div class="controls">
+  <button onclick="startGame()">New Game</button>
+  <button onclick="togglePause()">Pause</button>
+</div>
+
+<p class="instructions">
+  Move your mug with <strong>Arrow Keys</strong> or <strong>A / D</strong>.<br>
+  On mobile, tap left or right side of the screen.
+</p>
+
+<div class="legend">
+  <span>🫘 Bean +10</span>
+  <span>☕ Cup +25</span>
+  <span>⚡ Espresso +50</span>
+  <span>🧊 Ice -20</span>
+  <span>💤 Decaf -15</span>
+</div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+const highEl = document.getElementById('high');
+const levelEl = document.getElementById('level');
+const overEl = document.getElementById('over');
+const finalEl = document.getElementById('final');
+
+let W = 400, H = 520;
+let score = 0, high = parseInt(localStorage.getItem('caffeine_high') || '0');
+let level = 1, lives = 3, paused = false, running = false;
+let mug = { x: W/2 - 30, y: H - 50, w: 60, h: 40, speed: 6 };
+let items = [], particles = [], spawnTimer = 0, spawnInterval = 45;
+
+highEl.textContent = high;
+
+const ITEM_TYPES = [
+  { emoji: '🫘', score: 10, speed: 2.5, weight: 40, good: true },
+  { emoji: '☕', score: 25, speed: 3.2, weight: 25, good: true },
+  { emoji: '⚡', score: 50, speed: 4.5, weight: 10, good: true },
+  { emoji: '🧊', score: -20, speed: 3.0, weight: 15, good: false },
+  { emoji: '💤', score: -15, speed: 2.8, weight: 10, good: false },
+];
+
+function resize() {
+  const maxW = Math.min(window.innerWidth - 40, 400);
+  const scale = maxW / 400;
+  canvas.style.width = maxW + 'px';
+  canvas.style.height = (520 * scale) + 'px';
+}
+resize();
+window.addEventListener('resize', resize);
+
+let keys = {};
+window.addEventListener('keydown', e => {
+  keys[e.key] = true;
+  if (['ArrowLeft','ArrowRight','a','d','A','D'].includes(e.key)) e.preventDefault();
+});
+window.addEventListener('keyup', e => keys[e.key] = false);
+
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  const x = (touch.clientX - rect.left) * (W / rect.width);
+  if (x < W/2) keys['ArrowLeft'] = true;
+  else keys['ArrowRight'] = true;
+});
+canvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  keys['ArrowLeft'] = false;
+  keys['ArrowRight'] = false;
+});
+
+function pickItem() {
+  const total = ITEM_TYPES.reduce((s, t) => s + t.weight, 0);
+  let r = Math.random() * total;
+  for (const t of ITEM_TYPES) {
+    r -= t.weight;
+    if (r <= 0) return { ...t, x: Math.random() * (W - 30) + 15, y: -30 };
+  }
+  return { ...ITEM_TYPES[0], x: Math.random() * (W - 30) + 15, y: -30 };
+}
+
+function spawnParticles(x, y, color) {
+  for (let i = 0; i < 8; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 4,
+      vy: (Math.random() - 0.5) * 4,
+      life: 1,
+      color
+    });
+  }
+}
+
+function update() {
+  if (!running || paused) return;
+
+  // Move mug
+  if (keys['ArrowLeft'] || keys['a'] || keys['A']) mug.x -= mug.speed;
+  if (keys['ArrowRight'] || keys['d'] || keys['D']) mug.x += mug.speed;
+  mug.x = Math.max(0, Math.min(W - mug.w, mug.x));
+
+  // Spawn items
+  spawnTimer++;
+  const interval = Math.max(12, spawnInterval - level * 3);
+  if (spawnTimer >= interval) {
+    spawnTimer = 0;
+    items.push(pickItem());
+  }
+
+  // Update items
+  for (let i = items.length - 1; i >= 0; i--) {
+    const it = items[i];
+    it.y += it.speed + level * 0.3;
+
+    // Collision with mug
+    if (it.y + 20 > mug.y && it.y < mug.y + mug.h && it.x + 15 > mug.x && it.x - 15 < mug.x + mug.w) {
+      score += it.score;
+      if (score < 0) score = 0;
+      const color = it.good ? '#00D4AA' : '#e74c3c';
+      spawnParticles(it.x, it.y, color);
+      items.splice(i, 1);
+
+      if (!it.good) {
+        lives--;
+        if (lives <= 0) endGame();
+      }
+      continue;
+    }
+
+    // Missed good item = lose life
+    if (it.y > H && it.good) {
+      lives--;
+      if (lives <= 0) endGame();
+      items.splice(i, 1);
+      continue;
+    }
+
+    // Missed bad item = no penalty, just remove
+    if (it.y > H && !it.good) {
+      items.splice(i, 1);
+    }
+  }
+
+  // Update particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life -= 0.04;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  // Level up every 150 points
+  level = 1 + Math.floor(score / 150);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw mug
+  ctx.fillStyle = '#C4A882';
+  ctx.beginPath();
+  ctx.roundRect(mug.x, mug.y, mug.w, mug.h, 6);
+  ctx.fill();
+  ctx.strokeStyle = '#8b6914';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // Mug handle
+  ctx.beginPath();
+  ctx.arc(mug.x + mug.w, mug.y + mug.h/2, 10, -Math.PI/2, Math.PI/2);
+  ctx.strokeStyle = '#C4A882';
+  ctx.stroke();
+  // Coffee inside
+  ctx.fillStyle = '#3e2723';
+  ctx.beginPath();
+  ctx.roundRect(mug.x + 4, mug.y + 4, mug.w - 8, mug.h - 12, 4);
+  ctx.fill();
+  // Steam particles
+  for (let i = 0; i < 3; i++) {
+    const sx = mug.x + 15 + i * 15;
+    const sy = mug.y - 10 + Math.sin(Date.now()/300 + i) * 5;
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath();
+    ctx.arc(sx, sy, 3 + Math.sin(Date.now()/200 + i)*2, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  // Draw items
+  ctx.font = '24px serif';
+  ctx.textAlign = 'center';
+  for (const it of items) {
+    ctx.fillText(it.emoji, it.x, it.y);
+  }
+
+  // Draw particles
+  for (const p of particles) {
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // Draw lives
+  ctx.font = '16px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#e6edf3';
+  ctx.fillText('Lives: ' + '☕'.repeat(Math.max(0, lives)), 12, 24);
+
+  // Score and level
+  scoreEl.textContent = score;
+  levelEl.textContent = level;
+}
+
+function loop() {
+  update();
+  draw();
+  if (running) requestAnimationFrame(loop);
+}
+
+function startGame() {
+  score = 0;
+  level = 1;
+  lives = 3;
+  items = [];
+  particles = [];
+  spawnTimer = 0;
+  paused = false;
+  running = true;
+  overEl.style.display = 'none';
+  loop();
+}
+
+function togglePause() {
+  if (!running) return;
+  paused = !paused;
+}
+
+function endGame() {
+  running = false;
+  if (score > high) {
+    high = score;
+    localStorage.setItem('caffeine_high', high);
+    highEl.textContent = high;
+  }
+  finalEl.textContent = score;
+  overEl.style.display = 'block';
+}
+
+startGame();
+</script>
+</body>
+</html>

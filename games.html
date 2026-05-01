@@ -38,6 +38,16 @@
       <button class="filter-btn" data-category="classic">Classic</button>
     </div>
 
+    <div class="games-toolbar">
+      <span class="games-count" id="games-count"></span>
+      <select class="games-sort" id="games-sort" onchange="sortGames(this.value)">
+        <option value="newest" selected>Newest First</option>
+        <option value="name">Name A–Z</option>
+        <option value="difficulty">Difficulty</option>
+        <option value="category">Category</option>
+      </select>
+    </div>
+
     <div class="games-grid" id="games-container">
       <!-- Games rendered dynamically -->
     </div>

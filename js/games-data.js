@@ -4,6 +4,17 @@
 
 const GAMES = [
   {
+    id: 'caffeine-catch',
+    title: 'Caffeine Catch',
+    description: 'Catch falling coffee beans, cups, and espresso shots in your mug. But watch out for decaf and ice cubes! Speed increases as you level up.',
+    category: 'action',
+    thumbnail: 'linear-gradient(135deg, #6F4E37 0%, #C4A882 100%)',
+    file: 'games/caffeine-catch.html',
+    difficulty: 'Medium',
+    emoji: '☕',
+    createdAt: '2026-05-01'
+  },
+  {
     id: 'snake',
     title: 'Snake',
     description: 'The classic snake game! Eat food to grow longer, but don\'t hit the walls or your own tail. Simple yet addictive.',
@@ -11,7 +22,8 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)',
     file: 'games/snake.html',
     difficulty: 'Easy',
-    emoji: '🐍'
+    emoji: '🐍',
+    createdAt: '2026-04-15'
   },
   {
     id: 'memory-match',
@@ -21,7 +33,8 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)',
     file: 'games/memory.html',
     difficulty: 'Easy',
-    emoji: '🃏'
+    emoji: '🃏',
+    createdAt: '2026-04-14'
   },
   {
     id: 'pong',
@@ -31,7 +44,8 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
     file: 'games/pong.html',
     difficulty: 'Medium',
-    emoji: '🏓'
+    emoji: '🏓',
+    createdAt: '2026-04-13'
   },
   {
     id: 'flappy-bird',
@@ -41,7 +55,8 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #1abc9c 0%, #16a085 100%)',
     file: 'games/flappy.html',
     difficulty: 'Hard',
-    emoji: '🐦'
+    emoji: '🐦',
+    createdAt: '2026-04-12'
   },
   {
     id: 'tic-tac-toe',
@@ -51,7 +66,8 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)',
     file: 'games/tictactoe.html',
     difficulty: 'Easy',
-    emoji: '❌'
+    emoji: '❌',
+    createdAt: '2026-04-11'
   },
   {
     id: 'breakout',
@@ -61,7 +77,8 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
     file: 'games/breakout.html',
     difficulty: 'Medium',
-    emoji: '🧱'
+    emoji: '🧱',
+    createdAt: '2026-04-10'
   },
   {
     id: '2048',
@@ -71,7 +88,8 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 100%)',
     file: 'games/2048.html',
     difficulty: 'Medium',
-    emoji: '2048️'
+    emoji: '🔢',
+    createdAt: '2026-04-09'
   },
   {
     id: 'space-invaders',
@@ -81,7 +99,8 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #2c3e50 0%, #8e44ad 100%)',
     file: 'games/invaders.html',
     difficulty: 'Hard',
-    emoji: '👾'
+    emoji: '👾',
+    createdAt: '2026-04-08'
   }
 ];
 
