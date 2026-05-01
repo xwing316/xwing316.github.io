@@ -213,7 +213,7 @@ Sections in order:
 ### 8.4 Game Pages (`games/*.html`)
 - Self-contained single HTML files with inline CSS and JS
 - Dark background matching site palette (`#0d1117` or similar)
-- Back button: `a.back` linking to `../games.html`
+- Back button: `a.back-link` linking to `../games.html` with SVG chevron icon (see Game Page Standards)
 - Canvas-based games centered on page
 
 ---
@@ -291,10 +291,41 @@ Each game in `GAMES` array must have:
 
 ### 11.1 Visual Consistency
 - Game pages should use colors from the site palette (`#0d1117` bg, `#00D4AA` accents)
-- Back button must link to `../games.html`
 - Self-contained: all CSS and JS inline in the HTML file
 
-### 11.2 Coffee Theme Rule (CRITICAL)
+### 11.2 Game Page Standards (CRITICAL)
+Every game file MUST include this exact back link markup:
+
+```html
+<a href="../games.html" class="back-link">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+  Games
+</a>
+```
+
+With this exact CSS:
+```css
+.back-link {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  color: #00D4AA;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s, transform 0.2s;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.back-link:hover { color: #C4A882; transform: translateX(-3px); }
+.back-link svg { width: 16px; height: 16px; }
+```
+
+**NEVER** use `class="back"`, text arrows (`← Games`), `position: absolute`, or different colors. All 8 games must share identical back-link markup and styling.
+
+### 11.3 Coffee Theme Rule (CRITICAL)
 **All future games added to the site MUST be coffee-themed unless the user explicitly states otherwise.**
 
 This means:
@@ -337,6 +368,7 @@ This means:
 
 ## 15. Checklist Before Deploying
 
+- [ ] All game pages use `class="back-link"` with SVG chevron — NEVER `class="back"` or text arrows
 - [ ] Navbar brand says "☕ Shane Maynard"
 - [ ] All nav links work on every page
 - [ ] Blog "Read More" links point to real article pages
@@ -354,6 +386,7 @@ This means:
 | Date | Change |
 |------|--------|
 | 2026-05-01 | Initial style guide created. Documented design system, colors, typography, components, file structure. |
+| 2026-05-01 | Standardized all game back buttons to `.back-link` with SVG chevron. Updated Game Page Standards with exact markup/CSS. |
 
 ---
 
