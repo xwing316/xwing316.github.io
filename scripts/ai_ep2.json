@@ -1,0 +1,39 @@
+{
+  "title": "It's Just You and Me..... And AI - Episode 2",
+  "hosts": {
+    "Alex": "en-US-Andrew:DragonHDLatestNeural",
+    "Jordan": "en-US-Emma:DragonHDLatestNeural"
+  },
+  "lines": [
+    {"speaker": "Alex", "text": "Welcome back to It's Just You and Me..... And AI. I'm Alex, and today we're diving into some seriously big model news, plus a few tools that might actually save you from vendor lock-in."},
+    {"speaker": "Jordan", "text": "Hey everyone, I'm Jordan. And yeah, Alex is right. Meta just dropped some details about Llama 4, and it's not just an incremental update. We're talking about Liquid Transformers 2.0 architecture."},
+    {"speaker": "Alex", "text": "Liquid Transformers. That name sounds like something out of a sci-fi movie. Like, 'In a world where attention mechanisms flow like water...'"},
+    {"speaker": "Jordan", "text": "Ha! But seriously, the architecture is fascinating. Instead of fixed attention patterns, Liquid Transformers use dynamic routing that adapts based on the input. So the model literally reconfigures itself depending on what you're asking it to do."},
+    {"speaker": "Alex", "text": "That's wild. So it's not just scaling up parameters anymore. It's about making the architecture itself more flexible. Like having a Swiss Army knife instead of just a bigger hammer."},
+    {"speaker": "Jordan", "text": "Exactly. And Meta is positioning this as part of their 'Sovereign AI' push. The idea is that countries and organizations can run their own state-of-the-art models without depending on OpenAI or Anthropic. Which, politically, is a pretty big deal right now."},
+    {"speaker": "Alex", "text": "Yeah, the whole AI sovereignty conversation has been heating up. Europe wants its own models. The Middle East is investing billions. India is building its own stack. And Llama 4 might be the first open model that's actually competitive with the closed ones on real-world tasks."},
+    {"speaker": "Jordan", "text": "The benchmarks they've teased are impressive, but you know how benchmark marketing goes. I'll believe it when I see it running on my laptop. Speaking of which, there's this new project called LocalPilot that's trying to replace GitHub Copilot with entirely local models using Ollama."},
+    {"speaker": "Alex", "text": "Oh, I saw that! LocalPilot basically turns Ollama into a Copilot-compatible endpoint. So you can use it with VS Code, JetBrains, whatever, but the model is running on your own machine. No code leaves your laptop."},
+    {"speaker": "Jordan", "text": "And it's getting surprisingly good. Like, sure, it's not Claude Opus level, but for day-to-day autocomplete and boilerplate? It's more than adequate. And the privacy implications are huge. No more wondering if your proprietary code is being used to train someone else's model."},
+    {"speaker": "Alex", "text": "Right? That's been the elephant in the room with Copilot and Codex. Even with their enterprise promises, there's always that little voice in the back of your head saying, 'Are they... learning from my code?'"},
+    {"speaker": "Jordan", "text": "With LocalPilot, that voice goes away. Because the model is literally running on your GPU. The only thing learning from your code is your own machine."},
+    {"speaker": "Alex", "text": "And for companies in regulated industries, that's a game changer. Healthcare, finance, government, they can't just send code to a cloud API. LocalPilot gives them the Copilot experience without the compliance nightmare."},
+    {"speaker": "Jordan", "text": "Moving on to another open source project that caught my eye: OpenHarness. It's an open-source terminal coding agent that works with any LLM."},
+    {"speaker": "Alex", "text": "I love the philosophy behind this. Instead of being locked into Claude Code or Codex or whatever, OpenHarness is like a universal remote for coding agents. Plug in any model you want."},
+    {"speaker": "Jordan", "text": "And it's not just about avoiding vendor lock-in. Different models really do excel at different things. Some are better at Rust. Some understand legacy codebases better. Some are just cheaper for the 80% of tasks that don't need frontier-level reasoning."},
+    {"speaker": "Alex", "text": "It's like having a toolbox instead of just one really expensive screwdriver. And honestly, I think this is the future. The monolithic 'one agent to rule them all' approach is going to give way to specialized, composable tools."},
+    {"speaker": "Jordan", "text": "Speaking of composable tools, did you see Nimbalyst? It's an open-source visual workspace that wraps around Claude Code, Codex, and OpenCode."},
+    {"speaker": "Alex", "text": "Yeah! Instead of living in the terminal, Nimbalyst gives you a visual interface where you can see what the agent is doing, edit its plan, roll back steps. It's like adding a GUI to the black box."},
+    {"speaker": "Jordan", "text": "Which is so needed. Right now, using these coding agents feels like talking to a very smart ghost. You type something, you wait, files change, and you hope it did what you meant. Nimbalyst makes the process visible and interactive."},
+    {"speaker": "Alex", "text": "It's the difference between driving with a GPS that just says 'turn left in 500 feet' and one that shows you the map, the traffic, and alternative routes. Same destination, way less anxiety."},
+    {"speaker": "Jordan", "text": "I also want to shout out the broader trend of agent-native infrastructure that we've been seeing. There are projects building sandbox environments specifically for computer-use agents, consensus mechanisms for multi-agent systems, even email protocols designed for AI agents."},
+    {"speaker": "Alex", "text": "The robot email one made me laugh. Robot Mail. Like, the future of communication is just AI agents sending each other structured data while humans watch from the sidelines."},
+    {"speaker": "Jordan", "text": "Hey, if it means fewer meetings, I'm all for it. Let the agents negotiate the API contracts. I'll be over here drinking coffee and reviewing the final result."},
+    {"speaker": "Alex", "text": "And on that note, let's talk about what all this means for developers. The landscape is fragmenting in a good way. We're moving from 'pick one AI assistant and hope for the best' to 'assemble your own toolkit from best-of-breed components.'"},
+    {"speaker": "Jordan", "text": "It's the Unix philosophy applied to AI agents. Do one thing well. Compose them together. And for the love of all that is holy, keep your options open because everything is changing every three months."},
+    {"speaker": "Alex", "text": "So today's takeaway: Llama 4 is coming with fancy new architecture, LocalPilot lets you go fully offline, OpenHarness frees you from vendor lock-in, Nimbalyst adds visual transparency, and the whole ecosystem is maturing faster than anyone expected."},
+    {"speaker": "Jordan", "text": "And remember, just because you CAN run everything locally doesn't mean you HAVE to. But it's really nice to have the option. Choice is the ultimate feature."},
+    {"speaker": "Alex", "text": "Thanks for tuning in to It's Just You and Me..... And AI. I'm Alex."},
+    {"speaker": "Jordan", "text": "And I'm Jordan. May your models be fast, your context windows be long, and your prompts be ever clear. See you tomorrow!"}
+  ]
+}

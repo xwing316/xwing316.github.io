@@ -11,12 +11,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     font-family: 'Courier New', monospace;
-    overflow: hidden;
     color: #e0e0e0;
+    position: relative;
+    padding: 20px;
   }
+  a.back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    color: #00ff88;
+    text-decoration: none;
+    font-size: 14px;
+    transition: opacity .2s;
+    z-index: 10;
+  }
+  a.back:hover { opacity: .7; }
   #hud {
     width: 640px;
     max-width: 100vw;
@@ -81,6 +92,7 @@
 </style>
 </head>
 <body>
+<a href="../games.html" class="back">← Games</a>
 
 <div id="hud">
   <div>SCORE: <span id="scoreEl">0</span></div>

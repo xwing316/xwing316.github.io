@@ -1,0 +1,41 @@
+{
+  "title": "It's Just You and Me..... And AI - Episode 1",
+  "hosts": {
+    "Alex": "en-US-Andrew:DragonHDLatestNeural",
+    "Jordan": "en-US-Emma:DragonHDLatestNeural"
+  },
+  "lines": [
+    {"speaker": "Alex", "text": "Good morning, good evening, or good whatever-time-zone-you're-in. Welcome to It's Just You and Me..... And AI. I'm Alex."},
+    {"speaker": "Jordan", "text": "And I'm Jordan. And yes, that is five dots in the title. We counted. We're thorough like that."},
+    {"speaker": "Alex", "text": "Five dots for five times the existential dread of watching AI tools evolve faster than my ability to keep up with them."},
+    {"speaker": "Jordan", "text": "Speaking of keeping up, have you heard what Uber's been up to with Claude Code?"},
+    {"speaker": "Alex", "text": "Oh, I saw the headlines. Apparently Uber managed to burn through their entire 2026 AI budget in just four months using Claude Code. Four months!"},
+    {"speaker": "Jordan", "text": "That's... actually kind of impressive in a terrifying way. Like, imagine walking into a budget meeting in January and being like, yeah, so we're done. See you next fiscal year."},
+    {"speaker": "Alex", "text": "Right? And it's not like they were being reckless. From what I read, they were just... using it. A lot. Like, every engineer at Uber apparently fell in love with Claude Code and just kept asking it to do things."},
+    {"speaker": "Jordan", "text": "I mean, I get it. Claude Code is genuinely good. But this raises a real question about pricing models for these agentic tools. Are they priced for hobbyists or for enterprise-scale usage? Because those are very different numbers."},
+    {"speaker": "Alex", "text": "Exactly. And it's not just Anthropic. We're seeing this across the board. GitHub Copilot had its own controversy recently. You know the one I'm talking about?"},
+    {"speaker": "Jordan", "text": "Oh, the co-author thing? Where Copilot started silently adding itself as a co-author on git commits?"},
+    {"speaker": "Alex", "text": "Yeah! So apparently, if you use Copilot's chat or inline suggestions, it would sometimes append itself to the commit message as a co-author. Like, excuse me, I wrote the prompt. You're the tool."},
+    {"speaker": "Jordan", "text": "It's like your calculator demanding credit on your tax return. I used you to add numbers, Phillips, you don't get a W-2."},
+    {"speaker": "Alex", "text": "Ha! And the worst part is it was silent. Users didn't opt in. They just noticed one day that their commits had this extra co-author line. GitHub eventually acknowledged it and said they'd look into it, but the trust damage was already done."},
+    {"speaker": "Jordan", "text": "This is why I think the whole agentic AI space is going through some serious growing pains. The tools are powerful, but the social contracts around them haven't been figured out yet. Who gets credit? Who pays? Who's responsible when the agent does something weird?"},
+    {"speaker": "Alex", "text": "Speaking of doing something weird, have you seen the OpenCode RCE vulnerability that was disclosed?"},
+    {"speaker": "Jordan", "text": "Ooh, yeah. Unauthenticated remote code execution. That's... not great for a tool that's literally designed to execute code on your machine."},
+    {"speaker": "Alex", "text": "Right? The irony is almost poetic. A coding agent that can be remotely exploited to run arbitrary code. It's like building a really smart locksmith and then leaving your own front door unlocked."},
+    {"speaker": "Jordan", "text": "To be fair, the OpenCode team patched it pretty quickly once it was reported. But it does highlight something important: these agentic tools are running with a lot of privileges, and security needs to be baked in from the start, not bolted on later."},
+    {"speaker": "Alex", "text": "Totally. And it's not just about the big players either. There's this new tool called Council that caught my eye. It's basically a meta-agent that lets you run Claude, Codex, and Gemini against the same prompt simultaneously and compare their outputs."},
+    {"speaker": "Jordan", "text": "Oh, I love that concept. Like a battle royale for LLMs. Put them in the ring, same prompt, may the best model win."},
+    {"speaker": "Alex", "text": "Exactly! And it's open source too. The idea is that different models have different strengths. Claude might be better at architecture, Codex at implementation, Gemini at reasoning through edge cases. Why not get all three opinions?"},
+    {"speaker": "Jordan", "text": "It's like having a panel of experts instead of just one really smart intern. Which, let's be honest, is how we should have been thinking about this all along. No single model is perfect at everything."},
+    {"speaker": "Alex", "text": "Yeah. And related to that, there's Brifly, which solves a different but equally painful problem: having to re-explain your entire codebase to Claude Code every single week."},
+    {"speaker": "Jordan", "text": "Ugh, yes. The context window amnesia. You spend twenty minutes setting up the perfect context, and then a week later it's like you've never met."},
+    {"speaker": "Alex", "text": "Brifly basically creates persistent context snapshots. So instead of starting from zero every session, it remembers the important stuff. Your architecture decisions, your conventions, that weird workaround you had to do because of a third-party library."},
+    {"speaker": "Jordan", "text": "That sounds genuinely useful. Context management is one of the biggest unsolved problems in agentic coding right now. These models have amnesia by design, and it's the user's job to constantly re-teach them."},
+    {"speaker": "Alex", "text": "It's like Groundhog Day, but instead of Bill Murray learning to play piano, it's you explaining why you chose PostgreSQL over MongoDB for the hundredth time."},
+    {"speaker": "Jordan", "text": "So to wrap up today's topics: Uber spent all their money on Claude Code, GitHub Copilot wants writing credit, OpenCode left the back door open, and a bunch of smart people are building tools to make agentic AI actually usable at scale."},
+    {"speaker": "Alex", "text": "Sounds about right. The agentic AI space is moving fast, breaking things, and occasionally breaking budgets. But the innovation happening around context management, multi-agent orchestration, and security is really encouraging."},
+    {"speaker": "Jordan", "text": "If you're building with these tools, just remember: set a budget alarm, check your commit authors, and maybe don't expose your coding agent to the open internet. Basic stuff."},
+    {"speaker": "Alex", "text": "Words to code by. Thanks for joining us on It's Just You and Me..... And AI. We'll be back tomorrow with more news from the robot uprising. I'm Alex."},
+    {"speaker": "Jordan", "text": "And I'm Jordan. Stay caffeinated, stay curious, and maybe hug a human today. They still do some things better than us."}
+  ]
+}
