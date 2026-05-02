@@ -1,6 +1,18 @@
 const GAMES = [
   {
     id: 'coffee-2026-05-02',
+    title: 'Grind Master',
+    description: 'Match three or more coffee beans of the same roast level to grind them into the perfect blend. Chain combos for bonus points!',
+    category: 'puzzle',
+    thumbnail: 'linear-gradient(135deg, #5d4037 0%, #a1887f 100%)',
+    file: 'games/coffee-2026-05-02.html',
+    difficulty: 'Medium',
+    emoji: '🔧',
+    createdAt: '2026-05-02',
+  },
+
+  {
+    id: 'coffee-2026-05-02',
     title: 'Pour Over Pro',
     description: 'Guide the pour stream in spirals to evenly saturate the coffee bed. Miss a spot and you get channeling -- every drop counts!',
     category: 'puzzle',

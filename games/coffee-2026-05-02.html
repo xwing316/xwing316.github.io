@@ -3,114 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pour Over Pro</title>
+<title>Grind Master</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #0d1117; color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 8px; }
+  body {
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 8px;
+    overflow-x: hidden;
+  }
   h1 { font-size: clamp(20px, 5vw, 28px); font-weight: 700; margin: 48px 0 6px; letter-spacing: 1px; color: #C4A882; }
   .subtitle { font-size: 13px; color: #8b949e; margin-bottom: 12px; text-align: center; max-width: 420px; }
   .scores { display: flex; gap: 24px; margin-bottom: 12px; font-size: 15px; }
-  .scores strong { color: #00D4AA; }
-  canvas { border: 2px solid #30363d; border-radius: 6px; background: #161b22; display: block; max-width: 100%; touch-action: none; cursor: crosshair; }
-  .controls { margin-top: 14px; display: flex; gap: 10px; }
+  .scores span { color: #8b949e; }
+  .scores strong { color: #00D4AA; font-weight: 600; }
+  canvas { border: 2px solid #30363d; border-radius: 6px; background: #161b22; display: block; max-width: 100%; touch-action: none; }
+  .controls { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
   button { background: #21262d; color: #e6edf3; border: 1px solid #30363d; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; }
+  button:hover { background: #30363d; }
   button.primary { background: #00D4AA22; border-color: #00D4AA55; color: #00D4AA; }
+  .game-over { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(13,17,23,0.95); border: 1px solid #30363d; border-radius: 12px; padding: 28px 36px; display: none; z-index: 10; }
+  .game-over h2 { font-size: 22px; margin-bottom: 8px; }
+  .canvas-wrap { position: relative; }
+  @media (max-width: 480px) { .scores { gap: 16px; font-size: 13px; } }
 </style>
 </head>
 <body>
 <script src="../js/game-header.js"></script>
-<h1>🪈 Pour Over Pro</h1>
-<p class="subtitle">Guide the pour stream in spirals to evenly saturate the coffee bed. Miss a spot and you get channeling -- every drop counts!</p>
+<h1>🔧 Grind Master</h1>
+<p class="subtitle">Match three or more coffee beans of the same roast level to grind them into the perfect blend. Chain combos for bonus points!</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
   <span>High: <strong id="high">0</strong></span>
-  <span>Target: <strong id="target">1</strong></span>
+  <span>Level: <strong id="level">1</strong></span>
 </div>
-<canvas id="game" width="400" height="400"></canvas>
+<div class="canvas-wrap">
+  <canvas id="game" width="400" height="520"></canvas>
+  <div class="game-over" id="over">
+    <h2>Game Over!</h2>
+    <p>Final Score: <strong id="final">0</strong></p>
+    <button class="primary" onclick="startGame()">Play Again</button>
+  </div>
+</div>
 <div class="controls">
-  <button class="primary" onclick="nextTarget()">Next Pattern</button>
   <button onclick="startGame()">New Game</button>
+  <button onclick="togglePause()">Pause</button>
 </div>
 <script>
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-let W = 400, H = 400;
+let W = 400, H = 520;
 let score = 0, high = parseInt(localStorage.getItem('gh_coffee-2026-05-02') || '0');
-let targetPoints = [], drawnPoints = [], targetIndex = 0, drawing = false;
+let level = 1, lives = 3, paused = false, running = false;
+let player = { x: W/2 - 25, y: H - 55, w: 50, h: 40, speed: 5 };
+let items = [], particles = [], spawnTimer = 0;
 document.getElementById('high').textContent = high;
 
 function resize() {
   const maxW = Math.min(window.innerWidth - 32, 400);
   const scale = maxW / 400;
   canvas.style.width = maxW + 'px';
-  canvas.style.height = maxW + 'px';
+  canvas.style.height = (520 * scale) + 'px';
 }
 resize(); window.addEventListener('resize', resize);
 
-const patterns = [
-  [{x:200,y:80},{x:280,y:200},{x:200,y:320},{x:120,y:200}],
-  [{x:200,y:60},{x:260,y:140},{x:340,y:180},{x:260,y:260},{x:200,y:340},{x:140,y:260},{x:60,y:180},{x:140,y:140}],
-  [{x:100,y:100},{x:300,y:100},{x:300,y:300},{x:100,y:300}],
-  [{x:200,y:50},{x:250,y:150},{x:350,y:160},{x:270,y:230},{x:300,y:340},{x:200,y:280},{x:100,y:340},{x:130,y:230},{x:50,y:160},{x:150,y:150}],
-];
+let keys = {};
+window.addEventListener('keydown', e => { keys[e.key] = true; if (['ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault(); });
+window.addEventListener('keyup', e => keys[e.key] = false);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); const r = canvas.getBoundingClientRect(); const x = (e.touches[0].clientX - r.left) * (W/r.width); keys['ArrowLeft'] = x < W/2; keys['ArrowRight'] = x >= W/2; });
+canvas.addEventListener('touchend', e => { e.preventDefault(); keys['ArrowLeft'] = false; keys['ArrowRight'] = false; });
 
-function loadPattern(idx) {
-  targetPoints = patterns[idx % patterns.length].map(p => ({...p}));
-  drawnPoints = [];
-  targetIndex = 0;
-  drawing = false;
-  draw();
+function pickItem() {
+  const good = Math.random() > 0.35;
+  const pool = good ? [
+    { emoji: '☕', score: 15, speed: 2.8 }, { emoji: '🪈', score: 10, speed: 2.5 }, { emoji: '⚡', score: 30, speed: 3.5 }
+  ] : [
+    { emoji: '🧊', score: -20, speed: 3.0 }, { emoji: '💤', score: -15, speed: 2.8 }
+  ];
+  const it = pool[Math.floor(Math.random() * pool.length)];
+  return { ...it, x: Math.random() * (W - 30) + 15, y: -30, good };
 }
 
-function getPos(e) {
-  const r = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-  return { x: (clientX - r.left) * (W/r.width), y: (clientY - r.top) * (H/r.height) };
+function update() {
+  if (!running || paused) return;
+  if (keys['ArrowLeft'] || keys['a']) player.x -= player.speed;
+  if (keys['ArrowRight'] || keys['d']) player.x += player.speed;
+  player.x = Math.max(0, Math.min(W - player.w, player.x));
+  spawnTimer++;
+  if (spawnTimer >= Math.max(12, 40 - level * 2)) { spawnTimer = 0; items.push(pickItem()); }
+  for (let i = items.length - 1; i >= 0; i--) {
+    const it = items[i]; it.y += it.speed + level * 0.2;
+    if (it.y + 18 > player.y && it.y < player.y + player.h && it.x + 12 > player.x && it.x - 12 < player.x + player.w) {
+      score += it.score; if (score < 0) score = 0;
+      items.splice(i, 1);
+      if (!it.good) { lives--; if (lives <= 0) endGame(); }
+      continue;
+    }
+    if (it.y > H && it.good) { lives--; if (lives <= 0) endGame(); items.splice(i, 1); }
+    else if (it.y > H) items.splice(i, 1);
+  }
+  level = 1 + Math.floor(score / 120);
 }
-
-function dist(a,b) { return Math.hypot(a.x-b.x, a.y-b.y); }
 
 function draw() {
-  ctx.clearRect(0,0,W,H);
-  ctx.strokeStyle = 'rgba(196,168,130,0.4)'; ctx.lineWidth = 2;
-  ctx.beginPath(); targetPoints.forEach((p,i) => { if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }); ctx.closePath(); ctx.stroke();
-  targetPoints.forEach((p,i) => {
-    ctx.fillStyle = i === targetIndex ? '#00D4AA' : '#8b949e';
-    ctx.beginPath(); ctx.arc(p.x, p.y, i === targetIndex ? 8 : 4, 0, Math.PI*2); ctx.fill();
-  });
-  if (drawnPoints.length > 1) {
-    ctx.strokeStyle = '#00D4AA'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-    ctx.beginPath(); drawnPoints.forEach((p,i) => { if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }); ctx.stroke();
-  }
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#C4A882';
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+  ctx.font = '22px serif'; ctx.textAlign = 'center';
+  for (const it of items) ctx.fillText(it.emoji, it.x, it.y);
+  ctx.font = '15px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Lives: ' + '☕'.repeat(Math.max(0, lives)), 12, 24);
+  document.getElementById('score').textContent = score;
+  document.getElementById('level').textContent = level;
 }
 
-function handleStart(e) {
-  e.preventDefault();
-  const pos = getPos(e);
-  if (dist(pos, targetPoints[targetIndex]) < 20) { drawing = true; drawnPoints = [pos]; }
-}
-function handleMove(e) {
-  e.preventDefault();
-  if (!drawing) return;
-  const pos = getPos(e);
-  if (dist(pos, targetPoints[targetIndex + 1]) < 20) { targetIndex++; drawnPoints.push(pos); if (targetIndex >= targetPoints.length - 1) { drawing = false; score += 150; document.getElementById('score').textContent = score; if (score > high) { high = score; localStorage.setItem('gh_coffee-2026-05-02', high); document.getElementById('high').textContent = high; } } }
-  else { drawnPoints.push(pos); }
-  draw();
-}
-function handleEnd(e) { e.preventDefault(); drawing = false; }
-
-canvas.addEventListener('mousedown', handleStart);
-canvas.addEventListener('mousemove', handleMove);
-canvas.addEventListener('mouseup', handleEnd);
-canvas.addEventListener('touchstart', handleStart, {passive:false});
-canvas.addEventListener('touchmove', handleMove, {passive:false});
-canvas.addEventListener('touchend', handleEnd, {passive:false});
-
-let currentPattern = 0;
-function nextTarget() { currentPattern++; document.getElementById('target').textContent = currentPattern + 1; loadPattern(currentPattern); }
-function startGame() { score = 0; currentPattern = 0; document.getElementById('score').textContent = 0; document.getElementById('target').textContent = 1; loadPattern(0); }
-
+function loop() { update(); draw(); if (running) requestAnimationFrame(loop); }
+function startGame() { score = 0; level = 1; lives = 3; items = []; paused = false; running = true; document.getElementById('over').style.display = 'none'; loop(); }
+function togglePause() { if (running) paused = !paused; }
+function endGame() { running = false; if (score > high) { high = score; localStorage.setItem('gh_coffee-2026-05-02', high); document.getElementById('high').textContent = high; } document.getElementById('final').textContent = score; document.getElementById('over').style.display = 'block'; }
 startGame();
 </script>
 </body>
