@@ -87,14 +87,14 @@ function createGameCard(game, index) {
 
   card.innerHTML = `
     <div class="game-card__thumb" style="${thumbStyle}">
-      <span class="game-card__emoji">${game.emoji}</span>
+      ${game.emoji ? `<span class="game-card__emoji">${game.emoji}</span>` : ''}
       <span class="game-card__badge">${game.difficulty}</span>
     </div>
     <div class="game-card__content">
       <h3 class="game-card__title">${game.title}</h3>
       <p class="game-card__desc">${game.description}</p>
       <div class="game-card__tags">
-        <span class="game-card__tag">${GAME_CATEGORIES[game.category]?.icon || ''} ${game.category}</span>
+        <span class="game-card__tag">${game.category}</span>
       </div>
       <a href="${game.file}" class="game-card__play">▶ Play</a>
     </div>

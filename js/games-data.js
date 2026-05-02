@@ -7,7 +7,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-roast-runner.png',
     file: 'games/coffee-2026-05-02.html',
     difficulty: 'Hard',
-    emoji: '🔥',
+    emoji: '',
     createdAt: '2026-05-02',
   },
 
@@ -19,7 +19,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-caffeine-catch.png',
     file: 'games/caffeine-catch.html',
     difficulty: 'Medium',
-    emoji: '☕',
+    emoji: '',
     createdAt: '2026-05-01',
   },
   {
@@ -30,7 +30,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-snake.png',
     file: 'games/snake.html',
     difficulty: 'Easy',
-    emoji: '🐍',
+    emoji: '',
     createdAt: '2026-04-15',
   },
   {
@@ -41,7 +41,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-memory.png',
     file: 'games/memory.html',
     difficulty: 'Easy',
-    emoji: '🃏',
+    emoji: '',
     createdAt: '2026-04-14',
   },
   {
@@ -52,7 +52,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-pong.png',
     file: 'games/pong.html',
     difficulty: 'Medium',
-    emoji: '🏓',
+    emoji: '',
     createdAt: '2026-04-13',
   },
   {
@@ -63,7 +63,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-flappy.png',
     file: 'games/flappy.html',
     difficulty: 'Hard',
-    emoji: '🐦',
+    emoji: '',
     createdAt: '2026-04-12',
   },
   {
@@ -74,7 +74,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-tictactoe.png',
     file: 'games/tictactoe.html',
     difficulty: 'Easy',
-    emoji: '❌',
+    emoji: '',
     createdAt: '2026-04-11',
   },
   {
@@ -85,7 +85,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-breakout.png',
     file: 'games/breakout.html',
     difficulty: 'Medium',
-    emoji: '🧱',
+    emoji: '',
     createdAt: '2026-04-10',
   },
   {
@@ -96,7 +96,7 @@ const GAMES = [
     thumbnail: 'assets/images/game-2048.png',
     file: 'games/2048.html',
     difficulty: 'Medium',
-    emoji: '🔢',
+    emoji: '',
     createdAt: '2026-04-09',
   },
   {
@@ -107,17 +107,17 @@ const GAMES = [
     thumbnail: 'assets/images/game-invaders.png',
     file: 'games/invaders.html',
     difficulty: 'Hard',
-    emoji: '👾',
+    emoji: '',
     createdAt: '2026-04-08',
   },
 ];
 
 const GAME_CATEGORIES = {
-  all:      { label: 'All Games',    icon: '🎮' },
-  puzzle:   { label: 'Puzzle',       icon: '🧩' },
-  action:   { label: 'Action',       icon: '⚡' },
-  strategy: { label: 'Strategy',     icon: '♟️' },
-  classic:  { label: 'Classic',      icon: '🕹️' }
+  all:      { label: 'All Games',    icon: '' },
+  puzzle:   { label: 'Puzzle',       icon: '' },
+  action:   { label: 'Action',       icon: '' },
+  strategy: { label: 'Strategy',     icon: '' },
+classic:  { label: 'Classic',      icon: '' },
 };
 
 const DIFFICULTY_ORDER = { 'Easy': 1, 'Medium': 2, 'Hard': 3 };

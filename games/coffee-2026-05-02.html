@@ -27,7 +27,7 @@
 </head>
 <body>
 <script src="../js/game-header.js"></script>
-<h1>🔥 Roast Runner</h1>
+<h1>Roast Runner</h1>
 <p class="subtitle">Keep the beans moving through the roaster! Dodge hotspots, control airflow, and eject each batch at the perfect roast level.</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -93,12 +93,36 @@ function update() {
   document.getElementById('score').textContent = score;
 }
 
+// Preload game sprites
+const RR_SPRITES = {};
+const RR_SPRITE_SRC = {
+  bean: '../assets/images/game-assets/rr-bean-medium.png',
+  hotspot: '../assets/images/game-assets/rr-hotspot.png'
+};
+Object.keys(RR_SPRITE_SRC).forEach(key => {
+  const img = new Image(); img.src = RR_SPRITE_SRC[key]; RR_SPRITES[key] = img;
+});
+
 function draw() {
   ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#bf360c';
-  ctx.fillRect(player.x, player.y, player.w, player.h);
-  ctx.fillStyle = '#ff7043';
-  for (const ob of obstacles) ctx.fillRect(ob.x, ob.y, ob.w, ob.h);
+  // Draw player as coffee bean
+  const beanImg = RR_SPRITES.bean;
+  if (beanImg && beanImg.complete && beanImg.naturalWidth) {
+    ctx.drawImage(beanImg, player.x, player.y, player.w, player.h);
+  } else {
+    ctx.fillStyle = '#bf360c';
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+  }
+  // Draw obstacles as hotspots
+  const hotImg = RR_SPRITES.hotspot;
+  for (const ob of obstacles) {
+    if (hotImg && hotImg.complete && hotImg.naturalWidth) {
+      ctx.drawImage(hotImg, ob.x, ob.y, ob.w, ob.h);
+    } else {
+      ctx.fillStyle = '#ff7043';
+      ctx.fillRect(ob.x, ob.y, ob.w, ob.h);
+    }
+  }
 }
 
 function loop() { update(); draw(); if (running) requestAnimationFrame(loop); }

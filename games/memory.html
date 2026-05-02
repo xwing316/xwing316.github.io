@@ -300,8 +300,8 @@
       pointer-events: none;
     }
     .card-back::after {
-      content: '☕';
-      font-size: 1.4rem;
+      content: '';
+      background: url('../assets/images/game-assets/icon-coffee.png') center/70% no-repeat;
       opacity: 0.5;
       z-index: 1;
     }
@@ -573,7 +573,7 @@
   <!-- Win Overlay -->
   <div class="win-overlay" id="win-overlay">
     <div class="win-modal">
-      <span class="win-emoji">🎉</span>
+      <span class="win-emoji"><img src="../assets/images/game-assets/icon-gamepad.png" alt="win" style="width:3rem;height:3rem;"></span>
       <h2 class="win-title">You Win!</h2>
       <div class="win-stats">
         <div class="win-stat">
@@ -600,27 +600,34 @@
   <div class="confetti-container" id="confetti-container"></div>
 
   <script>
-    // ── Card emoji pool ──────────────────────────────────────────
+    // ── Card icon pool (images replace emojis) ──────────────────────────
     const ALL_EMOJIS = [
-      { emoji: '☕', label: 'Coffee'   },
-      { emoji: '🤖', label: 'Robot'    },
-      { emoji: '🐍', label: 'Snake'    },
-      { emoji: '🎨', label: 'Art'      },
-      { emoji: '🚀', label: 'Rocket'   },
-      { emoji: '⚡', label: 'Lightning'},
-      { emoji: '🔥', label: 'Fire'     },
-      { emoji: '🎲', label: 'Dice'     },
-      { emoji: '🌟', label: 'Star'     },
-      { emoji: '🎸', label: 'Guitar'  },
-      { emoji: '🎯', label: 'Target'   },
-      { emoji: '💡', label: 'Idea'     },
-      { emoji: '🧩', label: 'Puzzle'   },
-      { emoji: '🌙', label: 'Moon'     },
-      { emoji: '🎵', label: 'Music'   },
-      { emoji: '🐾', label: 'Paw'      },
-      { emoji: '🏆', label: 'Trophy'  },
-      { emoji: '🔮', label: 'Crystal'  },
+      { emoji: '☕', label: 'Coffee',   img: '../assets/images/game-assets/mem-coffee.png'   },
+      { emoji: '🤖', label: 'Robot',    img: '../assets/images/game-assets/mem-robot.png'    },
+      { emoji: '🐍', label: 'Snake',    img: '../assets/images/game-assets/mem-snake.png'    },
+      { emoji: '🎨', label: 'Art',      img: '../assets/images/game-assets/mem-art.png'      },
+      { emoji: '🚀', label: 'Rocket',   img: '../assets/images/game-assets/mem-rocket.png'   },
+      { emoji: '⚡', label: 'Lightning', img: '../assets/images/game-assets/mem-lightning.png' },
+      { emoji: '🔥', label: 'Fire',     img: '../assets/images/game-assets/mem-fire.png'     },
+      { emoji: '🎲', label: 'Dice',     img: '../assets/images/game-assets/mem-dice.png'     },
+      { emoji: '🌟', label: 'Star',     img: '../assets/images/game-assets/mem-star.png'     },
+      { emoji: '🎸', label: 'Guitar',  img: '../assets/images/game-assets/mem-guitar.png'  },
+      { emoji: '🎯', label: 'Target',   img: '../assets/images/game-assets/mem-target.png'   },
+      { emoji: '💡', label: 'Idea',     img: '../assets/images/game-assets/mem-idea.png'     },
+      { emoji: '🧩', label: 'Puzzle',   img: '../assets/images/game-assets/mem-puzzle.png'   },
+      { emoji: '🌙', label: 'Moon',     img: '../assets/images/game-assets/mem-moon.png'     },
+      { emoji: '🎵', label: 'Music',    img: '../assets/images/game-assets/mem-music.png'   },
+      { emoji: '🐾', label: 'Paw',      img: '../assets/images/game-assets/mem-paw.png'      },
+      { emoji: '🏆', label: 'Trophy',  img: '../assets/images/game-assets/mem-trophy.png'  },
+      { emoji: '🔮', label: 'Crystal',  img: '../assets/images/game-assets/mem-crystal.png'  },
     ];
+
+    // Preload card images
+    ALL_EMOJIS.forEach(item => {
+      const img = new Image();
+      img.src = item.img;
+      item.imgEl = img;
+    });
 
     // ── Game State ──────────────────────────────────────────────
     let gridSize = 4;
@@ -720,11 +727,16 @@
         card.dataset.index = idx;
         card.style.animationDelay = `${idx * 0.03}s`;
 
+        // Use image icon if available, fallback to emoji
+        const iconContent = data.imgEl && data.imgEl.complete
+          ? `<img src="${data.img}" alt="${data.label}" class="card-icon" style="width:48px;height:48px;object-fit:contain;">`
+          : `<span class="card-emoji">${data.emoji}</span>`;
+
         card.innerHTML = `
           <div class="card-inner">
             <div class="card-face card-back"></div>
             <div class="card-face card-front">
-              <span class="card-emoji">${data.emoji}</span>
+              ${iconContent}
               <span class="card-label">${data.label}</span>
             </div>
           </div>

@@ -82,7 +82,7 @@ function createEpisodeCard(ep, number, showKey) {
   const show = FAKECAST_DATA[showKey];
   const coverArt = show.coverArt
     ? `<img src="${show.coverArt}" alt="${escapeHtml(show.title)} cover art" class="episode-card__cover" loading="lazy">`
-    : `<div class="episode-card__cover episode-card__cover--placeholder">${show.emoji}</div>`;
+    : `<div class="episode-card__cover episode-card__cover--placeholder" style="background:var(--cyan-dim);border:1px solid var(--border-accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:0.75rem;color:var(--text-soft);">${show.title.charAt(0)}</div>`;
 
   return `
     <article class="episode-card">

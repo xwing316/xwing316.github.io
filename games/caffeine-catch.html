@@ -130,7 +130,7 @@
 </style>
 </head>
 <body>
-<h1>☕ Caffeine Catch</h1>
+<h1><img src="../assets/images/game-assets/cc-cup.png" alt="" style="width:28px;height:28px;vertical-align:middle;margin-right:6px;"> Caffeine Catch</h1>
 <p class="subtitle">Catch the good stuff. Dodge the decaf.</p>
 
 <div class="scores">
@@ -142,7 +142,7 @@
 <div class="canvas-wrap">
   <canvas id="game" width="400" height="520"></canvas>
   <div class="game-over" id="over">
-    <h2>Spilled It! ☕</h2>
+    <h2>Spilled It!</h2>
     <p>Final Score: <strong id="final">0</strong></p>
     <button class="primary" onclick="startGame()">Play Again</button>
   </div>
@@ -159,11 +159,11 @@
 </p>
 
 <div class="legend">
-  <span>🫘 Bean +10</span>
-  <span>☕ Cup +25</span>
-  <span>⚡ Espresso +50</span>
-  <span>🧊 Ice -20</span>
-  <span>💤 Decaf -15</span>
+  <span><img src="../assets/images/game-assets/cc-bean.png" alt="Bean" style="width:18px;height:18px;vertical-align:middle;"> Bean +10</span>
+  <span><img src="../assets/images/game-assets/cc-cup.png" alt="Cup" style="width:18px;height:18px;vertical-align:middle;"> Cup +25</span>
+  <span><img src="../assets/images/game-assets/cc-espresso.png" alt="Espresso" style="width:18px;height:18px;vertical-align:middle;"> Espresso +50</span>
+  <span><img src="../assets/images/game-assets/cc-ice.png" alt="Ice" style="width:18px;height:18px;vertical-align:middle;"> Ice -20</span>
+  <span><img src="../assets/images/game-assets/cc-decaf.png" alt="Decaf" style="width:18px;height:18px;vertical-align:middle;"> Decaf -15</span>
 </div>
 
 <script>
@@ -183,12 +183,28 @@ let items = [], particles = [], spawnTimer = 0, spawnInterval = 45;
 
 highEl.textContent = high;
 
+// Preload game sprite images
+const SPRITES = {};
+const SPRITE_SOURCES = {
+  bean: '../assets/images/game-assets/cc-bean.png',
+  cup: '../assets/images/game-assets/cc-cup.png',
+  espresso: '../assets/images/game-assets/cc-espresso.png',
+  ice: '../assets/images/game-assets/cc-ice.png',
+  decaf: '../assets/images/game-assets/cc-decaf.png',
+  life: '../assets/images/game-assets/cc-cup.png'
+};
+Object.keys(SPRITE_SOURCES).forEach(key => {
+  const img = new Image();
+  img.src = SPRITE_SOURCES[key];
+  SPRITES[key] = img;
+});
+
 const ITEM_TYPES = [
-  { emoji: '🫘', score: 10, speed: 2.5, weight: 40, good: true },
-  { emoji: '☕', score: 25, speed: 3.2, weight: 25, good: true },
-  { emoji: '⚡', score: 50, speed: 4.5, weight: 10, good: true },
-  { emoji: '🧊', score: -20, speed: 3.0, weight: 15, good: false },
-  { emoji: '💤', score: -15, speed: 2.8, weight: 10, good: false },
+  { img: 'bean', label: 'Bean +10', score: 10, speed: 2.5, weight: 40, good: true },
+  { img: 'cup', label: 'Cup +25', score: 25, speed: 3.2, weight: 25, good: true },
+  { img: 'espresso', label: 'Espresso +50', score: 50, speed: 4.5, weight: 10, good: true },
+  { img: 'ice', label: 'Ice -20', score: -20, speed: 3.0, weight: 15, good: false },
+  { img: 'decaf', label: 'Decaf -15', score: -15, speed: 2.8, weight: 10, good: false },
 ];
 
 function resize() {
@@ -337,11 +353,18 @@ function draw() {
     ctx.fill();
   }
 
-  // Draw items
-  ctx.font = '24px serif';
-  ctx.textAlign = 'center';
+  // Draw items as sprite images
+  const spriteSize = 24;
   for (const it of items) {
-    ctx.fillText(it.emoji, it.x, it.y);
+    const sprite = SPRITES[it.img];
+    if (sprite && sprite.complete && sprite.naturalWidth) {
+      ctx.drawImage(sprite, it.x - spriteSize/2, it.y - spriteSize/2, spriteSize, spriteSize);
+    } else {
+      // Fallback to text label while image loads
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(it.label ? it.label.split(' ')[0] : '?', it.x, it.y);
+    }
   }
 
   // Draw particles
@@ -354,11 +377,19 @@ function draw() {
     ctx.globalAlpha = 1;
   }
 
-  // Draw lives
+  // Draw lives as small cup icons
   ctx.font = '16px sans-serif';
   ctx.textAlign = 'left';
   ctx.fillStyle = '#e6edf3';
-  ctx.fillText('Lives: ' + '☕'.repeat(Math.max(0, lives)), 12, 24);
+  const lifeImg = SPRITES.life;
+  ctx.fillText('Lives: ', 12, 24);
+  for (let i = 0; i < Math.max(0, lives); i++) {
+    if (lifeImg && lifeImg.complete && lifeImg.naturalWidth) {
+      ctx.drawImage(lifeImg, 58 + i * 22, 10, 18, 18);
+    } else {
+      ctx.fillText('♥', 58 + i * 18, 24);
+    }
+  }
 
   // Score and level
   scoreEl.textContent = score;
