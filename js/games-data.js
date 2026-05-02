@@ -1,40 +1,5 @@
 const GAMES = [
   {
-    id: 'coffee-2026-05-02',
-    title: 'Grind Master',
-    description: 'Match three or more coffee beans of the same roast level to grind them into the perfect blend. Chain combos for bonus points!',
-    category: 'puzzle',
-    thumbnail: 'linear-gradient(135deg, #5d4037 0%, #a1887f 100%)',
-    file: 'games/coffee-2026-05-02.html',
-    difficulty: 'Medium',
-    emoji: '🔧',
-    createdAt: '2026-05-02',
-  },
-
-  {
-    id: 'coffee-2026-05-02',
-    title: 'Pour Over Pro',
-    description: 'Guide the pour stream in spirals to evenly saturate the coffee bed. Miss a spot and you get channeling -- every drop counts!',
-    category: 'puzzle',
-    thumbnail: 'linear-gradient(135deg, #4e342e 0%, #bcaaa4 100%)',
-    file: 'games/coffee-2026-05-02.html',
-    difficulty: 'Easy',
-    emoji: '🪈',
-    createdAt: '2026-05-02',
-  },
-
-  {
-    id: 'coffee-20260502',
-    title: 'Grind Master',
-    description: 'Match three or more coffee beans of the same roast level to grind them into the perfect blend. Chain combos for bonus points!',
-    category: 'puzzle',
-    thumbnail: 'linear-gradient(135deg, #5d4037 0%, #a1887f 100%)',
-    file: 'games/coffee-20260502.html',
-    difficulty: 'Medium',
-    emoji: '🔧',
-    createdAt: '2026-05-02',
-  },
-  {
     id: 'caffeine-catch',
     title: 'Caffeine Catch',
     description: 'Catch falling coffee beans, cups, and espresso shots in your mug. But watch out for decaf and ice cubes! Speed increases as you level up.',
@@ -42,7 +7,7 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #6F4E37 0%, #C4A882 100%)',
     file: 'games/caffeine-catch.html',
     difficulty: 'Medium',
-    emoji: '☕',
+    emoji: '\u2615',
     createdAt: '2026-05-01',
   },
   {
@@ -53,7 +18,7 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)',
     file: 'games/snake.html',
     difficulty: 'Easy',
-    emoji: '🐍',
+    emoji: '\ud83d\udc0d',
     createdAt: '2026-04-15',
   },
   {
@@ -64,7 +29,7 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)',
     file: 'games/memory.html',
     difficulty: 'Easy',
-    emoji: '🃏',
+    emoji: '\ud83c\udccf',
     createdAt: '2026-04-14',
   },
   {
@@ -75,7 +40,7 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
     file: 'games/pong.html',
     difficulty: 'Medium',
-    emoji: '🏓',
+    emoji: '\ud83c\udfd3',
     createdAt: '2026-04-13',
   },
   {
@@ -86,18 +51,18 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #1abc9c 0%, #16a085 100%)',
     file: 'games/flappy.html',
     difficulty: 'Hard',
-    emoji: '🐦',
+    emoji: '\ud83d\udc26',
     createdAt: '2026-04-12',
   },
   {
     id: 'tic-tac-toe',
     title: 'Tic Tac Toe',
-    description: 'Classic strategy game against an unbeatable AI. Can you outsmart the computer and force a draw — or even win?',
+    description: 'Classic strategy game against an unbeatable AI. Can you outsmart the computer and force a draw \u2014 or even win?',
     category: 'strategy',
     thumbnail: 'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)',
     file: 'games/tictactoe.html',
     difficulty: 'Easy',
-    emoji: '❌',
+    emoji: '\u274c',
     createdAt: '2026-04-11',
   },
   {
@@ -108,18 +73,18 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
     file: 'games/breakout.html',
     difficulty: 'Medium',
-    emoji: '🧱',
+    emoji: '\ud83e\uddf1',
     createdAt: '2026-04-10',
   },
   {
     id: '2048',
     title: '2048',
-    description: 'Slide numbered tiles to combine them and reach the elusive 2048 tile. A puzzle that"s easy to learn, hard to master.',
+    description: 'Slide numbered tiles to combine them and reach the elusive 2048 tile. A puzzle that\'s easy to learn, hard to master.',
     category: 'puzzle',
     thumbnail: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 100%)',
     file: 'games/2048.html',
     difficulty: 'Medium',
-    emoji: '🔢',
+    emoji: '\ud83d\udd22',
     createdAt: '2026-04-09',
   },
   {
@@ -130,17 +95,17 @@ const GAMES = [
     thumbnail: 'linear-gradient(135deg, #2c3e50 0%, #8e44ad 100%)',
     file: 'games/invaders.html',
     difficulty: 'Hard',
-    emoji: '👾',
+    emoji: '\ud83d\udc7e',
     createdAt: '2026-04-08',
   },
 ];
 
 const GAME_CATEGORIES = {
-  all:      { label: 'All Games',    icon: '🎮' },
-  puzzle:   { label: 'Puzzle',       icon: '🧩' },
-  action:   { label: 'Action',       icon: '⚡' },
-  strategy: { label: 'Strategy',     icon: '♟️' },
-  classic:  { label: 'Classic',      icon: '🕹️' }
+  all:      { label: 'All Games',    icon: '\ud83c\udfae' },
+  puzzle:   { label: 'Puzzle',       icon: '\ud83e\udde9' },
+  action:   { label: 'Action',       icon: '\u26a1' },
+  strategy: { label: 'Strategy',     icon: '\u265f\ufe0f' },
+  classic:  { label: 'Classic',      icon: '\ud83d\udd79\ufe0f' }
 };
 
 const DIFFICULTY_ORDER = { 'Easy': 1, 'Medium': 2, 'Hard': 3 };
