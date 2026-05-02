@@ -6,130 +6,204 @@
 <title>Roast Runner</title>
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon.png">
 <meta property="og:title" content="Roast Runner">
-<meta property="og:description" content="Coffee-fueled AI enthusiast & developer">
+<meta property="og:description" content="Guide a coffee bean through the roaster, dodge hotspots, and nail the perfect roast.">
 <meta property="og:image" content="../assets/images/og-image.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #0d1117; color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 8px; }
-  h1 { font-size: clamp(20px, 5vw, 28px); font-weight: 700; margin: 48px 0 6px; letter-spacing: 1px; color: #C4A882; }
-  .subtitle { font-size: 13px; color: #8b949e; margin-bottom: 12px; text-align: center; max-width: 420px; }
-  .scores { display: flex; gap: 24px; margin-bottom: 12px; font-size: 15px; }
-  .scores strong { color: #00D4AA; }
-  canvas { border: 2px solid #30363d; border-radius: 6px; background: #161b22; display: block; max-width: 100%; touch-action: none; }
-  .controls { margin-top: 14px; display: flex; gap: 10px; }
-  button { background: #21262d; color: #e6edf3; border: 1px solid #30363d; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; }
+  body {
+    background: radial-gradient(circle at 50% -20%, rgba(196,168,130,.10), transparent 35%), #0d1117;
+    color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+    padding: 12px; overflow-x: hidden;
+  }
+  h1 { font-size: clamp(22px, 5vw, 30px); font-weight: 800; margin: 52px 0 6px; letter-spacing: .8px; color: #C4A882; }
+  .subtitle { font-size: 13px; color: #8b949e; margin-bottom: 12px; text-align: center; max-width: 460px; line-height: 1.45; }
+  .scores { display: flex; gap: 22px; margin-bottom: 12px; font-size: 14px; flex-wrap: wrap; justify-content: center; }
+  .scores span { color: #8b949e; }
+  .scores strong { color: #00D4AA; font-weight: 700; }
+  canvas {
+    border: 1px solid rgba(196,168,130,.22);
+    border-radius: 18px;
+    background: #111820;
+    display: block; max-width: 100%; touch-action: none;
+    box-shadow: 0 24px 80px rgba(0,0,0,.42), inset 0 0 0 1px rgba(255,255,255,.03);
+  }
+  .controls { margin-top: 14px; display: flex; gap: 10px; justify-content: center; }
+  button { background: #21262d; color: #e6edf3; border: 1px solid #30363d; padding: 8px 20px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: .15s; }
+  button:hover { background: #30363d; border-color: #8b949e; }
   button.primary { background: #00D4AA22; border-color: #00D4AA55; color: #00D4AA; }
-  .game-over { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(13,17,23,0.95); border: 1px solid #30363d; border-radius: 12px; padding: 28px; display: none; }
+  .game-over {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center; background: rgba(13,17,23,0.94); backdrop-filter: blur(10px);
+    border: 1px solid rgba(196,168,130,.24); border-radius: 16px; padding: 28px 34px;
+    display: none; box-shadow: 0 18px 60px rgba(0,0,0,.45);
+  }
+  .game-over h2 { font-size: 23px; margin-bottom: 8px; }
+  .game-over p { color: #8b949e; margin-bottom: 16px; }
   .canvas-wrap { position: relative; }
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
 <h1>Roast Runner</h1>
-<p class="subtitle">Keep the beans moving through the roaster! Dodge hotspots, control airflow, and eject each batch at the perfect roast level.</p>
+<p class="subtitle">Steer the bean through the roasting drum. Avoid scorching hotspots and ride the airflow to a clean finish.</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
   <span>High: <strong id="high">0</strong></span>
-  <span>Speed: <strong id="speed">1x</strong></span>
+  <span>Roast: <strong id="roast">Medium</strong></span>
+  <span>Speed: <strong id="speed">1.0x</strong></span>
 </div>
 <div class="canvas-wrap">
-  <canvas id="game" width="360" height="540"></canvas>
+  <canvas id="game" width="380" height="560"></canvas>
   <div class="game-over" id="over">
-    <h2>Too Hot!</h2>
+    <h2>Scorched Batch</h2>
     <p>Score: <strong id="final">0</strong></p>
-    <button class="primary" onclick="startGame()">Retry</button>
+    <button class="primary" onclick="startGame()">Roast Again</button>
   </div>
 </div>
 <div class="controls">
-  <button onclick="startGame()">New Game</button>
+  <button onclick="startGame()">New Batch</button>
   <button onclick="togglePause()">Pause</button>
 </div>
 <script>
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-let W = 360, H = 540;
+const W = 380, H = 560;
 let score = 0, high = parseInt(localStorage.getItem('gh_coffee-2026-05-02') || '0');
-let player, obstacles = [], particles = [], running = false, paused = false, speedMult = 1;
+let player, obstacles = [], sparks = [], running = false, paused = false, speedMult = 1;
+let tick = 0;
 document.getElementById('high').textContent = high;
 
 function resize() {
-  const maxW = Math.min(window.innerWidth - 32, 360);
-  const scale = maxW / 360;
+  const maxW = Math.min(window.innerWidth - 32, 380);
+  const scale = maxW / 380;
   canvas.style.width = maxW + 'px';
-  canvas.style.height = (540 * scale) + 'px';
+  canvas.style.height = (560 * scale) + 'px';
 }
 resize(); window.addEventListener('resize', resize);
 
 let keys = {};
-window.addEventListener('keydown', e => { keys[e.key] = true; if (['ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault(); });
+window.addEventListener('keydown', e => { keys[e.key] = true; if (['ArrowLeft','ArrowRight','a','d','A','D'].includes(e.key)) e.preventDefault(); });
 window.addEventListener('keyup', e => keys[e.key] = false);
 canvas.addEventListener('touchstart', e => { e.preventDefault(); const r = canvas.getBoundingClientRect(); const x = (e.touches[0].clientX - r.left) * (W/r.width); keys['ArrowLeft'] = x < W/2; keys['ArrowRight'] = x >= W/2; });
 canvas.addEventListener('touchend', e => { e.preventDefault(); keys['ArrowLeft'] = false; keys['ArrowRight'] = false; });
 
 function spawnObstacle() {
-  const w = 40 + Math.random() * 50;
-  const x = Math.random() * (W - w);
-  obstacles.push({ x, y: -30, w, h: 20, speed: 2.5 + speedMult });
+  const w = 34 + Math.random() * 56;
+  const x = 18 + Math.random() * (W - w - 36);
+  obstacles.push({ x, y: -36, w, h: 24 + Math.random() * 10, speed: 2.35 + speedMult * .9, phase: Math.random() * Math.PI * 2 });
+}
+
+function spawnSpark(x, y, color = '#ff9d4a') {
+  for (let i = 0; i < 6; i++) sparks.push({ x, y, vx:(Math.random()-.5)*2.6, vy:(Math.random()-.5)*2.6, life:1, color });
 }
 
 function update() {
   if (!running || paused) return;
-  if (keys['ArrowLeft'] || keys['a']) player.x -= player.speed;
-  if (keys['ArrowRight'] || keys['d']) player.x += player.speed;
-  player.x = Math.max(0, Math.min(W - player.w, player.x));
+  tick++;
+  if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= player.speed;
+  if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += player.speed;
+  player.x = Math.max(22, Math.min(W - player.w - 22, player.x));
+  player.y = H - 80 + Math.sin(tick / 18) * 3;
+
   score++;
-  speedMult = 1 + Math.floor(score / 300) * 0.3;
+  speedMult = 1 + Math.floor(score / 280) * 0.25;
+  const roastLevel = score < 220 ? 'Light' : score < 520 ? 'Medium' : score < 880 ? 'Dark' : 'French';
   document.getElementById('speed').textContent = speedMult.toFixed(1) + 'x';
-  if (Math.random() < 0.02 + speedMult * 0.005) spawnObstacle();
+  document.getElementById('roast').textContent = roastLevel;
+
+  if (Math.random() < 0.024 + speedMult * 0.006) spawnObstacle();
+  if (Math.random() < 0.08) spawnSpark(Math.random()*W, Math.random()*H, Math.random() < .5 ? '#C4A882' : '#00D4AA');
+
   for (let i = obstacles.length - 1; i >= 0; i--) {
-    const ob = obstacles[i]; ob.y += ob.speed;
-    if (ob.y > H) { obstacles.splice(i, 1); continue; }
+    const ob = obstacles[i];
+    ob.y += ob.speed;
+    ob.x += Math.sin(tick/30 + ob.phase) * .55;
+    if (ob.y > H + 40) { obstacles.splice(i, 1); continue; }
     if (player.x < ob.x + ob.w && player.x + player.w > ob.x && player.y < ob.y + ob.h && player.y + player.h > ob.y) {
+      spawnSpark(player.x + player.w/2, player.y + player.h/2, '#ff5a3d');
       endGame(); return;
     }
+  }
+
+  for (let i = sparks.length - 1; i >= 0; i--) {
+    const p = sparks[i]; p.x += p.vx; p.y += p.vy; p.vy -= .015; p.life -= .028;
+    if (p.life <= 0) sparks.splice(i, 1);
   }
   document.getElementById('score').textContent = score;
 }
 
-// Preload game sprites
-const RR_SPRITES = {};
-const RR_SPRITE_SRC = {
-  bean: '../assets/images/game-assets/rr-bean-medium.png',
-  hotspot: '../assets/images/game-assets/rr-hotspot.png'
-};
-Object.keys(RR_SPRITE_SRC).forEach(key => {
-  const img = new Image(); img.src = RR_SPRITE_SRC[key]; RR_SPRITES[key] = img;
-});
+function drawDrum() {
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#111923'); bg.addColorStop(.5, '#1a1613'); bg.addColorStop(1, '#0d1117');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+
+  const drum = ctx.createRadialGradient(W/2, H/2, 30, W/2, H/2, 300);
+  drum.addColorStop(0, 'rgba(196,168,130,.12)'); drum.addColorStop(.55, 'rgba(97,57,31,.18)'); drum.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = drum; ctx.fillRect(0,0,W,H);
+
+  ctx.save(); ctx.translate(W/2, H/2); ctx.rotate(tick/260);
+  ctx.strokeStyle = 'rgba(196,168,130,.08)'; ctx.lineWidth = 18;
+  for (let r = 120; r < 310; r += 54) { ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(0,212,170,.06)'; ctx.lineWidth = 2;
+  for (let a = 0; a < Math.PI*2; a += Math.PI/6) { ctx.beginPath(); ctx.moveTo(Math.cos(a)*60, Math.sin(a)*60); ctx.lineTo(Math.cos(a)*300, Math.sin(a)*300); ctx.stroke(); }
+  ctx.restore();
+
+  ctx.fillStyle = 'rgba(13,17,23,.24)'; ctx.fillRect(0,0,24,H); ctx.fillRect(W-24,0,24,H);
+}
+
+function drawBean(x, y, w, h, roast = score) {
+  ctx.save(); ctx.translate(x + w/2, y + h/2); ctx.rotate(Math.sin(tick/16) * .18);
+  const r = Math.max(w,h) / 2;
+  const g = ctx.createRadialGradient(-r*.3, -r*.45, 2, 0, 0, r*1.25);
+  const start = roast < 220 ? '#d2a36b' : roast < 520 ? '#a96535' : roast < 880 ? '#6f351c' : '#2f160f';
+  g.addColorStop(0, '#f0c68b'); g.addColorStop(.42, start); g.addColorStop(1, '#170a06');
+  ctx.shadowColor = 'rgba(196,168,130,.42)'; ctx.shadowBlur = 18;
+  ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(0, 0, w*.43, h*.58, 0, 0, Math.PI*2); ctx.fill();
+  ctx.shadowBlur = 0; ctx.strokeStyle = 'rgba(255,229,196,.22)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(-3, -h*.42); ctx.bezierCurveTo(8, -h*.18, -9, h*.16, 3, h*.42); ctx.stroke();
+  ctx.restore();
+}
+
+function drawHotspot(ob) {
+  const cx = ob.x + ob.w/2, cy = ob.y + ob.h/2;
+  const glow = ctx.createRadialGradient(cx, cy, 2, cx, cy, ob.w*.9);
+  glow.addColorStop(0, 'rgba(255,225,120,.95)'); glow.addColorStop(.35, 'rgba(255,112,67,.65)'); glow.addColorStop(1, 'rgba(255,68,54,0)');
+  ctx.fillStyle = glow; ctx.beginPath(); ctx.ellipse(cx, cy, ob.w*.75, ob.h*1.45, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#ff7043'; ctx.beginPath(); ctx.roundRect(ob.x, ob.y, ob.w, ob.h, 12); ctx.fill();
+  ctx.fillStyle = '#ffd27a'; ctx.beginPath(); ctx.roundRect(ob.x+5, ob.y+4, ob.w-10, Math.max(5, ob.h*.28), 8); ctx.fill();
+}
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
-  // Draw player as coffee bean
-  const beanImg = RR_SPRITES.bean;
-  if (beanImg && beanImg.complete && beanImg.naturalWidth) {
-    ctx.drawImage(beanImg, player.x, player.y, player.w, player.h);
-  } else {
-    ctx.fillStyle = '#bf360c';
-    ctx.fillRect(player.x, player.y, player.w, player.h);
-  }
-  // Draw obstacles as hotspots
-  const hotImg = RR_SPRITES.hotspot;
-  for (const ob of obstacles) {
-    if (hotImg && hotImg.complete && hotImg.naturalWidth) {
-      ctx.drawImage(hotImg, ob.x, ob.y, ob.w, ob.h);
-    } else {
-      ctx.fillStyle = '#ff7043';
-      ctx.fillRect(ob.x, ob.y, ob.w, ob.h);
-    }
-  }
+  drawDrum();
+  for (const ob of obstacles) drawHotspot(ob);
+  for (const p of sparks) { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, 1.5 + p.life*2.5, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1; }
+  drawBean(player.x, player.y, player.w, player.h);
+
+  ctx.fillStyle = 'rgba(230,237,243,.72)'; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('cool air', 70, H - 24); ctx.fillText('hot zone', W - 70, 28);
 }
 
 function loop() { update(); draw(); if (running) requestAnimationFrame(loop); }
-function startGame() { score = 0; speedMult = 1; player = { x: W/2 - 18, y: H - 60, w: 36, h: 36, speed: 5 }; obstacles = []; paused = false; running = true; document.getElementById('over').style.display = 'none'; loop(); }
+function startGame() {
+  score = 0; speedMult = 1; tick = 0;
+  player = { x: W/2 - 21, y: H - 80, w: 42, h: 46, speed: 5.3 };
+  obstacles = []; sparks = []; paused = false; running = true;
+  document.getElementById('over').style.display = 'none';
+  loop();
+}
 function togglePause() { if (running) paused = !paused; }
-function endGame() { running = false; if (score > high) { high = score; localStorage.setItem('gh_coffee-2026-05-02', high); document.getElementById('high').textContent = high; } document.getElementById('final').textContent = score; document.getElementById('over').style.display = 'block'; }
+function endGame() {
+  running = false;
+  if (score > high) { high = score; localStorage.setItem('gh_coffee-2026-05-02', high); document.getElementById('high').textContent = high; }
+  document.getElementById('final').textContent = score;
+  document.getElementById('over').style.display = 'block';
+}
 startGame();
 </script>
+<script src="../js/game-header.js"></script>
 </body>
 </html>
