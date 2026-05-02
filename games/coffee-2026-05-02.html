@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roast Runner</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 8px; }
+  h1 { font-size: clamp(20px, 5vw, 28px); font-weight: 700; margin: 48px 0 6px; letter-spacing: 1px; color: #C4A882; }
+  .subtitle { font-size: 13px; color: #8b949e; margin-bottom: 12px; text-align: center; max-width: 420px; }
+  .scores { display: flex; gap: 24px; margin-bottom: 12px; font-size: 15px; }
+  .scores strong { color: #00D4AA; }
+  canvas { border: 2px solid #30363d; border-radius: 6px; background: #161b22; display: block; max-width: 100%; touch-action: none; }
+  .controls { margin-top: 14px; display: flex; gap: 10px; }
+  button { background: #21262d; color: #e6edf3; border: 1px solid #30363d; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; }
+  button.primary { background: #00D4AA22; border-color: #00D4AA55; color: #00D4AA; }
+  .game-over { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(13,17,23,0.95); border: 1px solid #30363d; border-radius: 12px; padding: 28px; display: none; }
+  .canvas-wrap { position: relative; }
+</style>
+</head>
+<body>
+<script src="../js/game-header.js"></script>
+<h1>🔥 Roast Runner</h1>
+<p class="subtitle">Keep the beans moving through the roaster! Dodge hotspots, control airflow, and eject each batch at the perfect roast level.</p>
+<div class="scores">
+  <span>Score: <strong id="score">0</strong></span>
+  <span>High: <strong id="high">0</strong></span>
+  <span>Speed: <strong id="speed">1x</strong></span>
+</div>
+<div class="canvas-wrap">
+  <canvas id="game" width="360" height="540"></canvas>
+  <div class="game-over" id="over">
+    <h2>Too Hot!</h2>
+    <p>Score: <strong id="final">0</strong></p>
+    <button class="primary" onclick="startGame()">Retry</button>
+  </div>
+</div>
+<div class="controls">
+  <button onclick="startGame()">New Game</button>
+  <button onclick="togglePause()">Pause</button>
+</div>
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+let W = 360, H = 540;
+let score = 0, high = parseInt(localStorage.getItem('gh_coffee-2026-05-02') || '0');
+let player, obstacles = [], particles = [], running = false, paused = false, speedMult = 1;
+document.getElementById('high').textContent = high;
+
+function resize() {
+  const maxW = Math.min(window.innerWidth - 32, 360);
+  const scale = maxW / 360;
+  canvas.style.width = maxW + 'px';
+  canvas.style.height = (540 * scale) + 'px';
+}
+resize(); window.addEventListener('resize', resize);
+
+let keys = {};
+window.addEventListener('keydown', e => { keys[e.key] = true; if (['ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault(); });
+window.addEventListener('keyup', e => keys[e.key] = false);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); const r = canvas.getBoundingClientRect(); const x = (e.touches[0].clientX - r.left) * (W/r.width); keys['ArrowLeft'] = x < W/2; keys['ArrowRight'] = x >= W/2; });
+canvas.addEventListener('touchend', e => { e.preventDefault(); keys['ArrowLeft'] = false; keys['ArrowRight'] = false; });
+
+function spawnObstacle() {
+  const w = 40 + Math.random() * 50;
+  const x = Math.random() * (W - w);
+  obstacles.push({ x, y: -30, w, h: 20, speed: 2.5 + speedMult });
+}
+
+function update() {
+  if (!running || paused) return;
+  if (keys['ArrowLeft'] || keys['a']) player.x -= player.speed;
+  if (keys['ArrowRight'] || keys['d']) player.x += player.speed;
+  player.x = Math.max(0, Math.min(W - player.w, player.x));
+  score++;
+  speedMult = 1 + Math.floor(score / 300) * 0.3;
+  document.getElementById('speed').textContent = speedMult.toFixed(1) + 'x';
+  if (Math.random() < 0.02 + speedMult * 0.005) spawnObstacle();
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    const ob = obstacles[i]; ob.y += ob.speed;
+    if (ob.y > H) { obstacles.splice(i, 1); continue; }
+    if (player.x < ob.x + ob.w && player.x + player.w > ob.x && player.y < ob.y + ob.h && player.y + player.h > ob.y) {
+      endGame(); return;
+    }
+  }
+  document.getElementById('score').textContent = score;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#bf360c';
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+  ctx.fillStyle = '#ff7043';
+  for (const ob of obstacles) ctx.fillRect(ob.x, ob.y, ob.w, ob.h);
+}
+
+function loop() { update(); draw(); if (running) requestAnimationFrame(loop); }
+function startGame() { score = 0; speedMult = 1; player = { x: W/2 - 18, y: H - 60, w: 36, h: 36, speed: 5 }; obstacles = []; paused = false; running = true; document.getElementById('over').style.display = 'none'; loop(); }
+function togglePause() { if (running) paused = !paused; }
+function endGame() { running = false; if (score > high) { high = score; localStorage.setItem('gh_coffee-2026-05-02', high); document.getElementById('high').textContent = high; } document.getElementById('final').textContent = score; document.getElementById('over').style.display = 'block'; }
+startGame();
+</script>
+</body>
+</html>

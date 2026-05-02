@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-02',
+    title: 'Roast Runner',
+    description: 'Keep the beans moving through the roaster! Dodge hotspots, control airflow, and eject each batch at the perfect roast level.',
+    category: 'action',
+    thumbnail: 'linear-gradient(135deg, #bf360c 0%, #ff7043 100%)',
+    file: 'games/coffee-2026-05-02.html',
+    difficulty: 'Hard',
+    emoji: '🔥',
+    createdAt: '2026-05-02',
+  },
+
+  {
     id: 'caffeine-catch',
     title: 'Caffeine Catch',
     description: 'Catch falling coffee beans, cups, and espresso shots in your mug. But watch out for decaf and ice cubes! Speed increases as you level up.',
