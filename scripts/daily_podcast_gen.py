@@ -2,6 +2,7 @@
 """
 Daily podcast generator for FakeCast.
 Fetches recent news, generates scripts, produces audio, updates site data.
+Tracks covered stories across runs to avoid repeating content.
 
 Usage:
     python daily_podcast_gen.py --show ai
@@ -14,7 +15,7 @@ import os
 import subprocess
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 import requests
@@ -22,6 +23,54 @@ import requests
 SITE_DIR = Path(__file__).parent.parent
 FAKECAST_DIR = SITE_DIR / "fakecast"
 DATA_FILE = SITE_DIR / "js" / "fakecast-data.js"
+STATE_FILE = SITE_DIR / "scripts" / ".fakecast_state.json"
+
+# How many days to remember covered stories
+STORY_MEMORY_DAYS = 60
+
+
+def load_state():
+    """Load persisted state of covered stories."""
+    if STATE_FILE.exists():
+        try:
+            with open(STATE_FILE) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"ai": [], "coffee": []}
+
+
+def save_state(state):
+    """Persist state of covered stories."""
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=STORY_MEMORY_DAYS)).isoformat()
+    # Trim old entries
+    for show in state:
+        state[show] = [s for s in state[show] if s.get("date", "") > cutoff]
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f, indent=2)
+
+
+def is_story_covered(state, show, title, url):
+    """Check if a story has been covered in recent memory."""
+    title_norm = title.lower().strip()
+    url_norm = (url or "").lower().strip()
+    for s in state.get(show, []):
+        if s.get("title", "").lower().strip() == title_norm:
+            return True
+        if url_norm and s.get("url", "").lower().strip() == url_norm:
+            return True
+    return False
+
+
+def record_stories(state, show, stories):
+    """Record stories as covered."""
+    today = datetime.now(timezone.utc).isoformat()
+    for st in stories:
+        state.setdefault(show, []).append({
+            "title": st.get("title", ""),
+            "url": st.get("url", ""),
+            "date": today,
+        })
 
 
 def fetch_hn_stories(query, limit=10):
@@ -210,6 +259,10 @@ def run_show(show):
 
     print(f"\n=== Generating {show.upper()} episode for {today_str} ===")
 
+    # Load state for deduplication
+    state = load_state()
+    print(f"Loaded state: {len(state.get(show, []))} stories in recent memory")
+
     # Fetch news
     if show == "ai":
         queries = ["opencode cli", "github copilot", "claude code anthropic", "openai codex", "foundation model llama mistral"]
@@ -222,24 +275,41 @@ def run_show(show):
 
     all_news = []
     for q in queries:
-        all_news.extend(fetch_hn_stories(q, limit=5))
+        all_news.extend(fetch_hn_stories(q, limit=8))
 
-    # Deduplicate by title
+    # Deduplicate by title within this run
     seen = set()
     unique_news = []
     for n in all_news:
-        if n["title"] not in seen and len(unique_news) < 6:
+        if n["title"] not in seen:
             seen.add(n["title"])
             unique_news.append(n)
 
-    if not unique_news:
-        print("No news found, using fallback topics")
-        unique_news = [{"title": "Latest developments in " + show, "url": ""}]
+    # Filter out already-covered stories
+    fresh_news = [n for n in unique_news if not is_story_covered(state, show, n["title"], n["url"])]
+    print(f"After dedup: {len(unique_news)} unique, {len(fresh_news)} fresh stories")
 
-    print(f"Found {len(unique_news)} news items")
+    # If not enough fresh stories, keep the most recent ones even if covered,
+    # but prefer fresh ones
+    if len(fresh_news) < 3 and unique_news:
+        # Add back covered stories, newest first (Algolia returns by date)
+        covered_news = [n for n in unique_news if n not in fresh_news]
+        fresh_news = (fresh_news + covered_news)[:6]
+        print(f"Using {len(fresh_news)} stories (some may be repeats from older episodes)")
+
+    if not fresh_news:
+        print("No news found, using fallback topics")
+        fresh_news = [{"title": "Latest developments in " + show, "url": ""}]
+
+    # Use up to 4 stories for the script
+    script_news = fresh_news[:4]
+
+    # Record all used stories (including repeats, so we know when they were last used)
+    record_stories(state, show, fresh_news[:6])
+    save_state(state)
 
     # Generate script
-    script = generate_script(show, unique_news, hosts)
+    script = generate_script(show, script_news, hosts)
     script_path = FAKECAST_DIR / f"{show}-daily-{today_str}.json"
     with open(script_path, 'w') as f:
         json.dump(script, f, indent=2)
@@ -260,9 +330,9 @@ def run_show(show):
 
     # Update data file
     ep_info = {
-        "title": f"Daily Briefing: {unique_news[0]['title']}",
+        "title": f"Daily Briefing: {script_news[0]['title']}",
         "date": today_str,
-        "description": f"Today's episode covers {len(unique_news)} stories including {', '.join(n['title'] for n in unique_news[:3])}.",
+        "description": f"Today's episode covers {len(script_news)} stories including {', '.join(n['title'] for n in script_news[:3])}.",
         "audioSrc": f"fakecast/{show}-daily-{today_str}.mp3",
         "duration": duration
     }
