@@ -24,7 +24,7 @@ const GAMES = [
   {
     id: 'snake',
     title: 'Snake',
-    description: 'The classic snake game! Eat food to grow longer, but don"t hit the walls or your own tail. Simple yet addictive.',
+    description: 'The classic snake game! Eat food to grow longer, but don\'t hit the walls or your own tail. Simple yet addictive.',
     category: 'classic',
     thumbnail: 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)',
     file: 'games/snake.html',
