@@ -512,6 +512,8 @@ def update_games_data(game_info):
 
     data_str = match.group(1)
     json_str = data_str.replace("'", '"').replace('true', 'true').replace('false', 'false')
+    # Quote bare-word object keys so it's valid JSON
+    json_str = re.sub(r'([{,]\s*)([a-zA-Z_]\w*)\s*:', r'\1"\2":', json_str)
     json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
 
     try:

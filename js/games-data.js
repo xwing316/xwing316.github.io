@@ -1,8 +1,15 @@
-// ============================================
-// games-data.js — Game definitions dataset
-// ============================================
-
 const GAMES = [
+  {
+    id: 'coffee-20260502',
+    title: 'Grind Master',
+    description: 'Match three or more coffee beans of the same roast level to grind them into the perfect blend. Chain combos for bonus points!',
+    category: 'puzzle',
+    thumbnail: 'linear-gradient(135deg, #5d4037 0%, #a1887f 100%)',
+    file: 'games/coffee-20260502.html',
+    difficulty: 'Medium',
+    emoji: '🔧',
+    createdAt: '2026-05-02',
+  },
   {
     id: 'caffeine-catch',
     title: 'Caffeine Catch',
@@ -12,18 +19,18 @@ const GAMES = [
     file: 'games/caffeine-catch.html',
     difficulty: 'Medium',
     emoji: '☕',
-    createdAt: '2026-05-01'
+    createdAt: '2026-05-01',
   },
   {
     id: 'snake',
     title: 'Snake',
-    description: 'The classic snake game! Eat food to grow longer, but don\'t hit the walls or your own tail. Simple yet addictive.',
+    description: 'The classic snake game! Eat food to grow longer, but don"t hit the walls or your own tail. Simple yet addictive.',
     category: 'classic',
     thumbnail: 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)',
     file: 'games/snake.html',
     difficulty: 'Easy',
     emoji: '🐍',
-    createdAt: '2026-04-15'
+    createdAt: '2026-04-15',
   },
   {
     id: 'memory-match',
@@ -34,7 +41,7 @@ const GAMES = [
     file: 'games/memory.html',
     difficulty: 'Easy',
     emoji: '🃏',
-    createdAt: '2026-04-14'
+    createdAt: '2026-04-14',
   },
   {
     id: 'pong',
@@ -45,7 +52,7 @@ const GAMES = [
     file: 'games/pong.html',
     difficulty: 'Medium',
     emoji: '🏓',
-    createdAt: '2026-04-13'
+    createdAt: '2026-04-13',
   },
   {
     id: 'flappy-bird',
@@ -56,7 +63,7 @@ const GAMES = [
     file: 'games/flappy.html',
     difficulty: 'Hard',
     emoji: '🐦',
-    createdAt: '2026-04-12'
+    createdAt: '2026-04-12',
   },
   {
     id: 'tic-tac-toe',
@@ -67,7 +74,7 @@ const GAMES = [
     file: 'games/tictactoe.html',
     difficulty: 'Easy',
     emoji: '❌',
-    createdAt: '2026-04-11'
+    createdAt: '2026-04-11',
   },
   {
     id: 'breakout',
@@ -78,18 +85,18 @@ const GAMES = [
     file: 'games/breakout.html',
     difficulty: 'Medium',
     emoji: '🧱',
-    createdAt: '2026-04-10'
+    createdAt: '2026-04-10',
   },
   {
     id: '2048',
     title: '2048',
-    description: 'Slide numbered tiles to combine them and reach the elusive 2048 tile. A puzzle that\'s easy to learn, hard to master.',
+    description: 'Slide numbered tiles to combine them and reach the elusive 2048 tile. A puzzle that"s easy to learn, hard to master.',
     category: 'puzzle',
     thumbnail: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 100%)',
     file: 'games/2048.html',
     difficulty: 'Medium',
     emoji: '🔢',
-    createdAt: '2026-04-09'
+    createdAt: '2026-04-09',
   },
   {
     id: 'space-invaders',
@@ -100,11 +107,10 @@ const GAMES = [
     file: 'games/invaders.html',
     difficulty: 'Hard',
     emoji: '👾',
-    createdAt: '2026-04-08'
-  }
+    createdAt: '2026-04-08',
+  },
 ];
 
-// Category metadata for filters
 const GAME_CATEGORIES = {
   all:      { label: 'All Games',    icon: '🎮' },
   puzzle:   { label: 'Puzzle',       icon: '🧩' },
@@ -113,5 +119,4 @@ const GAME_CATEGORIES = {
   classic:  { label: 'Classic',      icon: '🕹️' }
 };
 
-// Difficulty ranking for sorting
 const DIFFICULTY_ORDER = { 'Easy': 1, 'Medium': 2, 'Hard': 3 };
