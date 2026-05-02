@@ -51,6 +51,17 @@ function renderShow(showKey, containerId) {
     return;
   }
 
+  // Add show cover art to the show header
+  const showHeader = container.parentElement?.querySelector('.fakecast-show__header');
+  if (showHeader && show.coverArt && !showHeader.querySelector('.fakecast-show__art')) {
+    const artImg = document.createElement('img');
+    artImg.src = show.coverArt;
+    artImg.alt = `${show.title} cover art`;
+    artImg.className = 'fakecast-show__art';
+    artImg.loading = 'lazy';
+    showHeader.insertBefore(artImg, showHeader.firstChild);
+  }
+
   container.innerHTML = show.episodes.map((ep, idx) => createEpisodeCard(ep, idx + 1, showKey)).join('');
 
   // Initialize audio players after rendering
@@ -68,21 +79,29 @@ function createEpisodeCard(ep, number, showKey) {
     day: 'numeric'
   });
 
+  const show = FAKECAST_DATA[showKey];
+  const coverArt = show.coverArt
+    ? `<img src="${show.coverArt}" alt="${escapeHtml(show.title)} cover art" class="episode-card__cover" loading="lazy">`
+    : `<div class="episode-card__cover episode-card__cover--placeholder">${show.emoji}</div>`;
+
   return `
     <article class="episode-card">
-      <div class="episode-card__header">
-        <div class="episode-card__number">EP${number}</div>
-        <div class="episode-card__meta">
-          <h3 class="episode-card__title">${escapeHtml(ep.title)}</h3>
-          <span class="episode-card__date">${dateStr} · ${formatDuration(ep.duration)}</span>
+      ${coverArt}
+      <div class="episode-card__body">
+        <div class="episode-card__header">
+          <div class="episode-card__number">EP${number}</div>
+          <div class="episode-card__meta">
+            <h3 class="episode-card__title">${escapeHtml(ep.title)}</h3>
+            <span class="episode-card__date">${dateStr} · ${formatDuration(ep.duration)}</span>
+          </div>
         </div>
-      </div>
-      <p class="episode-card__desc">${escapeHtml(ep.description)}</p>
-      <div class="episode-card__player">
-        <audio id="${playerId}" preload="metadata" controls style="width:100%;">
-          <source src="${ep.audioSrc}" type="audio/mpeg">
-          Your browser does not support the audio element.
-        </audio>
+        <p class="episode-card__desc">${escapeHtml(ep.description)}</p>
+        <div class="episode-card__player">
+          <audio id="${playerId}" preload="metadata" controls style="width:100%;">
+            <source src="${ep.audioSrc}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
       </div>
     </article>
   `;

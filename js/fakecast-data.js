@@ -3,6 +3,7 @@ const FAKECAST_DATA = {
     title: "It's Just You and Me..... And AI",
     emoji: "🤖",
     hosts: "Alex & Jordan",
+    coverArt: "assets/images/podcast-ai.png",
     episodes: [
       {
         title: "AGENTS.md Standards, Copilot Token Billing, and Qwen's OCR Rise",
@@ -31,6 +32,7 @@ const FAKECAST_DATA = {
     title: "The Daily Grind",
     emoji: "☕",
     hosts: "Milo & Riley",
+    coverArt: "assets/images/podcast-coffee.png",
     episodes: [
       {
         title: "Coffee at 50-Year Highs, Colombian Farmers Switch to Cacao",

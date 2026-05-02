@@ -79,8 +79,14 @@ function createGameCard(game, index) {
   card.style.animationDelay = `${index * 0.05}s`;
   card.dataset.category = game.category;
 
+  // Auto-detect: if thumbnail ends with an image extension, use background-image; otherwise treat as CSS gradient
+  const isImage = /\.(png|jpg|jpeg|webp|svg|gif)($|\?)/i.test(game.thumbnail);
+  const thumbStyle = isImage
+    ? `background-image: url('${game.thumbnail}'); background-size: cover; background-position: center;`
+    : `background: ${game.thumbnail};`;
+
   card.innerHTML = `
-    <div class="game-card__thumb" style="background: ${game.thumbnail};">
+    <div class="game-card__thumb" style="${thumbStyle}">
       <span class="game-card__emoji">${game.emoji}</span>
       <span class="game-card__badge">${game.difficulty}</span>
     </div>
