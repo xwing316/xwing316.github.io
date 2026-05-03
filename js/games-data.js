@@ -4,10 +4,10 @@ const GAMES = [
     title: 'Milk Steamer',
     description: 'Steam milk to microfoam perfection. Watch the thermometer and stop at exactly the right temperature -- no scorching allowed!',
     category: 'action',
-    thumbnail: 'linear-gradient(135deg, #f9a825 0%, #fff59d 100%)',
+    thumbnail: 'assets/images/game-coffee-2026-05-03.png',
     file: 'games/coffee-2026-05-03.html',
     difficulty: 'Medium',
-    emoji: '🥛',
+    emoji: '',
     createdAt: '2026-05-03',
   },
 

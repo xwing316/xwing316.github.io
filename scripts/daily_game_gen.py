@@ -14,13 +14,20 @@ import random
 import re
 import subprocess
 import sys
+import base64
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+
+import requests
 
 SITE_DIR = Path(__file__).parent.parent
 GAMES_DIR = SITE_DIR / "games"
 DATA_FILE = SITE_DIR / "js" / "games-data.js"
 STATE_FILE = SITE_DIR / "scripts" / ".gamelab_state.json"
+IMAGES_DIR = SITE_DIR / "assets" / "images"
+FLUX_API_URL = "http://192.168.86.2:3033/v1/images/generations"
+FLUX_MODEL = "flux.2-klein-9b"
+FLUX_SIZE = "1024x768"
 
 # How many days to avoid reusing the same archetype
 ARCHETYPE_COOLDOWN_DAYS = 14
@@ -191,6 +198,71 @@ def pick_archetype(state):
             return oldest
         return random.choice(GAME_ARCHETYPES)
     return random.choice(available)
+
+
+def build_prompt(archetype):
+    """Construct a LocalAI Flux prompt following xwing-site-image-design rules."""
+    name = archetype["name"]
+    desc = archetype["desc"]
+    mechanic = archetype.get("mechanic", "catch")
+
+    # Subject description derived from the game theme
+    subject_fragments = {
+        "catch": f"a barista catching falling coffee beans and espresso cups",
+        "timing": f"a pressure gauge and espresso machine with steam",
+        "match3": f"glowing coffee beans in a matching grid pattern",
+        "trace": f"a hand pouring latte art with swirling milk patterns",
+        "dodge": f"coffee beans rushing through a roasting machine with flames",
+        "td": f"tower defense filters protecting a cold brew path",
+        "memory": f"three coffee cups in a triangle cupping setup",
+        "shooter": f"an espresso machine defending against burnt beans",
+        "stack": f"stacked coffee filters forming a tower",
+    }
+    subject = subject_fragments.get(mechanic, f"coffee themed arcade game scene")
+
+    prompt = (
+        f"{subject}, "
+        f"dark navy background, high contrast, cinematic lighting, "
+        f"clean modern aesthetic, no text overlay, flat or semi-flat illustration style, "
+        f"warm coffee brown and golden caramel tones with vibrant teal and cyan accents, "
+        f"game-art style illustration, bold vibrant colors, no text, no letters, no words"
+    )
+    return prompt
+
+
+def generate_thumbnail(archetype, game_id):
+    """Generate a 1024x768 PNG thumbnail via LocalAI Flux and save to assets/images."""
+    prompt = build_prompt(archetype)
+    output_path = IMAGES_DIR / f"game-{game_id}.png"
+
+    print(f"Generating Flux thumbnail for {game_id}...")
+    print(f"Prompt: {prompt}")
+
+    try:
+        resp = requests.post(
+            FLUX_API_URL,
+            json={
+                "model": FLUX_MODEL,
+                "prompt": prompt,
+                "size": FLUX_SIZE,
+                "n": 1,
+                "response_format": "b64_json",
+            },
+            timeout=300,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        b64 = data["data"][0]["b64_json"]
+        img_bytes = base64.b64decode(b64)
+        with open(output_path, "wb") as f:
+            f.write(img_bytes)
+        print(f"Thumbnail saved: {output_path} ({len(img_bytes)} bytes)")
+        return f"assets/images/game-{game_id}.png"
+    except Exception as e:
+        print(f"WARNING: Thumbnail generation failed: {e}")
+        # Fallback to gradient if image gen fails
+        g1, g2 = archetype["gradient"]
+        return f"linear-gradient(135deg, {g1} 0%, {g2} 100%)"
 
 
 # ── Game mechanic generators ─────────────────────────────────────────────
@@ -1172,21 +1244,22 @@ def generate_game_html(archetype, game_id, date_str):
     return generator(archetype, game_id, date_str)
 
 
-def update_games_data(game_id, title, category, difficulty, emoji, desc, gradient, date_str):
+def update_games_data(game_id, title, category, difficulty, emoji, desc, thumbnail_path, date_str):
     """Update games-data.js by prepending the new game entry."""
     with open(DATA_FILE) as f:
         content = f.read()
 
     escaped_desc = desc.replace("'", "\\'")
+    # New generated games use PNG thumbnail and blank emoji
     new_entry = f"""  {{
     id: '{game_id}',
     title: '{title}',
     description: '{escaped_desc}',
     category: '{category}',
-    thumbnail: 'linear-gradient(135deg, {gradient[0]} 0%, {gradient[1]} 100%)',
+    thumbnail: '{thumbnail_path}',
     file: 'games/{game_id}.html',
     difficulty: '{difficulty}',
-    emoji: '{emoji}',
+    emoji: '',
     createdAt: '{date_str}',
   }},
 """
@@ -1234,6 +1307,9 @@ def main():
     with open(game_path, 'w') as f:
         f.write(html)
 
+    # Generate thumbnail via LocalAI Flux
+    thumbnail_path = generate_thumbnail(archetype, game_id)
+
     # Update data
     update_games_data(
         game_id=game_id,
@@ -1242,7 +1318,7 @@ def main():
         difficulty=archetype["difficulty"],
         emoji=archetype["emoji"],
         desc=archetype["desc"],
-        gradient=archetype["gradient"],
+        thumbnail_path=thumbnail_path,
         date_str=date_str,
     )
 
