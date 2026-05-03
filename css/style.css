@@ -1053,10 +1053,34 @@ button {
   margin-bottom: var(--space-xl);
 }
 
-.fakecast-page__icon {
-  font-size: 4rem;
-  margin-bottom: var(--space-sm);
+.fakecast-page__art {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  margin-bottom: var(--space-md);
   animation: float 3s ease-in-out infinite;
+}
+
+.fakecast-page__art img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+.fakecast-page__art img + img {
+  margin-left: -16px;
+}
+
+.fakecast-page__art img:first-child {
+  transform: rotate(-4deg);
+}
+
+.fakecast-page__art img:last-child {
+  transform: rotate(4deg);
 }
 
 .fakecast-page__header h1 {

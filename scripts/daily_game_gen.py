@@ -32,6 +32,17 @@ FLUX_SIZE = "1024x768"
 # How many days to avoid reusing the same archetype
 ARCHETYPE_COOLDOWN_DAYS = 14
 
+# Daily games should feel handcrafted, not like a one-minute template swap.
+# The cron prompt also references scripts/game_quality_checklist.md; these
+# runtime gates catch the most common regressions before anything is committed.
+QUALITY_GATE_MARKERS = [
+    ('shared game header', '../js/game-header.js?v=3'),
+    ('restart/new game control', 'New Game'),
+    ('score/status HUD', 'Score:'),
+    ('site cyan accent', '#00D4AA'),
+    ('site coffee accent', '#C4A882'),
+]
+
 # ── Game archetypes with distinct mechanics ──────────────────────────────
 GAME_ARCHETYPES = [
     {
@@ -302,8 +313,8 @@ def generate_catch_game(archetype, game_id, date_str):
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
-<h1>{archetype["emoji"]} {name}</h1>
+<script src="../js/game-header.js?v=3"></script>
+<h1>{name}</h1>
 <p class="subtitle">{archetype["desc"]}</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -429,8 +440,8 @@ def generate_timing_game(archetype, game_id, date_str):
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
-<h1>{archetype["emoji"]} {name}</h1>
+<script src="../js/game-header.js?v=3"></script>
+<h1>{name}</h1>
 <p class="subtitle">{archetype["desc"]}</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -531,8 +542,8 @@ def generate_dodge_game(archetype, game_id, date_str):
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
-<h1>{archetype["emoji"]} {name}</h1>
+<script src="../js/game-header.js?v=3"></script>
+<h1>{name}</h1>
 <p class="subtitle">{archetype["desc"]}</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -643,8 +654,8 @@ def generate_shooter_game(archetype, game_id, date_str):
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
-<h1>{archetype["emoji"]} {name}</h1>
+<script src="../js/game-header.js?v=3"></script>
+<h1>{name}</h1>
 <p class="subtitle">{archetype["desc"]}</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -776,8 +787,8 @@ def generate_memory_game(archetype, game_id, date_str):
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
-<h1>{archetype["emoji"]} {name}</h1>
+<script src="../js/game-header.js?v=3"></script>
+<h1>{name}</h1>
 <p class="subtitle">{archetype["desc"]}</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -865,8 +876,8 @@ def generate_trace_game(archetype, game_id, date_str):
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
-<h1>{archetype["emoji"]} {name}</h1>
+<script src="../js/game-header.js?v=3"></script>
+<h1>{name}</h1>
 <p class="subtitle">{archetype["desc"]}</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -991,8 +1002,8 @@ def generate_stack_game(archetype, game_id, date_str):
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
-<h1>{archetype["emoji"]} {name}</h1>
+<script src="../js/game-header.js?v=3"></script>
+<h1>{name}</h1>
 <p class="subtitle">{archetype["desc"]}</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -1106,8 +1117,8 @@ def generate_td_game(archetype, game_id, date_str):
 </style>
 </head>
 <body>
-<script src="../js/game-header.js"></script>
-<h1>{archetype["emoji"]} {name}</h1>
+<script src="../js/game-header.js?v=3"></script>
+<h1>{name}</h1>
 <p class="subtitle">{archetype["desc"]}</p>
 <div class="scores">
   <span>Score: <strong id="score">0</strong></span>
@@ -1232,11 +1243,25 @@ MECHANIC_GENERATORS = {
 }
 
 
+def validate_generated_game(html, archetype, game_id):
+    """Fail fast if a generated game misses non-negotiable publishing basics."""
+    missing = [label for label, marker in QUALITY_GATE_MARKERS if marker not in html]
+    if '<h1>{archetype["emoji"]}' in html or 'game.emoji' in html:
+        missing.append('blank visible UI emoji policy')
+    mechanic = archetype.get("mechanic", "catch")
+    if mechanic not in MECHANIC_GENERATORS:
+        missing.append(f'known mechanic generator for {mechanic}')
+    if missing:
+        raise RuntimeError(f"Generated game {game_id} failed quality gates: {', '.join(missing)}")
+
+
 def generate_game_html(archetype, game_id, date_str):
-    """Dispatch to the correct mechanic generator."""
+    """Dispatch to the correct mechanic generator and enforce quality gates."""
     mechanic = archetype.get("mechanic", "catch")
     generator = MECHANIC_GENERATORS.get(mechanic, generate_catch_game)
-    return generator(archetype, game_id, date_str)
+    html = generator(archetype, game_id, date_str)
+    validate_generated_game(html, archetype, game_id)
+    return html
 
 
 def update_games_data(game_id, title, category, difficulty, emoji, desc, thumbnail_path, date_str):
