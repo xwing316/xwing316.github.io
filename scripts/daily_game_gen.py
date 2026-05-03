@@ -238,31 +238,26 @@ def generate_thumbnail(archetype, game_id):
     print(f"Generating Flux thumbnail for {game_id}...")
     print(f"Prompt: {prompt}")
 
-    try:
-        resp = requests.post(
-            FLUX_API_URL,
-            json={
-                "model": FLUX_MODEL,
-                "prompt": prompt,
-                "size": FLUX_SIZE,
-                "n": 1,
-                "response_format": "b64_json",
-            },
-            timeout=300,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        b64 = data["data"][0]["b64_json"]
-        img_bytes = base64.b64decode(b64)
-        with open(output_path, "wb") as f:
-            f.write(img_bytes)
-        print(f"Thumbnail saved: {output_path} ({len(img_bytes)} bytes)")
-        return f"assets/images/game-{game_id}.png"
-    except Exception as e:
-        print(f"WARNING: Thumbnail generation failed: {e}")
-        # Fallback to gradient if image gen fails
-        g1, g2 = archetype["gradient"]
-        return f"linear-gradient(135deg, {g1} 0%, {g2} 100%)"
+    IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+    resp = requests.post(
+        FLUX_API_URL,
+        json={
+            "model": FLUX_MODEL,
+            "prompt": prompt,
+            "size": FLUX_SIZE,
+            "n": 1,
+            "response_format": "b64_json",
+        },
+        timeout=300,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    b64 = data["data"][0]["b64_json"]
+    img_bytes = base64.b64decode(b64)
+    with open(output_path, "wb") as f:
+        f.write(img_bytes)
+    print(f"Thumbnail saved: {output_path} ({len(img_bytes)} bytes)")
+    return f"assets/images/game-{game_id}.png"
 
 
 # ── Game mechanic generators ─────────────────────────────────────────────
