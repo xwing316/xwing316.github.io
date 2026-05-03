@@ -1,0 +1,197 @@
+{
+  "title": "It's Just You and Me..... And AI - Daily Episode",
+  "hosts": {
+    "Alex": "en-US-Andrew:DragonHDLatestNeural",
+    "Jordan": "en-US-Emma:DragonHDLatestNeural"
+  },
+  "lines": [
+    {
+      "speaker": "Alex",
+      "text": "Good morning and welcome back to It's Just You and Me..... And AI. I'm Alex, reporting from the terminal, where apparently all software now lives."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And I'm Jordan. I brought coffee, a threat model, and a mild suspicion that my shell prompt is about to ask for stock options."
+    },
+    {
+      "speaker": "Alex",
+      "text": "It's Sunday, May 3rd, and today's theme is pretty clear: coding agents are leaving the novelty phase and moving into the messy adult phase."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Budgets, credentials, model routing, geopolitical chip drama. The robots got promoted and immediately created paperwork."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Let's start with GitHub Copilot CLI reaching general availability. InfoQ framed it as GitHub making the terminal a first-class surface for AI-assisted development. It is not just a feature launch; it is GitHub saying the command line is now a product surface with enterprise expectations, audit trails, and pricing debates attached."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Which makes sense. Developers live in the terminal anyway. It's where we go to feel powerful right before a missing flag humbles us."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Copilot CLI now plugs into the GitHub CLI and has the headline features you'd expect: suggest commands from plain English, explain mysterious command lines, and handle more complex workflows."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "The explain feature might save friendships. Nothing tests trust like someone pasting a five-stage find command into Slack and saying, quote, should be safe."
+    },
+    {
+      "speaker": "Alex",
+      "text": "There is also an autopilot mode for multi-step tasks, where the agent can run commands, inspect the output, and adjust without stopping at every single step."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's useful, but also where my eyebrows go up. Autonomy in a shell is powerful in exactly the way a chainsaw is powerful. The difference between a helpful assistant and an incident report can be one ignored prompt, one environment variable, or one command that looked harmless until it hit production."
+    },
+    {
+      "speaker": "Alex",
+      "text": "GitHub is still emphasizing review and confirmation for suggested commands in the normal flow, and enterprise admins get metrics like daily active users and token consumption for CLI sessions."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Ah yes, token consumption. The modern version of, why is the cloud bill shaped like a ski jump?"
+    },
+    {
+      "speaker": "Alex",
+      "text": "The bigger point is that terminal agents are no longer side projects. GitHub, OpenAI, Anthropic, Amazon, Warp, and open-source tools are all fighting for the same command-line real estate."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And that brings us neatly to OpenCode, which has become kind of the mascot for terminal-first momentum."
+    },
+    {
+      "speaker": "Alex",
+      "text": "A recent developer write-up says OpenCode has crossed 140 thousand GitHub stars, with hundreds of contributors, and it supports a huge range of models through providers like OpenRouter, Anthropic, OpenAI, Ollama, and custom endpoints. That model flexibility is part of why teams like it: they can bring the agent to their existing provider strategy instead of rebuilding their workflow around a single vendor."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "No IDE extension required. The pitch is basically: your editor can be VS Code, Neovim, Helix, a remote box, or pure chaos. The agent just operates on files."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Exactly. That decoupling matters because remote development is normal now. If your code is on a dev server, a terminal agent is already where the work is."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Meanwhile an IDE-bound agent has to do the whole remote forwarding dance. It's like bringing a grand piano to a camping trip."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The OpenCode story is also about model routing. Use an expensive reasoning model for planning, then cheaper or local models for mechanical edits. That's becoming the default playbook for cost control. It also lets teams experiment with local models for privacy-sensitive work, then escalate to a cloud model only when the problem genuinely needs more reasoning."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "I love that because it treats AI like an engineering system, not a magical vending machine. You don't use the executive chef to butter toast."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The article also highlighted multi-session workflows: one agent on a migration branch, another on a bug fix, each with separate context. Very useful, very easy to create seven half-finished robot interns."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Seven robot interns is still better than one robot intern with sudo and no supervision. Which brings us to security."
+    },
+    {
+      "speaker": "Alex",
+      "text": "VentureBeat had a big security roundup: Claude Code, Copilot, Codex, and Vertex AI all saw serious agent-related exploits, and the common target was not the model. It was the credential underneath the agent. The article's big warning was that identity tools often see the human or the vendor, but not the autonomous runtime making decisions between those two layers."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That sentence should be taped above every enterprise AI deployment. The model is flashy, but the token is the thing attackers actually want."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The examples were pretty uncomfortable. Codex had a branch-name command injection issue where malicious input could exfiltrate a GitHub OAuth token before cleanup."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And Claude Code had multiple patched issues around sandbox escape, trust bypass, and permission enforcement. Basically, the agent's runtime is now part of your attack surface."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Copilot examples involved hidden instructions in pull request descriptions and GitHub issues, including ways to manipulate settings or reach secrets in development environments. And because these attacks can be triggered by ordinary collaboration objects, like branches, issues, and pull requests, they fit right into the places developers already trust."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Prompt injection used to sound like a parlor trick. Now it's, open an issue and maybe hand someone a repository takeover. That's a very different category of oops."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The defense lesson is boring but important: least privilege, short-lived credentials, isolated sandboxes, patch quickly, and inventory the agents as actual software assets."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Also, stop giving every helpful robot the keys to production because it has a friendly name and writes decent TypeScript. In practice, that means separating read-only exploration from write actions, and separating repository access from deployment credentials whenever possible."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The last AI story today is DeepSeek V4. Reuters reported that the preview improved over prior versions, but markets reacted much more calmly than they did to DeepSeek's 2025 shock."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Last year, DeepSeek was the plot twist. This year, strong low-cost models from China are just part of the weekly weather report."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Analysts said the surprise is priced in now. DeepSeek V4 is competitive among leading open-weight models, but rivals like Kimi and Qwen have narrowed the gap. Expectations have changed so much that an impressive model can still feel routine if the entire field is improving at the same time."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's actually a huge sign of maturity. The story is no longer one company breaking the scoreboard. It's an ecosystem where multiple teams can ship frontier-adjacent models quickly."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The geopolitical angle is still big. Reuters noted DeepSeek adapted V4 to run well on Huawei chips, which matters under tightening U.S. export controls."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "So the benchmark chart is only half the story. The other half is, can countries build and run capable models on their own hardware supply chains? That matters for cost, availability, and national strategy, not just for who wins a leaderboard screenshot on launch day."
+    },
+    {
+      "speaker": "Alex",
+      "text": "And for developers, the practical takeaway is that model choice is becoming more diverse. You can mix proprietary agents, open-weight models, cloud APIs, and local inference depending on task and risk."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Which sounds freeing until you realize your config file now needs a procurement department."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Let's connect the dots. Copilot CLI going GA says the terminal is mainstream. OpenCode's growth says open-source terminal agents are credible. The security incidents say credentials are the new blast radius. DeepSeek V4 says model competition is relentless. The winners will probably be the teams that treat agents like infrastructure: observable, permissioned, replaceable, and boring in all the right places."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And together they say the next phase is less about demos and more about operations. Who can run these agents safely, cheaply, and repeatably?"
+    },
+    {
+      "speaker": "Alex",
+      "text": "My advice this morning: if your team uses coding agents, write down what credentials they receive, what networks they can reach, and what commands they can run without human approval."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And if the answer is, we don't know, congratulations. You have discovered today's action item. Even a one-page diagram of the agent path from prompt to command to network call can reveal surprises fast."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Also try routing tasks by difficulty. Let the big model design the plan, let a cheaper model execute routine edits, and let tests be the adult in the room."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Tests: still undefeated, still underfunded, still sitting there like, I told you so. The boring architecture pattern is becoming glamorous: smaller permissions, clearer boundaries, cheaper execution, and a human checkpoint before expensive mistakes."
+    },
+    {
+      "speaker": "Alex",
+      "text": "That is our Sunday tour of agent-land: Copilot CLI, OpenCode, agent security, and DeepSeek's more normalized V4 moment."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Thanks for joining us on It's Just You and Me..... And AI. I'm Jordan. Rotate your tokens, update your CLIs, and maybe don't let autopilot deploy on a Sunday."
+    },
+    {
+      "speaker": "Alex",
+      "text": "I'm Alex. Stay curious, stay skeptical, and we'll see you tomorrow for whatever the robots did overnight."
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "title": "The Daily Grind - Daily Episode",
+  "hosts": {
+    "Milo": "en-US-Davis:DragonHDLatestNeural",
+    "Riley": "en-US-Phoebe:DragonHDLatestNeural"
+  },
+  "lines": [
+    {
+      "speaker": "Milo",
+      "text": "Good morning, coffee people. Welcome to The Daily Grind. I'm Milo, and my grinder made one normal sound and then one sound that belonged in a submarine movie."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And I'm Riley. If your grinder starts sonar-pinging, that's either channeling or a ghost. Either way, drink first, diagnose later."
+    },
+    {
+      "speaker": "Milo",
+      "text": "It's Sunday, May 3rd, and today's cup has business drama, trade policy, portable espresso, coffee science, and a little barista competition rule nerdery."
+    },
+    {
+      "speaker": "Riley",
+      "text": "A balanced breakfast: caffeine, capitalism, and a PDF of grinder procedures."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Let's start with the biggest industry headline from Perfect Daily Grind's May 1st recap: Nestl\u00e9 confirmed it's selling its majority stake in Blue Bottle Coffee to Centurium Capital, the private equity firm behind Luckin Coffee. It is one of those stories where brand identity, global expansion, and the economics of running beautiful caf\u00e9s all collide in the same demitasse."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That is a sentence that would have melted specialty coffee Twitter in 2017. Blue Bottle, the minimalist temple of tiny cups, tied to the Luckin universe?"
+    },
+    {
+      "speaker": "Milo",
+      "text": "The reported valuation is around 400 million dollars, down from the roughly 700 million dollar valuation when Nestl\u00e9 took control back in 2017."
+    },
+    {
+      "speaker": "Riley",
+      "text": "So Blue Bottle went from unicorn foam art to, let's say, a more realistic cappuccino."
+    },
+    {
+      "speaker": "Milo",
+      "text": "The interesting split is that Centurium gets the physical caf\u00e9s, while Nestl\u00e9 keeps the consumer packaged goods business and Nespresso-compatible pod rights."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That tells you a lot. Caf\u00e9s are brand theater, operations, rent, and labor. Pods are margins in tiny aluminum hats."
+    },
+    {
+      "speaker": "Milo",
+      "text": "For Luckin's backer, Blue Bottle offers instant premium credibility. Luckin is famous for small-footprint convenience and aggressive scaling, while Blue Bottle is premium, design-led, and slow-bar adjacent."
+    },
+    {
+      "speaker": "Riley",
+      "text": "It's like pairing a bullet train with a ceramic dripper. The question is whether they complement each other or just stare awkwardly across the platform. The next few years will show whether premium ritual can survive inside a faster, more convenience-driven growth machine."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Perfect Daily Grind also noted Luckin's scale: big Q1 sales growth, thousands of new locations, and major roasting infrastructure in China."
+    },
+    {
+      "speaker": "Riley",
+      "text": "So if Blue Bottle expands further in Asia, it might get operational horsepower it never had on its own. But specialty fans will watch closely for whether the brand keeps its soul."
+    },
+    {
+      "speaker": "Milo",
+      "text": "The same roundup had a trade story with real origin impact: China cut tariffs to zero for Ethiopia and 52 other African countries, effective May 1st."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That's huge. Ethiopia is coffee's birthplace, and China is already becoming a serious market for specialty consumption."
+    },
+    {
+      "speaker": "Milo",
+      "text": "China is reportedly Ethiopia's third largest coffee market now. Removing tariffs could make Ethiopian coffee more competitive and give producers another major demand channel."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And diversification matters. If producers can sell beyond the usual U.S. and European channels, they have more leverage and potentially better resilience when one market gets weird."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Of course, lower tariffs don't automatically mean farmers get paid more. The value still has to travel back through exporters, importers, roasters, and contracts."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Right. Trade policy opens the door. Transparent buying relationships decide who actually walks through with money in their pocket."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Next up: portable electric coffee gear is getting serious. Perfect Daily Grind covered how on-the-go brewing has moved way beyond sachets and sad hotel room pour-over attempts. What has changed is the promise that you can now make a respectable drink in places where the old answer was simply, lower your standards."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Sad hotel pour-over is when the water comes from a kettle with a mysterious interior and the coffee tastes like beige regret."
+    },
+    {
+      "speaker": "Milo",
+      "text": "The article focused on OutIn's ecosystem, including portable espresso machines like the Nano and Mino, plus the LattoGo cordless milk foamer for microfoam."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Portable microfoam still sounds like a magic trick to me. I remember when camping coffee meant grounds in a pot and a crunchy last sip."
+    },
+    {
+      "speaker": "Milo",
+      "text": "At World of Coffee San Diego, OutIn ran a CUPO competition where participants used portable stations for speed challenges and latte art. The fastest full process was reportedly 50 seconds."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Fifty seconds? I spend fifty seconds deciding which mug emotionally supports me that morning."
+    },
+    {
+      "speaker": "Milo",
+      "text": "The broader trend is that portable now means professional, or at least professional-ish. Battery tech, pressure systems, and compact accessories are making real espresso workflows possible outside the caf\u00e9."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And consumer demand is there. More people drink lattes and espresso, hybrid work scattered routines everywhere, and caf\u00e9 prices make home or travel brewing more tempting."
+    },
+    {
+      "speaker": "Milo",
+      "text": "I do wonder if this creates a new kind of coffee person: the park-bench barista with a backpack, a scale, and absolutely no chill."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That person already exists. They are beloved, terrifying, and somehow own three hand grinders."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Now for the science story. Researchers at the University of Oregon, including Christopher Hendon, published work using electrochemistry to capture a chemical fingerprint of brewed coffee."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Coffee science has the best job titles. Imagine saying, I measure deliciousness with electricity."
+    },
+    {
+      "speaker": "Milo",
+      "text": "They adapted a potentiostat, a tool usually associated with batteries and fuel cells. By sending electrical current through coffee and measuring the response, they can separate strength from roast color, or what Hendon calls roastiness."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That's important because refractive index tells you strength, but not the whole flavor picture. Two cups can have similar strength and wildly different vibes."
+    },
+    {
+      "speaker": "Milo",
+      "text": "In one blind test, the method identified the single sample that had failed a roaster's own internal quality control, even though the samples looked identical. For multi-location roasters, that kind of repeatable signal could help catch drift before customers notice the espresso has wandered off-script."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That could be a big deal for roasters and caf\u00e9s. Not because it replaces tasting, but because it adds an objective instrument to the quality-control toolbox."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Exactly. Cupping remains human and sensory, but a quick chemical fingerprint could help teams keep roast and extraction consistency tighter."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Plus, anything that helps a caf\u00e9 serve the same beloved espresso on Tuesday and Friday is worth attention. Consistency is hospitality."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Last story: the Specialty Coffee Association released updated rules and regulations for the 2026 World Barista Championship in Panama, happening October 22nd through 25th at World of Coffee Panama."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Competition rules are where coffee gets delightfully specific. Like, emotionally specific. People will debate spoons with the intensity of constitutional law."
+    },
+    {
+      "speaker": "Milo",
+      "text": "This year's updates include changes to water served to judges, clarified language around the number of espresso shots for signature beverages, and a note that competitors can override drink evaluation protocol by not serving spoons."
+    },
+    {
+      "speaker": "Riley",
+      "text": "No spoons as a strategic choice is peak barista competition. Somewhere, a coach just whispered, finally, our moment."
+    },
+    {
+      "speaker": "Milo",
+      "text": "There are also updated grinder rules. Qualified sponsor Ceado will provide standardized equipment, with approved models including the REV Zero and the E37Z-Naked."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Competitors can use up to two grinders, but personal grinders have to match the approved models with original parts only, and everything gets inspected and sealed. The goal is not to erase competitor technique; it is to make sure the competition is about coffee service rather than secret hardware advantages."
+    },
+    {
+      "speaker": "Milo",
+      "text": "That standardization matters. At the highest level, tiny equipment differences can shape workflow, extraction, and stress levels."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And stress levels matter because the WBC stage already looks like making a tasting menu during a job interview while twenty people stare at your milk texture."
+    },
+    {
+      "speaker": "Milo",
+      "text": "So today's roast: Blue Bottle's caf\u00e9s are headed to Luckin's backer, China is opening the door wider to Ethiopian coffee, portable gear is becoming real caf\u00e9 kit, electrochemistry may help measure flavor consistency, and WBC rules are out."
+    },
+    {
+      "speaker": "Riley",
+      "text": "The industry is stretching in every direction: bigger capital, wider trade routes, smaller gear, deeper science, and competitions where spoons are tactical."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Thanks for joining us on The Daily Grind. I'm Milo. May your Sunday cup be sweet, balanced, and not accidentally brewed with yesterday's filter."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And I'm Riley. Brew something lovely, tip your barista, and we'll catch you tomorrow."
+    }
+  ]
+}
