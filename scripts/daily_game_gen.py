@@ -405,7 +405,7 @@ function stopGauge() {{
   if (inZone) {{
     const points = 100 + Math.round((60 - Math.abs(needlePos - 50)) * 2);
     score += points; streak++;
-    fb.textContent = `PERFECT! +${points}`; fb.className = 'feedback perfect';
+    fb.textContent = `PERFECT! +${{points}}`; fb.className = 'feedback perfect';
   }} else if (nearZone) {{
     score += 30; streak = 0;
     fb.textContent = 'Good +30'; fb.className = 'feedback good';
@@ -1177,10 +1177,11 @@ def update_games_data(game_id, title, category, difficulty, emoji, desc, gradien
     with open(DATA_FILE) as f:
         content = f.read()
 
+    escaped_desc = desc.replace("'", "\\'")
     new_entry = f"""  {{
     id: '{game_id}',
     title: '{title}',
-    description: '{desc.replace("'", "\\'")}',
+    description: '{escaped_desc}',
     category: '{category}',
     thumbnail: 'linear-gradient(135deg, {gradient[0]} 0%, {gradient[1]} 100%)',
     file: 'games/{game_id}.html',

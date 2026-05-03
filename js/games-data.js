@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-03',
+    title: 'Milk Steamer',
+    description: 'Steam milk to microfoam perfection. Watch the thermometer and stop at exactly the right temperature -- no scorching allowed!',
+    category: 'action',
+    thumbnail: 'linear-gradient(135deg, #f9a825 0%, #fff59d 100%)',
+    file: 'games/coffee-2026-05-03.html',
+    difficulty: 'Medium',
+    emoji: '🥛',
+    createdAt: '2026-05-03',
+  },
+
+  {
     id: 'coffee-2026-05-02',
     title: 'Roast Runner',
     description: 'Keep the beans moving through the roaster! Dodge hotspots, control airflow, and eject each batch at the perfect roast level.',
