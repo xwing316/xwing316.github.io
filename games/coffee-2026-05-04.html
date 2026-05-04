@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espresso Pressure</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg-elevated: #161b22;
+    --coffee: #C4A882;
+    --coffee-dim: rgba(196,168,130,0.12);
+    --coffee-glow: rgba(196,168,130,0.20);
+    --cyan: #00D4AA;
+    --cyan-dim: rgba(0,212,170,0.10);
+    --cyan-glow: rgba(0,212,170,0.25);
+    --text: #e6edf3;
+    --text-soft: #8b949e;
+    --text-faint: #6e7681;
+    --danger: #f85149;
+    --danger-glow: rgba(248,81,73,0.25);
+    --warn: #f0883e;
+    --good: #3fb950;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  .game-wrap {
+    width: 100%;
+    max-width: 520px;
+    padding: 24px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .game-title {
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--coffee);
+    text-shadow: 0 0 20px var(--coffee-glow);
+    text-align: center;
+  }
+
+  .game-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-soft);
+    text-align: center;
+    margin-top: -10px;
+    line-height: 1.5;
+  }
+
+  .hud {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .hud-box {
+    background: var(--bg-elevated);
+    border: 1px solid rgba(139,148,158,0.12);
+    border-radius: 12px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+
+  .hud-label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    margin-bottom: 4px;
+  }
+
+  .hud-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .hud-value.combo {
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan-glow);
+  }
+
+  .danger-bar-wrap {
+    width: 100%;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(139,148,158,0.12);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .danger-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+  }
+
+  .danger-bar-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(139,148,158,0.10);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .danger-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--warn), var(--danger));
+    border-radius: 4px;
+    transition: width 0.1s linear;
+  }
+
+  canvas {
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 4 / 5;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(139,148,158,0.12);
+    border-radius: 16px;
+    touch-action: none;
+  }
+
+  .controls-hint {
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+  }
+
+  .btn--primary {
+    background: var(--cyan);
+    color: var(--bg);
+    box-shadow: 0 2px 12px var(--cyan-glow);
+  }
+
+  .btn--primary:hover { transform: translateY(-2px); box-shadow: 0 4px 18px var(--cyan-glow); }
+  .btn--primary:active { transform: translateY(0); }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13,17,23,0.92);
+    backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .overlay-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--coffee);
+    text-shadow: 0 0 20px var(--coffee-glow);
+  }
+
+  .overlay-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 320px;
+    width: 90%;
+  }
+
+  .stat-box {
+    background: var(--bg-elevated);
+    border: 1px solid rgba(139,148,158,0.12);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    margin-bottom: 4px;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .overlay-msg {
+    font-size: 0.95rem;
+    color: var(--text-soft);
+    text-align: center;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  .back-link {
+    position: fixed;
+    top: 20px;
+    left: 24px;
+    color: var(--cyan);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s, transform 0.2s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .back-link:hover { color: var(--coffee); transform: translateX(-3px); }
+  .back-link svg { width: 16px; height: 16px; }
+
+  @media (max-width: 480px) {
+    .game-wrap { padding: 16px 12px 32px; }
+    .hud { gap: 6px; }
+    .hud-box { padding: 8px 4px; }
+    .hud-value { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<a href="../games.html" class="back-link">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+  Games
+</a>
+
+<div class="game-wrap">
+  <div class="game-title">Espresso Pressure</div>
+  <div class="game-subtitle">Hold <strong>Space</strong> or <strong>Tap</strong> to build pressure. Keep the needle in the green sweet spot. Don't blow the shot!</div>
+
+  <div class="hud">
+    <div class="hud-box">
+      <div class="hud-label">Score</div>
+      <div class="hud-value" id="scoreDisplay">0</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-label">Combo</div>
+      <div class="hud-value combo" id="comboDisplay">x1</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-label">Time</div>
+      <div class="hud-value" id="timeDisplay">0.0s</div>
+    </div>
+  </div>
+
+  <div class="danger-bar-wrap">
+    <div class="danger-bar-label">
+      <span>Shot Stability</span>
+      <span id="dangerLabel">Safe</span>
+    </div>
+    <div class="danger-bar-track">
+      <div class="danger-bar-fill" id="dangerBar"></div>
+    </div>
+  </div>
+
+  <canvas id="gameCanvas" width="480" height="600"></canvas>
+
+  <div class="controls-hint">
+    Hold <strong>Space</strong> / <strong>Mouse</strong> / <strong>Touch</strong> to increase pressure.<br>
+    Release to let pressure drop. Avoid red and blue zones!
+  </div>
+
+  <button class="btn btn--primary" id="startBtn">Start Shot</button>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-title" id="overlayTitle">Shot Complete</div>
+  <div class="overlay-stats">
+    <div class="stat-box">
+      <div class="stat-label">Score</div>
+      <div class="stat-value" id="endScore">0</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Best Combo</div>
+      <div class="stat-value" id="endCombo">x1</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Sweet Spot %</div>
+      <div class="stat-value" id="endAccuracy">0%</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Time</div>
+      <div class="stat-value" id="endTime">0s</div>
+    </div>
+  </div>
+  <div class="overlay-msg" id="overlayMsg">A balanced extraction with beautiful crema.</div>
+  <button class="btn btn--primary" id="restartBtn">Pull Another Shot</button>
+</div>
+
+<script src="../js/game-header.js?v=3"></script>
+<script>
+(function() {
+  'use strict';
+
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  const comboDisplay = document.getElementById('comboDisplay');
+  const timeDisplay = document.getElementById('timeDisplay');
+  const dangerBar = document.getElementById('dangerBar');
+  const dangerLabel = document.getElementById('dangerLabel');
+  const startBtn = document.getElementById('startBtn');
+  const overlay = document.getElementById('overlay');
+  const overlayTitle = document.getElementById('overlayTitle');
+  const overlayMsg = document.getElementById('overlayMsg');
+  const restartBtn = document.getElementById('restartBtn');
+  const endScore = document.getElementById('endScore');
+  const endCombo = document.getElementById('endCombo');
+  const endAccuracy = document.getElementById('endAccuracy');
+  const endTime = document.getElementById('endTime');
+
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  const W = 480;
+  const H = 600;
+
+  // Game state
+  let state = 'menu'; // menu, playing, gameover
+  let pressure = 50; // 0-100
+  let targetPressure = 50;
+  let score = 0;
+  let combo = 1;
+  let maxCombo = 1;
+  let sweetTime = 0;
+  let dangerTime = 0;
+  let totalTime = 0;
+  let holding = false;
+  let particles = [];
+  let cupFill = 0; // 0-1
+  let eventTimer = 0;
+  let nextEvent = 2;
+  let eventType = null; // 'surge', 'channel', null
+  let eventStrength = 0;
+  let animId = null;
+  let lastT = 0;
+
+  // Zones
+  const ZONE_LOW = 25;
+  const ZONE_HIGH = 75;
+  const DANGER_MAX = 3.0; // seconds of danger before game over
+
+  // Gauge geometry
+  const CX = W / 2;
+  const CY = 180;
+  const R = 110;
+
+  // Cup geometry
+  const CUP_X = CX;
+  const CUP_Y = 420;
+  const CUP_W = 140;
+  const CUP_H = 110;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  resize();
+
+  function reset() {
+    pressure = 40;
+    targetPressure = 50;
+    score = 0;
+    combo = 1;
+    maxCombo = 1;
+    sweetTime = 0;
+    dangerTime = 0;
+    totalTime = 0;
+    holding = false;
+    particles = [];
+    cupFill = 0;
+    eventTimer = 0;
+    nextEvent = 1.5 + Math.random() * 2;
+    eventType = null;
+    eventStrength = 0;
+    lastT = performance.now();
+  }
+
+  function startGame() {
+    reset();
+    state = 'playing';
+    startBtn.style.display = 'none';
+    overlay.classList.remove('active');
+    lastT = performance.now();
+    animId = requestAnimationFrame(loop);
+  }
+
+  function endGame(reason) {
+    state = 'gameover';
+    cancelAnimationFrame(animId);
+    const accuracy = totalTime > 0 ? Math.round((sweetTime / totalTime) * 100) : 0;
+    endScore.textContent = Math.floor(score);
+    endCombo.textContent = 'x' + maxCombo;
+    endAccuracy.textContent = accuracy + '%';
+    endTime.textContent = totalTime.toFixed(1) + 's';
+    if (reason === 'blowout') {
+      overlayTitle.textContent = 'Blowout!';
+      overlayTitle.style.color = '#f85149';
+      overlayMsg.textContent = 'Pressure spiked too high. The puck cracked and water channelled through.';
+    } else if (reason === 'under') {
+      overlayTitle.textContent = 'Under-Extracted';
+      overlayTitle.style.color = '#58a6ff';
+      overlayMsg.textContent = 'Pressure dropped too low. Sour, thin, and disappointing.';
+    } else {
+      overlayTitle.textContent = 'Shot Complete';
+      overlayTitle.style.color = '#C4A882';
+      if (accuracy >= 80) {
+        overlayMsg.textContent = 'A masterpiece! Silky crema, perfect balance. Barista-level extraction.';
+      } else if (accuracy >= 50) {
+        overlayMsg.textContent = 'A decent shot. Drinkable, but room for improvement.';
+      } else {
+        overlayMsg.textContent = 'Rough around the edges. Keep practicing that pressure control.';
+      }
+    }
+    overlay.classList.add('active');
+  }
+
+  function update(dt) {
+    if (state !== 'playing') return;
+    totalTime += dt;
+    eventTimer += dt;
+
+    // Pressure physics
+    let rise = holding ? 28 : -18;
+    let noise = (Math.random() - 0.5) * 6;
+
+    // Events
+    if (eventType) {
+      eventStrength -= dt * 1.2;
+      if (eventStrength <= 0) {
+        eventType = null;
+        eventStrength = 0;
+        nextEvent = 1.5 + Math.random() * 2.5;
+        eventTimer = 0;
+      }
+      if (eventType === 'surge') {
+        rise += 45 * eventStrength;
+        noise += 10 * eventStrength;
+      } else if (eventType === 'channel') {
+        rise -= 35 * eventStrength;
+        noise -= 8 * eventStrength;
+      }
+    } else if (eventTimer >= nextEvent) {
+      const roll = Math.random();
+      if (roll < 0.45) {
+        eventType = 'surge';
+        eventStrength = 1.0;
+      } else if (roll < 0.9) {
+        eventType = 'channel';
+        eventStrength = 1.0;
+      } else {
+        nextEvent = 0.5 + Math.random();
+        eventTimer = 0;
+      }
+    }
+
+    pressure += (rise + noise) * dt;
+    pressure = Math.max(0, Math.min(100, pressure));
+
+    // Zone logic
+    const inSweet = pressure >= ZONE_LOW && pressure <= ZONE_HIGH;
+    const inDanger = pressure < 10 || pressure > 90;
+
+    if (inSweet) {
+      sweetTime += dt;
+      combo = Math.min(10, Math.floor(sweetTime / 1.5) + 1);
+      maxCombo = Math.max(maxCombo, combo);
+      score += 10 * combo * dt;
+      // Spawn particles
+      if (Math.random() < 0.3) {
+        particles.push({
+          x: CX + (Math.random() - 0.5) * 60,
+          y: CY + 40 + Math.random() * 20,
+          vx: (Math.random() - 0.5) * 30,
+          vy: -40 - Math.random() * 40,
+          life: 0.6 + Math.random() * 0.4,
+          maxLife: 1.0,
+          r: 2 + Math.random() * 3,
+          color: 'cyan'
+        });
+      }
+      cupFill = Math.min(1, cupFill + dt * 0.12);
+    } else {
+      combo = 1;
+      if (inDanger) {
+        dangerTime += dt;
+        cupFill = Math.max(0, cupFill - dt * 0.03);
+      }
+    }
+
+    if (dangerTime >= DANGER_MAX) {
+      endGame(pressure > 90 ? 'blowout' : 'under');
+      return;
+    }
+
+    // Update particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.life -= dt;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+
+    // UI updates
+    scoreDisplay.textContent = Math.floor(score);
+    comboDisplay.textContent = 'x' + combo;
+    timeDisplay.textContent = totalTime.toFixed(1) + 's';
+    const dangerPct = Math.min(100, (dangerTime / DANGER_MAX) * 100);
+    dangerBar.style.width = dangerPct + '%';
+    if (dangerPct < 30) {
+      dangerLabel.textContent = 'Safe';
+      dangerLabel.style.color = 'var(--good)';
+    } else if (dangerPct < 70) {
+      dangerLabel.textContent = 'Warning';
+      dangerLabel.style.color = 'var(--warn)';
+    } else {
+      dangerLabel.textContent = 'Critical';
+      dangerLabel.style.color = 'var(--danger)';
+    }
+  }
+
+  function drawGauge() {
+    // Background arc
+    ctx.beginPath();
+    ctx.arc(CX, CY, R, Math.PI * 0.75, Math.PI * 2.25);
+    ctx.lineWidth = 18;
+    ctx.strokeStyle = 'rgba(139,148,158,0.10)';
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // Zone arcs
+    const startA = Math.PI * 0.75;
+    const endA = Math.PI * 2.25;
+    const range = endA - startA;
+
+    // Low zone (under-extracted)
+    const lowEnd = startA + (ZONE_LOW / 100) * range;
+    ctx.beginPath();
+    ctx.arc(CX, CY, R, startA, lowEnd);
+    ctx.lineWidth = 18;
+    ctx.strokeStyle = 'rgba(88,166,255,0.35)';
+    ctx.lineCap = 'butt';
+    ctx.stroke();
+
+    // Sweet zone
+    const highStart = startA + (ZONE_HIGH / 100) * range;
+    ctx.beginPath();
+    ctx.arc(CX, CY, R, lowEnd, highStart);
+    ctx.lineWidth = 18;
+    ctx.strokeStyle = 'rgba(0,212,170,0.45)';
+    ctx.stroke();
+
+    // High zone (blowout)
+    ctx.beginPath();
+    ctx.arc(CX, CY, R, highStart, endA);
+    ctx.lineWidth = 18;
+    ctx.strokeStyle = 'rgba(248,81,73,0.35)';
+    ctx.stroke();
+
+    // Tick marks
+    ctx.save();
+    ctx.translate(CX, CY);
+    for (let i = 0; i <= 10; i++) {
+      const a = startA + (i / 10) * range;
+      ctx.rotate(a);
+      ctx.beginPath();
+      ctx.moveTo(R - 22, 0);
+      ctx.lineTo(R - 10, 0);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(139,148,158,0.25)';
+      ctx.stroke();
+      ctx.rotate(-a);
+    }
+    ctx.restore();
+
+    // Needle
+    const needleA = startA + (pressure / 100) * range;
+    const nx = CX + Math.cos(needleA) * (R - 4);
+    const ny = CY + Math.sin(needleA) * (R - 4);
+
+    // Needle glow
+    ctx.beginPath();
+    ctx.arc(CX, CY, 6, 0, Math.PI * 2);
+    ctx.fillStyle = pressure >= ZONE_LOW && pressure <= ZONE_HIGH ? '#00D4AA' : (pressure > 90 || pressure < 10 ? '#f85149' : '#C4A882');
+    ctx.shadowColor = ctx.fillStyle;
+    ctx.shadowBlur = 16;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.lineTo(nx, ny);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = ctx.fillStyle;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // Center cap
+    ctx.beginPath();
+    ctx.arc(CX, CY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#0d1117';
+    ctx.fill();
+
+    // Labels
+    ctx.font = '600 11px DM Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(139,148,158,0.5)';
+    ctx.fillText('0', CX - R + 10, CY + 28);
+    ctx.fillText('50', CX, CY - R + 6);
+    ctx.fillText('100', CX + R - 10, CY + 28);
+
+    // Zone labels
+    ctx.font = '600 10px DM Sans, sans-serif';
+    ctx.fillStyle = 'rgba(88,166,255,0.6)';
+    ctx.fillText('UNDER', CX - 82, CY + 46);
+    ctx.fillStyle = 'rgba(0,212,170,0.7)';
+    ctx.fillText('SWEET', CX, CY + 52);
+    ctx.fillStyle = 'rgba(248,81,73,0.6)';
+    ctx.fillText('BLOWOUT', CX + 82, CY + 46);
+
+    // Event indicator
+    if (eventType) {
+      ctx.font = '700 12px DM Sans, sans-serif';
+      ctx.fillStyle = eventType === 'surge' ? '#f0883e' : '#58a6ff';
+      ctx.textAlign = 'center';
+      const label = eventType === 'surge' ? 'PUMP SURGE!' : 'CHANNELING!';
+      ctx.fillText(label, CX, CY - R - 18);
+    }
+  }
+
+  function drawCup() {
+    const x = CUP_X - CUP_W / 2;
+    const y = CUP_Y - CUP_H / 2;
+    const w = CUP_W;
+    const h = CUP_H;
+    const r = 12;
+
+    // Cup body
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(139,148,158,0.20)';
+    ctx.stroke();
+
+    // Crema fill
+    const fillH = h * cupFill;
+    if (fillH > 2) {
+      const fy = y + h - fillH;
+      ctx.save();
+      ctx.clip();
+      ctx.beginPath();
+      ctx.rect(x + 2, fy, w - 4, fillH);
+      const grad = ctx.createLinearGradient(0, fy, 0, y + h);
+      grad.addColorStop(0, 'rgba(196,168,130,0.55)');
+      grad.addColorStop(1, 'rgba(196,168,130,0.25)');
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Crema bubbles
+      if (cupFill > 0.1) {
+        ctx.fillStyle = 'rgba(240,220,180,0.35)';
+        for (let i = 0; i < 8; i++) {
+          const bx = x + 10 + (i * (w - 20) / 7) + Math.sin(totalTime * 2 + i) * 3;
+          const by = fy + 4 + Math.cos(totalTime * 3 + i) * 3;
+          ctx.beginPath();
+          ctx.arc(bx, by, 2 + Math.sin(totalTime + i) * 0.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    }
+
+    // Handle
+    ctx.beginPath();
+    ctx.arc(x + w - 2, y + h / 2 - 10, 22, -Math.PI * 0.4, Math.PI * 0.4);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'rgba(139,148,158,0.18)';
+    ctx.stroke();
+
+    // Cup label
+    ctx.font = '500 12px DM Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(139,148,158,0.35)';
+    ctx.fillText('Espresso', CUP_X, CUP_Y + 4);
+  }
+
+  function drawStream() {
+    if (state !== 'playing') return;
+    const streamW = 4 + (pressure / 100) * 6;
+    const sx = CX;
+    const sy1 = CY + R + 10;
+    const sy2 = CUP_Y - CUP_H / 2 - 4;
+
+    // Stream color based on zone
+    let streamColor = 'rgba(196,168,130,0.5)';
+    if (pressure >= ZONE_LOW && pressure <= ZONE_HIGH) {
+      streamColor = 'rgba(196,168,130,0.85)';
+    } else if (pressure < 10 || pressure > 90) {
+      streamColor = 'rgba(139,148,158,0.25)';
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(sx - streamW / 2, sy1);
+    ctx.quadraticCurveTo(sx + Math.sin(totalTime * 8) * 2, (sy1 + sy2) / 2, sx - streamW / 3, sy2);
+    ctx.lineTo(sx + streamW / 3, sy2);
+    ctx.quadraticCurveTo(sx + Math.sin(totalTime * 8) * 2, (sy1 + sy2) / 2, sx + streamW / 2, sy1);
+    ctx.closePath();
+    ctx.fillStyle = streamColor;
+    ctx.fill();
+
+    // Stream glow in sweet spot
+    if (pressure >= ZONE_LOW && pressure <= ZONE_HIGH) {
+      ctx.beginPath();
+      ctx.moveTo(sx - streamW / 2, sy1);
+      ctx.lineTo(sx + streamW / 2, sy1);
+      ctx.lineTo(sx + streamW / 3, sy2);
+      ctx.lineTo(sx - streamW / 3, sy2);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(0,212,170,0.08)';
+      ctx.fill();
+    }
+  }
+
+  function drawParticles() {
+    for (const p of particles) {
+      const alpha = p.life / p.maxLife;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * alpha, 0, Math.PI * 2);
+      ctx.fillStyle = p.color === 'cyan'
+        ? `rgba(0,212,170,${alpha * 0.8})`
+        : `rgba(196,168,130,${alpha * 0.8})`;
+      ctx.fill();
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    drawGauge();
+    drawStream();
+    drawCup();
+    drawParticles();
+
+    // Pressure value text
+    ctx.font = '700 18px DM Sans, sans-serif';
+    ctx.textAlign = 'center';
+    if (pressure >= ZONE_LOW && pressure <= ZONE_HIGH) {
+      ctx.fillStyle = '#00D4AA';
+      ctx.shadowColor = 'rgba(0,212,170,0.3)';
+      ctx.shadowBlur = 10;
+    } else if (pressure < 10 || pressure > 90) {
+      ctx.fillStyle = '#f85149';
+      ctx.shadowColor = 'rgba(248,81,73,0.3)';
+      ctx.shadowBlur = 10;
+    } else {
+      ctx.fillStyle = '#C4A882';
+      ctx.shadowColor = 'rgba(196,168,130,0.2)';
+      ctx.shadowBlur = 6;
+    }
+    ctx.fillText(Math.round(pressure) + ' bar', CX, CY + 82);
+    ctx.shadowBlur = 0;
+
+    // Combo popup text
+    if (combo >= 3 && state === 'playing') {
+      ctx.font = `700 ${12 + combo}px DM Sans, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = `rgba(0,212,170,${0.4 + Math.sin(totalTime * 6) * 0.2})`;
+      ctx.fillText('x' + combo, CX, CY + 110);
+    }
+  }
+
+  function loop(now) {
+    if (state !== 'playing') return;
+    const dt = Math.min((now - lastT) / 1000, 0.05);
+    lastT = now;
+    update(dt);
+    draw();
+    animId = requestAnimationFrame(loop);
+  }
+
+  // Input handlers
+  function pressStart() { holding = true; }
+  function pressEnd() { holding = false; }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      pressStart();
+    }
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      pressEnd();
+    }
+  });
+  canvas.addEventListener('mousedown', pressStart);
+  canvas.addEventListener('mouseup', pressEnd);
+  canvas.addEventListener('mouseleave', pressEnd);
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); pressStart(); }, { passive: false });
+  canvas.addEventListener('touchend', (e) => { e.preventDefault(); pressEnd(); });
+  canvas.addEventListener('touchcancel', (e) => { e.preventDefault(); pressEnd(); });
+
+  startBtn.addEventListener('click', startGame);
+  restartBtn.addEventListener('click', startGame);
+
+  // Initial draw
+  draw();
+})();
+</script>
+</body>
+</html>

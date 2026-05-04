@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-04',
+    title: 'Espresso Pressure',
+    description: 'Master the perfect espresso shot. Control the pressure gauge, ride pump surges, and avoid channeling. Keep the needle in the green sweet spot to build combo multipliers and fill your cup with golden crema.',
+    category: 'action',
+    thumbnail: 'assets/images/game-coffee-2026-05-04.png',
+    file: 'games/coffee-2026-05-04.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-04',
+  },
+
+  {
     id: 'coffee-2026-05-03',
     title: 'Milk Steamer',
     description: 'Steam milk to microfoam perfection. Watch the thermometer and stop at exactly the right temperature -- no scorching allowed!',
