@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     coverArt: "assets/images/podcast-ai.png",
     episodes: [
       {
+        title: "Dynatrace Brings Observability to Coding Agents",
+        date: "2026-05-04",
+        description: "We cover Dynatrace expanding OpenTelemetry-based monitoring across Claude Code, Codex CLI, OpenCode, Gemini CLI, and Copilot SDK, plus Codex CLI's new persistent goal workflows. We also discuss GitHub Copilot CLI adding local model and MCP allowlist controls, and why agent teams need AGENTS.md, specs, and permission profiles.",
+        audioSrc: "fakecast/ai-daily-2026-05-04.mp3",
+        duration: 497
+      },
+      {
         title: "GitHub Copilot CLI Goes GA as Agent Security Gets Real",
         date: "2026-05-03",
         description: "We discuss GitHub Copilot CLI reaching general availability, OpenCode's terminal-first momentum, and new security reports showing attackers targeting agent credentials rather than models. We also cover DeepSeek V4's more normalized launch and what it means for open-weight model competition.",
@@ -41,6 +48,13 @@ const FAKECAST_DATA = {
     hosts: "Milo & Riley",
     coverArt: "assets/images/podcast-coffee.png",
     episodes: [
+      {
+        title: "Yemeni Cafes Rise as Coffee Gear Gets Wild",
+        date: "2026-05-04",
+        description: "We discuss the U.S. boom in Yemeni coffee shops, a Kansas City cafe reversing its no-tip policy, and Sprudge's latest gear roundup featuring the Acaia Horizon, Comandante Hammerhead burrs, BOOKOO scale, and more. We also preview barista competition workshops, the 2026 world championship calendar, and new coffee science around roast color and brew strength.",
+        audioSrc: "fakecast/coffee-daily-2026-05-04.mp3",
+        duration: 548
+      },
       {
         title: "Blue Bottle's Luckin-Backed Sale Shakes Specialty Coffee",
         date: "2026-05-03",
