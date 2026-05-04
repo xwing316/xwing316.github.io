@@ -4,7 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Espresso Pressure</title>
+<meta name="description" content="Master espresso extraction pressure in this polished coffee arcade game.">
+<link rel="icon" type="image/png" href="../assets/images/favicon.png">
+<meta property="og:title" content="Espresso Pressure">
+<meta property="og:description" content="Master the sweet spot, ride pump surges, and pull the perfect espresso shot.">
+<meta property="og:image" content="../assets/images/game-coffee-2026-05-04.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
   :root {
     --bg: #0d1117;
     --bg-elevated: #161b22;
@@ -37,8 +46,6 @@
     user-select: none;
     -webkit-user-select: none;
   }
-
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
   .game-wrap {
     width: 100%;
@@ -244,24 +251,6 @@
     line-height: 1.5;
   }
 
-  .back-link {
-    position: fixed;
-    top: 20px;
-    left: 24px;
-    color: var(--cyan);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: color 0.2s, transform 0.2s;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .back-link:hover { color: var(--coffee); transform: translateX(-3px); }
-  .back-link svg { width: 16px; height: 16px; }
-
   @media (max-width: 480px) {
     .game-wrap { padding: 16px 12px 32px; }
     .hud { gap: 6px; }
@@ -271,11 +260,6 @@
 </style>
 </head>
 <body>
-
-<a href="../games.html" class="back-link">
-  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
-  Games
-</a>
 
 <div class="game-wrap">
   <div class="game-title">Espresso Pressure</div>
