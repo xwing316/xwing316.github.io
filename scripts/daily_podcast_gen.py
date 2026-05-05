@@ -164,7 +164,7 @@ def generate_script(show, news_items, hosts):
         ]
 
     script = {
-        "title": f"{'It\'s Just You and Me..... And AI' if show == 'ai' else 'The Daily Grind'} - Daily Episode",
+        "title": ("It's Just You and Me..... And AI" if show == 'ai' else 'The Daily Grind') + " - Daily Episode",
         "hosts": {h1: voice1, h2: voice2},
         "lines": lines
     }
