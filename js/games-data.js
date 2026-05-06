@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-06',
+    title: 'Crema Curve',
+    description: 'Master the art of espresso extraction. Follow the scrolling pressure curve with your cursor to pull the perfect shot. Keep your accuracy high to build combo multipliers and fill your cup with golden crema before time runs out.',
+    category: 'action',
+    thumbnail: 'assets/images/game-coffee-2026-05-06.png',
+    file: 'games/coffee-2026-05-06.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-06',
+  },
+
+  {
     id: 'coffee-2026-05-05',
     title: 'Cup Stack Cafe',
     description: 'Stack coffee cups with perfect precision. Drop each sliding cup onto the tower -- overhang gets sliced off, but a perfect center hit builds your combo multiplier. How high can you build before the tower collapses?',
