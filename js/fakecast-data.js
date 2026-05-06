@@ -70,6 +70,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: MyRobot, a Venture Capital Pitch",
+        "date": "2026-05-06",
+        "description": "Today's episode covers 4 stories including MyRobot, a Venture Capital Pitch, Show HN: I left my FAANG job at 50 to build a sci-fi game, Show HN: Wordrops – A competitive writing platform inspired by League of Legends.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-06.mp3",
+        "duration": 72
+      },
+      {
         "title": "Daily Briefing: Show HN: Free espresso/pourover tool with interactive WCR Flavor Wheel",
         "date": "2026-05-06",
         "description": "Today's episode covers 4 stories including Show HN: Free espresso/pourover tool with interactive WCR Flavor Wheel, Show HN: I Built an app to Find and track specialty coffee shops worldwide, Ask HN: Would a list of coffee shops serving good specialty coffee be useful?.",
