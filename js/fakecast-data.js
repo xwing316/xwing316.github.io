@@ -63,6 +63,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: Free espresso/pourover tool with interactive WCR Flavor Wheel",
+        "date": "2026-05-06",
+        "description": "Today's episode covers 4 stories including Show HN: Free espresso/pourover tool with interactive WCR Flavor Wheel, Show HN: I Built an app to Find and track specialty coffee shops worldwide, Ask HN: Would a list of coffee shops serving good specialty coffee be useful?.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-06.mp3",
+        "duration": 80
+      },
+      {
         "title": "Daily Briefing: Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers",
         "date": "2026-05-06",
         "description": "Today's episode covers 4 stories including Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",

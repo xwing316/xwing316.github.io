@@ -23,31 +23,7 @@
     },
     {
       "speaker": "Riley",
-      "text": "First up: Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers."
-    },
-    {
-      "speaker": "Riley",
-      "text": "That's a fascinating development. Worth keeping an eye on."
-    },
-    {
-      "speaker": "Milo",
-      "text": "Definitely. The pace of change in this space is just incredible."
-    },
-    {
-      "speaker": "Milo",
-      "text": "Next, I saw this: Show HN: Specialty Coffee Discovery Platform."
-    },
-    {
-      "speaker": "Milo",
-      "text": "This is exactly the kind of innovation that makes specialty coffee so exciting right now."
-    },
-    {
-      "speaker": "Riley",
-      "text": "The intersection of science and craft is producing some really cool results."
-    },
-    {
-      "speaker": "Riley",
-      "text": "Also making the rounds: Built brewmind.coffee because I kept wasting good coffee beans."
+      "text": "First up: Show HN: Free espresso/pourover tool with interactive WCR Flavor Wheel."
     },
     {
       "speaker": "Milo",
@@ -59,7 +35,31 @@
     },
     {
       "speaker": "Milo",
-      "text": "And one more thing: Show HN: PyMOL-RS \u2013 Rust reimplementation of PyMOL with modern rendering."
+      "text": "Next, I saw this: Show HN: I Built an app to Find and track specialty coffee shops worldwide."
+    },
+    {
+      "speaker": "Milo",
+      "text": "This is exactly the kind of innovation that makes specialty coffee so exciting right now."
+    },
+    {
+      "speaker": "Riley",
+      "text": "The intersection of science and craft is producing some really cool results."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Also making the rounds: Ask HN: Would a list of coffee shops serving good specialty coffee be useful?."
+    },
+    {
+      "speaker": "Milo",
+      "text": "This is exactly the kind of innovation that makes specialty coffee so exciting right now."
+    },
+    {
+      "speaker": "Riley",
+      "text": "The intersection of science and craft is producing some really cool results."
+    },
+    {
+      "speaker": "Milo",
+      "text": "And one more thing: Show HN: Stop LLMs from brute forcing (guessing) APIs."
     },
     {
       "speaker": "Riley",
