@@ -23,31 +23,7 @@
     },
     {
       "speaker": "Jordan",
-      "text": "First up: Show HN: A CLI to use any model in your coding agent."
-    },
-    {
-      "speaker": "Jordan",
-      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
-    },
-    {
-      "speaker": "Alex",
-      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
-    },
-    {
-      "speaker": "Alex",
-      "text": "Next, I saw this: Ask HN: Claude Code Alternative."
-    },
-    {
-      "speaker": "Jordan",
-      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
-    },
-    {
-      "speaker": "Alex",
-      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
-    },
-    {
-      "speaker": "Jordan",
-      "text": "Also making the rounds: Update on \"Co-Authored-By: Copilot\" in Commit Messages \u2013 Issue #314311."
+      "text": "First up: VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage."
     },
     {
       "speaker": "Jordan",
@@ -59,15 +35,39 @@
     },
     {
       "speaker": "Alex",
-      "text": "And one more thing: Show HN: Dust3D 1.0 \u2013 low-poly 3D modeling tool (10 years in the making)."
+      "text": "Next, I saw this: Show HN: Filling PDF forms with AI using client-side tool calling."
     },
     {
       "speaker": "Jordan",
-      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
+      "text": "That's a fascinating development. Worth keeping an eye on."
     },
     {
       "speaker": "Alex",
-      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Also making the rounds: GitHub Copilot: Upcoming Deprecation of GPT-5.2 and GPT-5.2-Codex."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The open source ecosystem around AI coding tools keeps getting richer. More options, more competition, better tools for everyone."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "I love that we're seeing genuine alternatives to the big closed-source players."
+    },
+    {
+      "speaker": "Alex",
+      "text": "And one more thing: GitHub Copilot Switches to Token-Based Billing for Developers."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The open source ecosystem around AI coding tools keeps getting richer. More options, more competition, better tools for everyone."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "I love that we're seeing genuine alternatives to the big closed-source players."
     },
     {
       "speaker": "Alex",

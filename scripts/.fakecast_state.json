@@ -59,6 +59,36 @@
       "title": "Model multipliers for annual plans staying on request-based billing",
       "url": "https://docs.github.com/en/copilot/reference/copilot-billing/model-multipliers-for-annual-plans",
       "date": "2026-05-06T00:26:04.934432+00:00"
+    },
+    {
+      "title": "VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage",
+      "url": "https://github.com/microsoft/vscode/pull/310226",
+      "date": "2026-05-06T00:27:04.229715+00:00"
+    },
+    {
+      "title": "Show HN: Filling PDF forms with AI using client-side tool calling",
+      "url": "https://copilot.simplepdf.com/?share=a7d00ad073c75a75d493228e6ff7b11eb3f2d945b6175913e87898ec96ca8076&form=w9&lang=en",
+      "date": "2026-05-06T00:27:04.229715+00:00"
+    },
+    {
+      "title": "GitHub Copilot: Upcoming Deprecation of GPT-5.2 and GPT-5.2-Codex",
+      "url": "https://github.blog/changelog/2026-05-01-upcoming-deprecation-of-gpt-5-2-and-gpt-5-2-codex/",
+      "date": "2026-05-06T00:27:04.229715+00:00"
+    },
+    {
+      "title": "GitHub Copilot Switches to Token-Based Billing for Developers",
+      "url": "https://www.aiuniverse.news/the-shift-to-usage-based-ai-billing-arrives-for-developers/",
+      "date": "2026-05-06T00:27:04.229715+00:00"
+    },
+    {
+      "title": "Show HN: Token Usage Meter 12 Providers and Coding Agent",
+      "url": "https://qlaud.ai",
+      "date": "2026-05-06T00:27:04.229715+00:00"
+    },
+    {
+      "title": "Show HN: Probus, AI vuln scanner (PRs merged in Vercel AI SDK, n8n, LangGraph)",
+      "url": "",
+      "date": "2026-05-06T00:27:04.229715+00:00"
     }
   ],
   "coffee": [

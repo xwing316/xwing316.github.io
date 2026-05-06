@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage",
+        "date": "2026-05-06",
+        "description": "Today's episode covers 4 stories including VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage, Show HN: Filling PDF forms with AI using client-side tool calling, GitHub Copilot: Upcoming Deprecation of GPT-5.2 and GPT-5.2-Codex.",
+        "audioSrc": "fakecast/ai-daily-2026-05-06.mp3",
+        "duration": 95
+      },
+      {
         "title": "Daily Briefing: Show HN: A CLI to use any model in your coding agent",
         "date": "2026-05-06",
         "description": "Today's episode covers 4 stories including Show HN: A CLI to use any model in your coding agent, Ask HN: Claude Code Alternative, Update on \"Co-Authored-By: Copilot\" in Commit Messages – Issue #314311.",
