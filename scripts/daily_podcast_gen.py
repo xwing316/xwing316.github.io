@@ -182,25 +182,31 @@ def generate_audio(script_path, output_path):
 
 def update_data_file(show, episode_info):
     """Update fakecast-data.js with a new episode."""
+    import re as _re
     with open(DATA_FILE) as f:
         content = f.read()
 
-    # Parse the JS object by finding the const declaration
-    import re
-    match = re.search(r'const\s+FAKECAST_DATA\s*=\s*(\{[\s\S]*?\n\}\s*);', content)
+    # Extract the JS object between 'const FAKECAST_DATA =' and the final '};'
+    match = _re.search(r'const\s+FAKECAST_DATA\s*=\s*(\{[\s\S]*?\n\})\s*;', content)
     if not match:
         raise RuntimeError("Could not parse fakecast-data.js")
 
     data_str = match.group(1)
-    # Replace JS-specific syntax to make it JSON-parseable
-    json_str = data_str.replace("'", '"').replace(',\n    ]', '\n    ]').replace(',\n  }', '\n  }')
-    # Remove trailing commas before closing brackets
-    json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
+
+    # Convert JS object syntax to valid JSON:
+    # 1. Quote unquoted keys (bare words before colon at start of lines)
+    json_str = _re.sub(r'(?m)^(\s*)(\w+)\s*:', r'\1"\2":', data_str)
+    # 2. Remove trailing commas before } or ]
+    json_str = _re.sub(r',(\s*[}\]])', r'\1', json_str)
 
     try:
         data = json.loads(json_str)
     except json.JSONDecodeError as e:
-        raise RuntimeError(f"Failed to parse data file as JSON: {e}")
+        # Debug: write the parsed string for inspection
+        debug_path = DATA_FILE.parent / 'fakecast-data-debug.json'
+        with open(debug_path, 'w') as dbg:
+            dbg.write(json_str)
+        raise RuntimeError(f"Failed to parse data file as JSON: {e}. Debug output written to {debug_path}")
 
     # Prepend new episode
     show_key = show
@@ -209,39 +215,12 @@ def update_data_file(show, episode_info):
     # Keep only last 30 episodes
     data[show_key]["episodes"] = data[show_key]["episodes"][:30]
 
-    # Rebuild the JS file
-    def val_to_js(v):
-        if isinstance(v, str):
-            return "'" + v.replace("'", "\\'") + "'"
-        if isinstance(v, bool):
-            return 'true' if v else 'false'
-        if isinstance(v, (int, float)):
-            return str(v)
-        if isinstance(v, list):
-            return '[\n' + ',\n'.join('      ' + val_to_js(item) for item in v) + '\n    ]'
-        if isinstance(v, dict):
-            return '{\n' + ',\n'.join(f"        {key}: {val_to_js(value)}" for key, value in v.items()) + '\n      }'
-        return str(v)
-
-    lines = ['const FAKECAST_DATA = {']
-    for show_key, show_data in data.items():
-        lines.append(f"  {show_key}: {{")
-        for key, value in show_data.items():
-            if key == 'episodes':
-                lines.append(f"    {key}: [")
-                for ep in value:
-                    lines.append("      {")
-                    for ep_key, ep_val in ep.items():
-                        lines.append(f"        {ep_key}: {val_to_js(ep_val)},")
-                    lines.append("      },")
-                lines.append("    ]")
-            else:
-                lines.append(f"    {key}: {val_to_js(value)},")
-        lines.append("  },")
-    lines.append("};")
+    # Rebuild as JSON inside a JS const for robust future parsing
+    json_blob = json.dumps(data, indent=2, ensure_ascii=False)
+    new_content = f"const FAKECAST_DATA = {json_blob};\n"
 
     with open(DATA_FILE, 'w') as f:
-        f.write('\n'.join(lines) + '\n')
+        f.write(new_content)
 
 
 def git_commit_and_push(show, date_str):

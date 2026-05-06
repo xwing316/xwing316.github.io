@@ -1,0 +1,65 @@
+{
+  "ai": [
+    {
+      "title": "Show HN: You can now run Gemini CLI in the browser",
+      "url": "https://browsercode.io",
+      "date": "2026-05-06T00:23:42.074649+00:00"
+    },
+    {
+      "title": "Show HN: Loom \u2013 A Markdown knowledge graph for better coding-agent execution",
+      "url": "https://github.com/z3z1ma/agent-loom",
+      "date": "2026-05-06T00:23:42.074649+00:00"
+    },
+    {
+      "title": "Ask HN: Enterprise Agent Orchestration Recommendations?",
+      "url": "",
+      "date": "2026-05-06T00:23:42.074649+00:00"
+    },
+    {
+      "title": "Show HN: Semble \u2013 Fast code search for agents with near-transformer accuracy",
+      "url": "https://github.com/MinishLab/semble",
+      "date": "2026-05-06T00:23:42.074649+00:00"
+    },
+    {
+      "title": "Show HN: Mux0 \u2013 Open-source macOS terminal with workspace tabs and agent hooks",
+      "url": "https://mux0.com/",
+      "date": "2026-05-06T00:23:42.074649+00:00"
+    },
+    {
+      "title": "Show HN: A Karpathy-style LLM wiki your agents maintain (Markdown and Git)",
+      "url": "https://github.com/nex-crm/wuphf",
+      "date": "2026-05-06T00:23:42.074649+00:00"
+    },
+    {
+      "title": "Show HN: A CLI to use any model in your coding agent",
+      "url": "https://getaivo.dev/",
+      "date": "2026-05-06T00:26:04.934432+00:00"
+    },
+    {
+      "title": "Ask HN: Claude Code Alternative",
+      "url": "",
+      "date": "2026-05-06T00:26:04.934432+00:00"
+    },
+    {
+      "title": "Update on \"Co-Authored-By: Copilot\" in Commit Messages \u2013 Issue #314311",
+      "url": "https://github.com/microsoft/vscode/issues/314311",
+      "date": "2026-05-06T00:26:04.934432+00:00"
+    },
+    {
+      "title": "Show HN: Dust3D 1.0 \u2013 low-poly 3D modeling tool (10 years in the making)",
+      "url": "https://dust3d.org",
+      "date": "2026-05-06T00:26:04.934432+00:00"
+    },
+    {
+      "title": "Ask HN: Are employers getting the returns from AI?",
+      "url": "",
+      "date": "2026-05-06T00:26:04.934432+00:00"
+    },
+    {
+      "title": "Model multipliers for annual plans staying on request-based billing",
+      "url": "https://docs.github.com/en/copilot/reference/copilot-billing/model-multipliers-for-annual-plans",
+      "date": "2026-05-06T00:26:04.934432+00:00"
+    }
+  ],
+  "coffee": []
+}
