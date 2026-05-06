@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-05',
+    title: 'Cup Stack Cafe',
+    description: 'Stack coffee cups with perfect precision. Drop each sliding cup onto the tower -- overhang gets sliced off, but a perfect center hit builds your combo multiplier. How high can you build before the tower collapses?',
+    category: 'puzzle',
+    thumbnail: 'assets/images/game-coffee-2026-05-05.png',
+    file: 'games/coffee-2026-05-05.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-05',
+  },
+
+  {
     id: 'coffee-2026-05-04',
     title: 'Espresso Pressure',
     description: 'Master the perfect espresso shot. Control the pressure gauge, ride pump surges, and avoid channeling. Keep the needle in the green sweet spot to build combo multipliers and fill your cup with golden crema.',

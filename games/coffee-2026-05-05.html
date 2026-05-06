@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Cup Stack Cafe</title>
+<meta name="description" content="Stack coffee cups with perfect precision in this polished arcade game.">
+<link rel="icon" type="image/png" href="../assets/images/favicon.png">
+<meta property="og:title" content="Cup Stack Cafe">
+<meta property="og:description" content="Stack coffee cups with perfect precision. How high can you build your cafe tower?">
+<meta property="og:image" content="../assets/images/game-coffee-2026-05-05.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --bg-elevated: #161b22;
+    --coffee: #C4A882;
+    --coffee-dim: rgba(196,168,130,0.12);
+    --coffee-glow: rgba(196,168,130,0.20);
+    --cyan: #00D4AA;
+    --cyan-dim: rgba(0,212,170,0.10);
+    --cyan-glow: rgba(0,212,170,0.25);
+    --text: #e6edf3;
+    --text-soft: #8b949e;
+    --text-faint: #6e7681;
+    --danger: #f85149;
+    --danger-glow: rgba(248,81,73,0.25);
+    --warn: #f0883e;
+    --good: #3fb950;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .game-wrap {
+    width: 100%;
+    max-width: 440px;
+    padding: 24px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .game-title {
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    font-weight: 700;
+    color: var(--coffee);
+    text-align: center;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 16px var(--coffee-glow);
+  }
+
+  .game-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-soft);
+    text-align: center;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  .hud {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+
+  .hud__left, .hud__right {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hud__label {
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+
+  .hud__value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .hud__value--score {
+    color: var(--cyan);
+  }
+
+  .hud__value--combo {
+    color: var(--coffee);
+  }
+
+  .hud__center {
+    text-align: center;
+  }
+
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 2 / 3;
+    background: linear-gradient(180deg, #0d1117 0%, #111820 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(139,148,158,0.12);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .controls-hint {
+    display: flex;
+    gap: 16px;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+
+  .controls-hint span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .key {
+    display: inline-block;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(139,148,158,0.18);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-soft);
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: rgba(13,17,23,0.88);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .overlay.hidden { display: none; }
+
+  .overlay__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--coffee);
+    text-shadow: 0 2px 12px var(--coffee-glow);
+  }
+
+  .overlay__stats {
+    display: flex;
+    gap: 24px;
+    margin: 4px 0;
+  }
+
+  .overlay__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .overlay__stat-label {
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+
+  .overlay__stat-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .overlay__stat-value--best {
+    color: var(--cyan);
+  }
+
+  .btn {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 12px 28px;
+    border-radius: 10px;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    margin-top: 4px;
+  }
+
+  .btn:active { transform: scale(0.96); }
+
+  .btn--primary {
+    background: var(--cyan);
+    color: var(--bg);
+    box-shadow: 0 2px 12px var(--cyan-glow);
+  }
+
+  .btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--cyan-glow);
+  }
+
+  .btn--outline {
+    background: transparent;
+    color: var(--text-soft);
+    border: 1.5px solid rgba(139,148,158,0.2);
+  }
+
+  .btn--outline:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    transform: translateY(-2px);
+  }
+
+  .instructions {
+    width: 100%;
+    max-width: 360px;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(139,148,158,0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    line-height: 1.6;
+  }
+
+  .instructions strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .instructions ul {
+    margin: 6px 0 0 18px;
+    padding: 0;
+  }
+
+  .instructions li {
+    margin-bottom: 3px;
+  }
+
+  .star-rating {
+    display: flex;
+    gap: 4px;
+    margin-top: 2px;
+  }
+
+  .star {
+    width: 20px;
+    height: 20px;
+    color: var(--coffee);
+    opacity: 0.3;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .star.lit {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 4px var(--coffee-glow));
+  }
+
+  @media (max-width: 420px) {
+    .game-wrap { padding: 16px 12px 32px; }
+    .canvas-wrap { border-radius: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="game-wrap">
+  <h1 class="game-title">Cup Stack Cafe</h1>
+  <p class="game-subtitle">Drop each coffee cup perfectly on top of the last. Build the tallest tower in the cafe!</p>
+
+  <div class="hud" id="hud">
+    <div class="hud__left">
+      <span class="hud__label">Score</span>
+      <span class="hud__value hud__value--score" id="scoreDisplay">0</span>
+    </div>
+    <div class="hud__center">
+      <span class="hud__label">Best</span>
+      <span class="hud__value" id="bestDisplay">0</span>
+    </div>
+    <div class="hud__right">
+      <span class="hud__label">Combo</span>
+      <span class="hud__value hud__value--combo" id="comboDisplay">0</span>
+    </div>
+  </div>
+
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div class="overlay" id="startOverlay">
+      <div class="overlay__title">Cup Stack Cafe</div>
+      <p style="color: var(--text-soft); font-size: 0.85rem; max-width: 260px;">Tap or press Space when the sliding cup aligns with the tower. Perfect drops build combos!</p>
+      <button class="btn btn--primary" id="startBtn">Play</button>
+    </div>
+    <div class="overlay hidden" id="gameOverOverlay">
+      <div class="overlay__title">Tower Collapsed!</div>
+      <div class="star-rating" id="starRating">
+        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div class="overlay__stats">
+        <div class="overlay__stat">
+          <span class="overlay__stat-label">Score</span>
+          <span class="overlay__stat-value" id="finalScore">0</span>
+        </div>
+        <div class="overlay__stat">
+          <span class="overlay__stat-label">Best</span>
+          <span class="overlay__stat-value overlay__stat-value--best" id="finalBest">0</span>
+        </div>
+        <div class="overlay__stat">
+          <span class="overlay__stat-label">Cups</span>
+          <span class="overlay__stat-value" id="finalCups">0</span>
+        </div>
+      </div>
+      <button class="btn btn--primary" id="restartBtn">Play Again</button>
+    </div>
+  </div>
+
+  <div class="controls-hint">
+    <span><span class="key">SPACE</span> or Tap to drop</span>
+    <span><span class="key">R</span> Restart</span>
+  </div>
+
+  <div class="instructions">
+    <strong>How to play:</strong>
+    <ul>
+      <li>A coffee cup slides in from the side. Drop it onto the tower.</li>
+      <li>Any overhang gets sliced off — the cup shrinks!</li>
+      <li>Perfect center drops give bonus points and build your combo.</li>
+      <li>Miss completely and the tower collapses. Game over!</li>
+      <li>Speed increases every 5 cups. How high can you stack?</li>
+    </ul>
+  </div>
+</div>
+
+<script src="../js/game-header.js?v=3"></script>
+<script>
+(function() {
+  'use strict';
+
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const startOverlay = document.getElementById('startOverlay');
+  const gameOverOverlay = document.getElementById('gameOverOverlay');
+  const startBtn = document.getElementById('startBtn');
+  const restartBtn = document.getElementById('restartBtn');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  const bestDisplay = document.getElementById('bestDisplay');
+  const comboDisplay = document.getElementById('comboDisplay');
+  const finalScore = document.getElementById('finalScore');
+  const finalBest = document.getElementById('finalBest');
+  const finalCups = document.getElementById('finalCups');
+  const stars = document.querySelectorAll('.star');
+
+  const W = 400, H = 600;
+  const CUP_HEIGHT = 36;
+  const BASE_WIDTH = 140;
+  const CUP_SPEED_BASE = 120;
+  const PERFECT_THRESHOLD = 4;
+  const GRAVITY = 1800;
+
+  let state = 'menu'; // menu, playing, gameover
+  let score = 0;
+  let best = parseInt(localStorage.getItem('cupstack_best') || '0', 10);
+  let combo = 0;
+  let maxCombo = 0;
+  let cups = [];
+  let currentCup = null;
+  let particles = [];
+  let popups = [];
+  let steam = [];
+  let camY = 0;
+  let targetCamY = 0;
+  let shake = 0;
+  let direction = 1;
+  let cupCount = 0;
+  let level = 1;
+  let animId = null;
+  let lastT = 0;
+  let towerSway = 0;
+  let towerSwaySpeed = 1.2;
+  let bgOffset = 0;
+
+  bestDisplay.textContent = best;
+
+  // Colors for cups (coffee-themed palette)
+  const CUP_COLORS = [
+    { body: '#C4A882', rim: '#E8D5C0', liquid: '#3B2618', handle: '#A88B6A' },
+    { body: '#8B6F4E', rim: '#D4C4B0', liquid: '#2A1A10', handle: '#6B5338' },
+    { body: '#D4A574', rim: '#F0E0CC', liquid: '#4A3020', handle: '#B08050' },
+    { body: '#6B8E6B', rim: '#B8D4B8', liquid: '#2A1A10', handle: '#4A6A4A' },
+    { body: '#7A5C3C', rim: '#C8B098', liquid: '#3B2618', handle: '#5A4030' },
+    { body: '#A67C52', rim: '#DCC0A0', liquid: '#4A3020', handle: '#866040' },
+  ];
+
+  function getCupColor(idx) {
+    return CUP_COLORS[idx % CUP_COLORS.length];
+  }
+
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function initGame() {
+    score = 0;
+    combo = 0;
+    maxCombo = 0;
+    cupCount = 0;
+    level = 1;
+    cups = [];
+    particles = [];
+    popups = [];
+    steam = [];
+    camY = 0;
+    targetCamY = 0;
+    shake = 0;
+    direction = 1;
+    towerSway = 0;
+    bgOffset = 0;
+
+    // Base cup
+    cups.push({
+      x: W / 2,
+      y: H - 60,
+      w: BASE_WIDTH,
+      h: CUP_HEIGHT,
+      color: getCupColor(0),
+      landed: true,
+      perfect: false,
+      alpha: 1,
+    });
+
+    spawnCup();
+    updateHUD();
+  }
+
+  function spawnCup() {
+    const prev = cups[cups.length - 1];
+    const w = Math.max(40, prev.w);
+    const speed = CUP_SPEED_BASE + (level - 1) * 25;
+    const startX = direction === 1 ? -w : W + w;
+
+    currentCup = {
+      x: startX,
+      y: prev.y - CUP_HEIGHT + 4,
+      w: w,
+      h: CUP_HEIGHT,
+      color: getCupColor(cupCount + 1),
+      vx: direction * speed,
+      vy: 0,
+      falling: false,
+      landed: false,
+      alpha: 1,
+    };
+    direction *= -1;
+  }
+
+  function dropCup() {
+    if (!currentCup || currentCup.falling || currentCup.landed) return;
+    currentCup.falling = true;
+    currentCup.vx = 0;
+  }
+
+  function addParticles(x, y, color, count, speed) {
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const spd = Math.random() * speed + speed * 0.3;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * spd,
+        vy: Math.sin(angle) * spd - 40,
+        life: 1,
+        decay: 0.015 + Math.random() * 0.02,
+        size: 2 + Math.random() * 3,
+        color,
+      });
+    }
+  }
+
+  function addPopup(x, y, text, color) {
+    popups.push({
+      x, y,
+      text,
+      color,
+      life: 1,
+      vy: -40,
+    });
+  }
+
+  function addSteam() {
+    if (cups.length === 0) return;
+    const top = cups[cups.length - 1];
+    if (Math.random() < 0.3) {
+      steam.push({
+        x: top.x + (Math.random() - 0.5) * top.w * 0.4,
+        y: top.y - top.h + 4,
+        vx: (Math.random() - 0.5) * 10,
+        vy: -20 - Math.random() * 20,
+        life: 1,
+        size: 2 + Math.random() * 3,
+      });
+    }
+  }
+
+  function update(dt) {
+    bgOffset += dt * 8;
+
+    // Camera follow
+    const topY = cups.length > 0 ? cups[cups.length - 1].y : H - 60;
+    targetCamY = Math.max(0, (H - 120) - topY);
+    camY = lerp(camY, targetCamY, dt * 4);
+
+    // Tower sway
+    towerSway += dt * towerSwaySpeed;
+
+    // Shake decay
+    shake = Math.max(0, shake - dt * 8);
+
+    // Current cup
+    if (currentCup) {
+      if (!currentCup.falling) {
+        currentCup.x += currentCup.vx * dt;
+        // Bounce at edges
+        if (currentCup.x < currentCup.w / 2) {
+          currentCup.x = currentCup.w / 2;
+          currentCup.vx = Math.abs(currentCup.vx);
+        }
+        if (currentCup.x > W - currentCup.w / 2) {
+          currentCup.x = W - currentCup.w / 2;
+          currentCup.vx = -Math.abs(currentCup.vx);
+        }
+      } else {
+        currentCup.vy += GRAVITY * dt;
+        currentCup.y += currentCup.vy * dt;
+
+        const prev = cups[cups.length - 1];
+        const landingY = prev.y - currentCup.h + 4;
+
+        if (currentCup.y >= landingY) {
+          currentCup.y = landingY;
+          currentCup.vy = 0;
+          currentCup.falling = false;
+          currentCup.landed = true;
+
+          // Calculate overlap
+          const overlapLeft = Math.max(0, (prev.x - prev.w / 2) - (currentCup.x - currentCup.w / 2));
+          const overlapRight = Math.max(0, (currentCup.x + currentCup.w / 2) - (prev.x + prev.w / 2));
+          const newW = currentCup.w - overlapLeft - overlapRight;
+
+          if (newW <= 0) {
+            // Missed completely
+            gameOver();
+            return;
+          }
+
+          // Adjust x to center of overlap
+          const leftEdge = Math.max(prev.x - prev.w / 2, currentCup.x - currentCup.w / 2);
+          currentCup.x = leftEdge + newW / 2;
+          currentCup.w = newW;
+
+          const offCenter = Math.abs(currentCup.x - prev.x);
+          const isPerfect = offCenter < PERFECT_THRESHOLD;
+
+          if (isPerfect) {
+            combo++;
+            if (combo > maxCombo) maxCombo = combo;
+            const bonus = 50 + combo * 25;
+            score += 10 + bonus;
+            addPopup(currentCup.x, currentCup.y - 20, `PERFECT x${combo}! +${bonus}`, '#00D4AA');
+            addParticles(currentCup.x, currentCup.y, '#00D4AA', 18, 80);
+            shake = 0.3;
+          } else {
+            combo = 0;
+            score += 10;
+            addParticles(currentCup.x, currentCup.y, '#C4A882', 10, 50);
+            shake = offCenter > 15 ? 0.6 : 0.2;
+          }
+
+          currentCup.perfect = isPerfect;
+          cups.push(currentCup);
+          cupCount++;
+
+          if (cupCount % 5 === 0) {
+            level++;
+            addPopup(W / 2, H / 2 + camY, `Level ${level}!`, '#f0883e');
+          }
+
+          updateHUD();
+          spawnCup();
+        }
+      }
+    }
+
+    // Particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 80 * dt;
+      p.life -= p.decay;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+
+    // Popups
+    for (let i = popups.length - 1; i >= 0; i--) {
+      const p = popups[i];
+      p.y += p.vy * dt;
+      p.life -= dt * 1.2;
+      if (p.life <= 0) popups.splice(i, 1);
+    }
+
+    // Steam
+    addSteam();
+    for (let i = steam.length - 1; i >= 0; i--) {
+      const s = steam[i];
+      s.x += s.vx * dt;
+      s.y += s.vy * dt;
+      s.life -= dt * 0.6;
+      s.size += dt * 1.5;
+      if (s.life <= 0) steam.splice(i, 1);
+    }
+  }
+
+  function gameOver() {
+    state = 'gameover';
+    if (score > best) {
+      best = score;
+      localStorage.setItem('cupstack_best', String(best));
+    }
+    finalScore.textContent = score;
+    finalBest.textContent = best;
+    finalCups.textContent = cupCount;
+
+    // Stars: 1 star for 5+ cups, 2 for 15+, 3 for 30+
+    const starCount = cupCount >= 30 ? 3 : cupCount >= 15 ? 2 : cupCount >= 5 ? 1 : 0;
+    stars.forEach((s, i) => {
+      s.classList.toggle('lit', i < starCount);
+    });
+
+    gameOverOverlay.classList.remove('hidden');
+    updateHUD();
+  }
+
+  function updateHUD() {
+    scoreDisplay.textContent = score;
+    bestDisplay.textContent = best;
+    comboDisplay.textContent = combo;
+    comboDisplay.style.color = combo >= 3 ? '#00D4AA' : '#C4A882';
+  }
+
+  function drawCup(c, swayX) {
+    const x = c.x + swayX;
+    const y = c.y + camY;
+    const w = c.w;
+    const h = c.h;
+    const col = c.color;
+    const hw = w / 2;
+
+    ctx.globalAlpha = c.alpha;
+
+    // Cup shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath();
+    ctx.ellipse(x, y + 4, hw + 4, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Handle
+    ctx.strokeStyle = col.handle;
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    const hx = x + hw + 2;
+    ctx.moveTo(hx, y - h * 0.6);
+    ctx.bezierCurveTo(hx + 14, y - h * 0.6, hx + 14, y - h * 0.2, hx, y - h * 0.2);
+    ctx.stroke();
+
+    // Cup body (trapezoid)
+    ctx.fillStyle = col.body;
+    ctx.beginPath();
+    const taper = 6;
+    ctx.moveTo(x - hw + taper, y - h);
+    ctx.lineTo(x + hw - taper, y - h);
+    ctx.lineTo(x + hw, y);
+    ctx.lineTo(x - hw, y);
+    ctx.closePath();
+    ctx.fill();
+
+    // Rim
+    ctx.fillStyle = col.rim;
+    ctx.beginPath();
+    ctx.ellipse(x, y - h, hw - taper + 2, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Liquid surface
+    ctx.fillStyle = col.liquid;
+    ctx.beginPath();
+    ctx.ellipse(x, y - h + 2, hw - taper - 2, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.beginPath();
+    ctx.ellipse(x - hw * 0.3, y - h * 0.5, 3, h * 0.25, 0.1, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Perfect glow
+    if (c.perfect) {
+      ctx.strokeStyle = 'rgba(0,212,170,0.35)';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = 'rgba(0,212,170,0.4)';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.ellipse(x, y - h / 2, hw + 6, h / 2 + 4, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+
+    ctx.globalAlpha = 1;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background grid / cafe counter pattern
+    ctx.fillStyle = '#0d1117';
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle vertical lines (cafe tiles)
+    ctx.strokeStyle = 'rgba(139,148,158,0.04)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < W; i += 40) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, H);
+      ctx.stroke();
+    }
+
+    // Counter surface
+    const counterY = H - 40 + camY;
+    ctx.fillStyle = '#161b22';
+    ctx.fillRect(0, counterY, W, H);
+    ctx.fillStyle = 'rgba(196,168,130,0.08)';
+    ctx.fillRect(0, counterY, W, 2);
+
+    // Counter wood grain hint
+    ctx.strokeStyle = 'rgba(196,168,130,0.04)';
+    for (let i = -20; i < W + 20; i += 30) {
+      ctx.beginPath();
+      ctx.moveTo(i, counterY + 4);
+      ctx.lineTo(i + 10, counterY + 36);
+      ctx.stroke();
+    }
+
+    const sway = Math.sin(towerSway) * (cups.length > 5 ? 1.5 : 0.5);
+
+    // Draw cups (oldest first, so newer are on top visually)
+    for (let i = 0; i < cups.length; i++) {
+      const cupSway = sway * (i / Math.max(1, cups.length)) * 0.5;
+      drawCup(cups[i], cupSway);
+    }
+
+    // Draw current cup
+    if (currentCup) {
+      drawCup(currentCup, 0);
+
+      // Drop guide line (subtle)
+      if (!currentCup.falling) {
+        ctx.strokeStyle = 'rgba(0,212,170,0.12)';
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(currentCup.x, currentCup.y);
+        ctx.lineTo(currentCup.x, currentCup.y + 60);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+
+    // Particles
+    for (const p of particles) {
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y + camY, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Steam
+    for (const s of steam) {
+      ctx.globalAlpha = s.life * 0.3;
+      ctx.fillStyle = '#e6edf3';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y + camY, s.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Popups
+    for (const p of popups) {
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.font = `700 ${14 + Math.sin(p.life * Math.PI) * 4}px DM Sans, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 8;
+      ctx.fillText(p.text, p.x, p.y + camY);
+      ctx.shadowBlur = 0;
+    }
+    ctx.globalAlpha = 1;
+
+    // Height marker on right side
+    if (cups.length > 1) {
+      ctx.fillStyle = 'rgba(139,148,158,0.15)';
+      ctx.fillRect(W - 22, 0, 22, H);
+      ctx.fillStyle = 'rgba(0,212,170,0.5)';
+      const markerY = H - (cups.length * CUP_HEIGHT * 0.3) - 40;
+      ctx.fillRect(W - 22, markerY, 22, 2);
+      ctx.fillStyle = '#00D4AA';
+      ctx.font = '600 9px DM Sans, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(cupCount + ' cups', W - 4, markerY - 4);
+    }
+
+    // Screen shake
+    if (shake > 0) {
+      const sx = (Math.random() - 0.5) * shake * 10;
+      const sy = (Math.random() - 0.5) * shake * 10;
+      ctx.drawImage(canvas, 0, 0, W, H, sx, sy, W, H);
+    }
+  }
+
+  function loop(now) {
+    if (state !== 'playing') return;
+    const dt = Math.min((now - lastT) / 1000, 0.05);
+    lastT = now;
+    update(dt);
+    draw();
+    animId = requestAnimationFrame(loop);
+  }
+
+  function startGame() {
+    state = 'playing';
+    startOverlay.classList.add('hidden');
+    gameOverOverlay.classList.add('hidden');
+    initGame();
+    lastT = performance.now();
+    animId = requestAnimationFrame(loop);
+  }
+
+  // Inputs
+  function onAction(e) {
+    if (e) e.preventDefault();
+    if (state === 'playing') {
+      dropCup();
+    }
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      onAction();
+    }
+    if (e.code === 'KeyR' && state === 'gameover') {
+      startGame();
+    }
+  });
+
+  canvas.addEventListener('mousedown', onAction);
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); onAction(e); }, { passive: false });
+
+  startBtn.addEventListener('click', startGame);
+  restartBtn.addEventListener('click', startGame);
+
+  // Initial draw
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#161b22';
+  ctx.fillRect(0, H - 40, W, 40);
+  ctx.fillStyle = 'rgba(196,168,130,0.08)';
+  ctx.fillRect(0, H - 40, W, 2);
+  ctx.font = '500 13px DM Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#6e7681';
+  ctx.fillText('Tap Play to start', W / 2, H / 2);
+})();
+</script>
+</body>
+</html>
