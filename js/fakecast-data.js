@@ -56,6 +56,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers",
+        "date": "2026-05-06",
+        "description": "Today's episode covers 4 stories including Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-06.mp3",
+        "duration": 76
+      },
+      {
         "title": "Yemeni Cafes Rise as Coffee Gear Gets Wild",
         "date": "2026-05-04",
         "description": "We discuss the U.S. boom in Yemeni coffee shops, a Kansas City cafe reversing its no-tip policy, and Sprudge's latest gear roundup featuring the Acaia Horizon, Comandante Hammerhead burrs, BOOKOO scale, and more. We also preview barista competition workshops, the 2026 world championship calendar, and new coffee science around roast color and brew strength.",
