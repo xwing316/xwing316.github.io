@@ -15,7 +15,7 @@
     },
     {
       "speaker": "Alex",
-      "text": "It's Tuesday, May 05. Let's dive into what's new."
+      "text": "It's Wednesday, May 06. Let's dive into what's new."
     },
     {
       "speaker": "Jordan",
@@ -23,7 +23,7 @@
     },
     {
       "speaker": "Jordan",
-      "text": "First up: VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage."
+      "text": "First up: Ask HN: The death of software development as a job?."
     },
     {
       "speaker": "Jordan",
@@ -35,39 +35,39 @@
     },
     {
       "speaker": "Alex",
-      "text": "Next, I saw this: Show HN: Filling PDF forms with AI using client-side tool calling."
+      "text": "Next, I saw this: Claude Code: /effort is global across concurrent sessions instead of session."
     },
     {
       "speaker": "Jordan",
-      "text": "That's a fascinating development. Worth keeping an eye on."
+      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
     },
     {
       "speaker": "Alex",
-      "text": "Definitely. The pace of change in this space is just incredible."
+      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
     },
     {
       "speaker": "Jordan",
-      "text": "Also making the rounds: GitHub Copilot: Upcoming Deprecation of GPT-5.2 and GPT-5.2-Codex."
-    },
-    {
-      "speaker": "Alex",
-      "text": "The open source ecosystem around AI coding tools keeps getting richer. More options, more competition, better tools for everyone."
+      "text": "Also making the rounds: Anthropic quietly nerfed Claude Code's 1-hour cache."
     },
     {
       "speaker": "Jordan",
-      "text": "I love that we're seeing genuine alternatives to the big closed-source players."
+      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
     },
     {
       "speaker": "Alex",
-      "text": "And one more thing: GitHub Copilot Switches to Token-Based Billing for Developers."
+      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
     },
     {
       "speaker": "Alex",
-      "text": "The open source ecosystem around AI coding tools keeps getting richer. More options, more competition, better tools for everyone."
+      "text": "And one more thing: Claude Code still doesn't support AGENTS.md."
     },
     {
       "speaker": "Jordan",
-      "text": "I love that we're seeing genuine alternatives to the big closed-source players."
+      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
     },
     {
       "speaker": "Alex",

@@ -89,6 +89,36 @@
       "title": "Show HN: Probus, AI vuln scanner (PRs merged in Vercel AI SDK, n8n, LangGraph)",
       "url": "",
       "date": "2026-05-06T00:27:04.229715+00:00"
+    },
+    {
+      "title": "Ask HN: The death of software development as a job?",
+      "url": "",
+      "date": "2026-05-06T06:02:14.698819+00:00"
+    },
+    {
+      "title": "Claude Code: /effort is global across concurrent sessions instead of session",
+      "url": "https://github.com/anthropics/claude-code/issues/49166",
+      "date": "2026-05-06T06:02:14.698819+00:00"
+    },
+    {
+      "title": "Anthropic quietly nerfed Claude Code's 1-hour cache",
+      "url": "https://www.xda-developers.com/anthropic-quietly-nerfed-claude-code-hour-cache-token-budget/",
+      "date": "2026-05-06T06:02:14.698819+00:00"
+    },
+    {
+      "title": "Claude Code still doesn't support AGENTS.md",
+      "url": "https://github.com/anthropics/claude-code/issues/6235",
+      "date": "2026-05-06T06:02:14.698819+00:00"
+    },
+    {
+      "title": "Tell HN: Claude Opus 4.7 quota suddenly changed to 0 TPM in Bedrock",
+      "url": "",
+      "date": "2026-05-06T06:02:14.698819+00:00"
+    },
+    {
+      "title": "Anthropic's anti-distillation defense,reverse-engineered from Claude Code source",
+      "url": "https://wanlanglin.github.io/-awesome-cc-harness/en/",
+      "date": "2026-05-06T06:02:14.698819+00:00"
     }
   ],
   "coffee": [

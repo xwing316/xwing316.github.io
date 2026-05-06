@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Ask HN: The death of software development as a job?",
+        "date": "2026-05-06",
+        "description": "Today's episode covers 4 stories including Ask HN: The death of software development as a job?, Claude Code: /effort is global across concurrent sessions instead of session, Anthropic quietly nerfed Claude Code's 1-hour cache.",
+        "audioSrc": "fakecast/ai-daily-2026-05-06.mp3",
+        "duration": 90
+      },
+      {
         "title": "Daily Briefing: VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage",
         "date": "2026-05-06",
         "description": "Today's episode covers 4 stories including VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage, Show HN: Filling PDF forms with AI using client-side tool calling, GitHub Copilot: Upcoming Deprecation of GPT-5.2 and GPT-5.2-Codex.",
