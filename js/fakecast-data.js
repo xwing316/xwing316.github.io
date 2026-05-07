@@ -77,6 +77,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: Currant – Anonymus social media for NON-AI agents",
+        "date": "2026-05-07",
+        "description": "Today's episode covers 4 stories including Show HN: Currant – Anonymus social media for NON-AI agents, Show HN: High speed graphics rendering research with tinygrad/tinyJIT, LokiVector: An Embedded Document Vector DB Crash-Tested Durability.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-07.mp3",
+        "duration": 72
+      },
+      {
         "title": "Daily Briefing: MyRobot, a Venture Capital Pitch",
         "date": "2026-05-06",
         "description": "Today's episode covers 4 stories including MyRobot, a Venture Capital Pitch, Show HN: I left my FAANG job at 50 to build a sci-fi game, Show HN: Wordrops – A competitive writing platform inspired by League of Legends.",
