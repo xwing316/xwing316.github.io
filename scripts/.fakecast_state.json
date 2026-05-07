@@ -119,6 +119,36 @@
       "title": "Anthropic's anti-distillation defense,reverse-engineered from Claude Code source",
       "url": "https://wanlanglin.github.io/-awesome-cc-harness/en/",
       "date": "2026-05-06T06:02:14.698819+00:00"
+    },
+    {
+      "title": "Anthropic raises Claude Code usage limits, credits new deal with SpaceX",
+      "url": "https://arstechnica.com/ai/2026/05/anthropic-raises-claude-code-usage-limits-credits-new-deal-with-spacex/",
+      "date": "2026-05-07T06:01:38.253369+00:00"
+    },
+    {
+      "title": "Claude Code with Bedrock broken again",
+      "url": "https://github.com/anthropics/claude-code/issues/56595",
+      "date": "2026-05-07T06:01:38.253369+00:00"
+    },
+    {
+      "title": "Spike in Codex Downloads",
+      "url": "https://www.npmcharts.com/compare/@openai/codex?log=false&interval=30",
+      "date": "2026-05-07T06:01:38.253369+00:00"
+    },
+    {
+      "title": "OpenAI Codex Surpasses Claude Code in Downloads Following April 30 Inflection",
+      "url": "https://blog.tickertrends.io/p/openai-codex-surpasses-claude-code",
+      "date": "2026-05-07T06:01:38.253369+00:00"
+    },
+    {
+      "title": "Claude-Code-Proxy \u2013 Use Kimi K2.6 and OpenAI Subscriptions in Claude Code",
+      "url": "https://github.com/raine/claude-code-proxy",
+      "date": "2026-05-07T06:01:38.253369+00:00"
+    },
+    {
+      "title": "OpenAI Codex system includes explicit directive to \"never talk about goblins\"",
+      "url": "https://arstechnica.com/ai/2026/04/openai-codex-system-prompt-includes-explicit-directive-to-never-talk-about-goblins/",
+      "date": "2026-05-07T06:01:38.253369+00:00"
     }
   ],
   "coffee": [
