@@ -149,6 +149,36 @@
       "title": "OpenAI Codex system includes explicit directive to \"never talk about goblins\"",
       "url": "https://arstechnica.com/ai/2026/04/openai-codex-system-prompt-includes-explicit-directive-to-never-talk-about-goblins/",
       "date": "2026-05-07T06:01:38.253369+00:00"
+    },
+    {
+      "title": "Show HN: Airlock \u2013 self-upgrading compiled AI agents",
+      "url": "https://github.com/airlockrun/airlock/",
+      "date": "2026-05-08T06:00:20.866645+00:00"
+    },
+    {
+      "title": "Show HN: I vibe-coded an illegal streaming platform",
+      "url": "https://streamvaults.ru/",
+      "date": "2026-05-08T06:00:20.866645+00:00"
+    },
+    {
+      "title": "We scanned 100 Smithery MCP servers, 22 flagged, here's what we found",
+      "url": "",
+      "date": "2026-05-08T06:00:20.866645+00:00"
+    },
+    {
+      "title": "Show HN: An agent that remembers across sessions (no chat history)",
+      "url": "https://github.com/umbecanessa/neural-ledger-system",
+      "date": "2026-05-08T06:00:20.866645+00:00"
+    },
+    {
+      "title": "GitHub Copilot CLI combines model families for a second opinion",
+      "url": "https://github.blog/ai-and-ml/github-copilot/github-copilot-cli-combines-model-families-for-a-second-opinion/",
+      "date": "2026-05-08T06:00:20.866645+00:00"
+    },
+    {
+      "title": "Anthropic response to 1-click pwn: Shouldn't have clicked 'ok'",
+      "url": "https://www.theregister.com/security/2026/05/07/claude-code-trust-prompt-can-trigger-one-click-rce/5235319",
+      "date": "2026-05-08T06:00:20.866645+00:00"
     }
   ],
   "coffee": [

@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: Airlock – self-upgrading compiled AI agents",
+        "date": "2026-05-08",
+        "description": "Today's episode covers 4 stories including Show HN: Airlock – self-upgrading compiled AI agents, Show HN: I vibe-coded an illegal streaming platform, We scanned 100 Smithery MCP servers, 22 flagged, here's what we found.",
+        "audioSrc": "fakecast/ai-daily-2026-05-08.mp3",
+        "duration": 85
+      },
+      {
         "title": "Daily Briefing: Anthropic raises Claude Code usage limits, credits new deal with SpaceX",
         "date": "2026-05-07",
         "description": "Today's episode covers 4 stories including Anthropic raises Claude Code usage limits, credits new deal with SpaceX, Claude Code with Bedrock broken again, Spike in Codex Downloads.",

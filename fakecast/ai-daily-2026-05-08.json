@@ -1,0 +1,81 @@
+{
+  "title": "It's Just You and Me..... And AI - Daily Episode",
+  "hosts": {
+    "Alex": "en-US-Andrew:DragonHDLatestNeural",
+    "Jordan": "en-US-Emma:DragonHDLatestNeural"
+  },
+  "lines": [
+    {
+      "speaker": "Alex",
+      "text": "Good morning, good evening, or good whatever-time-zone you're in. Welcome to It's Just You and Me..... And AI. I'm Alex."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And I'm Jordan. Bringing you the latest in agentic AI, foundation models, and open-source breakthroughs."
+    },
+    {
+      "speaker": "Alex",
+      "text": "It's Friday, May 08. Let's dive into what's new."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "We've got some interesting stories today."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "First up: Show HN: Airlock \u2013 self-upgrading compiled AI agents."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Next, I saw this: Show HN: I vibe-coded an illegal streaming platform."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Also making the rounds: We scanned 100 Smithery MCP servers, 22 flagged, here's what we found."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Alex",
+      "text": "And one more thing: Show HN: An agent that remembers across sessions (no chat history)."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Alex",
+      "text": "That's all for today's episode. Thanks for joining us on It's Just You and Me..... And AI. I'm Alex."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And I'm Jordan. Stay curious, stay caffeinated, and we'll see you tomorrow."
+    }
+  ]
+}
