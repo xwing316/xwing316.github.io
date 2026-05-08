@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Bloom Spiral</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --bg-elevated: #161b22;
+  --coffee: #C4A882;
+  --coffee-dim: rgba(196,168,130,0.15);
+  --coffee-glow: rgba(196,168,130,0.35);
+  --cyan: #00D4AA;
+  --cyan-dim: rgba(0,212,170,0.12);
+  --cyan-glow: rgba(0,212,170,0.4);
+  --text: #e6edf3;
+  --text-soft: #8b949e;
+  --text-faint: #6e7681;
+  --border: rgba(139,148,158,0.15);
+  --danger: #ff6b6b;
+  --danger-glow: rgba(255,107,107,0.35);
+  --gold: #ffd700;
+  --silver: #c0c0c0;
+  --bronze: #cd7f32;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  overflow: hidden;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.game-wrap {
+  position: relative;
+  width: 100vw; height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 14px;
+  box-shadow: 0 0 60px rgba(0,0,0,0.6), 0 0 100px var(--coffee-glow);
+}
+
+.hud {
+  position: absolute;
+  top: 56px; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 10px 18px;
+  pointer-events: none;
+  z-index: 10;
+  max-width: 860px; margin: 0 auto;
+}
+
+.hud__col { display: flex; flex-direction: column; gap: 6px; }
+
+.hud__label {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+
+.hud__value {
+  font-size: 1.1rem; font-weight: 700; color: var(--text);
+  font-family: 'DM Serif Display', Georgia, serif;
+}
+
+.hud__value--cyan { color: var(--cyan); text-shadow: 0 0 12px var(--cyan-glow); }
+.hud__value--coffee { color: var(--coffee); text-shadow: 0 0 12px var(--coffee-glow); }
+.hud__value--danger { color: var(--danger); text-shadow: 0 0 12px var(--danger-glow); }
+
+.extraction-bar {
+  width: 180px; height: 10px;
+  background: rgba(139,148,158,0.12);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.extraction-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--coffee), var(--cyan));
+  border-radius: 5px;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+.extraction-bar::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 5px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+}
+
+.combo-popup {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.4rem; font-weight: 700;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(255,215,0,0.5);
+  opacity: 0; transform: translateY(0) scale(0.8);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 20;
+  font-family: 'DM Serif Display', Georgia, serif;
+}
+
+.combo-popup.show { opacity: 1; transform: translateY(-30px) scale(1.1); }
+
+.screen-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: rgba(13,17,23,0.88);
+  backdrop-filter: blur(10px);
+  z-index: 50;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s ease;
+  padding: 24px;
+  text-align: center;
+}
+
+.screen-overlay.active { opacity: 1; pointer-events: auto; }
+
+.screen-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  color: var(--coffee);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 30px var(--coffee-glow);
+}
+
+.screen-subtitle {
+  font-size: 1rem; color: var(--text-soft);
+  max-width: 420px; line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.screen-stats {
+  display: flex; gap: 24px; margin-bottom: 1.8rem;
+  flex-wrap: wrap; justify-content: center;
+}
+
+.stat-box {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 22px;
+  min-width: 100px;
+}
+
+.stat-box__num {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.6rem; color: var(--cyan);
+  text-shadow: 0 0 12px var(--cyan-glow);
+}
+
+.stat-box__label {
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-faint); margin-top: 4px;
+}
+
+.btn {
+  appearance: none; border: none; cursor: pointer;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.95rem; font-weight: 600;
+  padding: 12px 32px; border-radius: 10px;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  pointer-events: auto;
+}
+
+.btn--primary {
+  background: var(--cyan); color: var(--bg);
+  box-shadow: 0 2px 16px var(--cyan-glow);
+}
+.btn--primary:hover { transform: translateY(-2px); box-shadow: 0 4px 24px var(--cyan-glow); }
+
+.btn--outline {
+  background: transparent; color: var(--text-soft);
+  border: 1.5px solid var(--border);
+  margin-left: 12px;
+}
+.btn--outline:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.medal {
+  width: 72px; height: 72px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.6rem; font-weight: 700;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+}
+.medal--gold { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #332200; }
+.medal--silver { background: linear-gradient(135deg, #e0e0e0, #a0a0a0); color: #222; }
+.medal--bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); color: #fff; }
+
+.instructions-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  max-width: 380px; margin-bottom: 1.5rem;
+}
+
+.instruction-item {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 0.82rem; color: var(--text-soft);
+  text-align: left;
+}
+
+.key-badge {
+  display: inline-block; background: rgba(139,148,158,0.15);
+  border: 1px solid rgba(139,148,158,0.25);
+  border-radius: 4px; padding: 1px 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; color: var(--cyan);
+  margin-right: 4px;
+}
+
+.warning-flash {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle, transparent 40%, rgba(255,107,107,0.15) 100%);
+  pointer-events: none; opacity: 0; z-index: 15;
+  transition: opacity 0.2s;
+}
+.warning-flash.on { opacity: 1; }
+
+.phase-badge {
+  display: inline-block;
+  background: var(--cyan-dim); color: var(--cyan);
+  border: 1px solid rgba(0,212,170,0.2);
+  border-radius: 6px; padding: 3px 10px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+  .instructions-grid { grid-template-columns: 1fr; }
+  .screen-stats { gap: 12px; }
+  .stat-box { padding: 10px 16px; min-width: 80px; }
+  .extraction-bar { width: 140px; }
+}
+</style>
+</head>
+<body>
+<div class="game-wrap" id="gameWrap">
+  <canvas id="gameCanvas"></canvas>
+
+  <div class="hud" id="hud" style="display:none;">
+    <div class="hud__col">
+      <div class="hud__label">Extraction</div>
+      <div class="extraction-bar"><div class="extraction-fill" id="extractionFill"></div></div>
+      <div style="font-size:0.75rem;color:var(--text-faint);margin-top:2px;" id="extractionText">0%</div>
+    </div>
+    <div class="hud__col" style="align-items:center;">
+      <div class="hud__label">Phase</div>
+      <div class="phase-badge" id="phaseBadge">Bloom</div>
+    </div>
+    <div class="hud__col" style="align-items:flex-end;">
+      <div class="hud__label">Combo</div>
+      <div class="hud__value hud__value--cyan" id="comboDisplay">x1.0</div>
+      <div class="hud__label" style="margin-top:4px;">Score</div>
+      <div class="hud__value hud__value--coffee" id="scoreDisplay">0</div>
+    </div>
+  </div>
+
+  <div class="warning-flash" id="warningFlash"></div>
+  <div class="combo-popup" id="comboPopup">Combo x2</div>
+
+  <!-- Menu Screen -->
+  <div class="screen-overlay active" id="menuScreen">
+    <div class="screen-title">Bloom Spiral</div>
+    <div class="screen-subtitle">
+      Guide the gooseneck kettle in a perfect spiral pour. Stay on the golden path to saturate the coffee bed evenly and build extraction.
+    </div>
+    <div class="instructions-grid">
+      <div class="instruction-item"><span class="key-badge">Mouse</span> or <span class="key-badge">Touch</span> Move kettle</div>
+      <div class="instruction-item"><span class="key-badge">Arrows</span> or <span class="key-badge">WASD</span> Precision control</div>
+      <div class="instruction-item"><span class="key-badge">Space</span> Start / Restart</div>
+      <div class="instruction-item">Stay on the glowing path to extract. Straying drains progress.</div>
+    </div>
+    <div>
+      <button class="btn btn--primary" id="startBtn">Start Pour</button>
+    </div>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div class="screen-overlay" id="gameoverScreen">
+    <div class="medal" id="medal"></div>
+    <div class="screen-title" id="goTitle">Pour Complete</div>
+    <div class="screen-subtitle" id="goSubtitle"></div>
+    <div class="screen-stats">
+      <div class="stat-box"><div class="stat-box__num" id="goExtraction">0%</div><div class="stat-box__label">Extraction</div></div>
+      <div class="stat-box"><div class="stat-box__num" id="goCombo">x1.0</div><div class="stat-box__label">Best Combo</div></div>
+      <div class="stat-box"><div class="stat-box__num" id="goScore">0</div><div class="stat-box__label">Score</div></div>
+    </div>
+    <div>
+      <button class="btn btn--primary" id="restartBtn">Pour Again</button>
+      <a href="../games.html" class="btn btn--outline" style="text-decoration:none;display:inline-flex;align-items:center;">Games</a>
+    </div>
+  </div>
+</div>
+
+<script src="../js/game-header.js?v=3"></script>
+<script>
+(function() {
+  'use strict';
+
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const wrap = document.getElementById('gameWrap');
+
+  // HUD elements
+  const hud = document.getElementById('hud');
+  const extractionFill = document.getElementById('extractionFill');
+  const extractionText = document.getElementById('extractionText');
+  const phaseBadge = document.getElementById('phaseBadge');
+  const comboDisplay = document.getElementById('comboDisplay');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  const comboPopup = document.getElementById('comboPopup');
+  const warningFlash = document.getElementById('warningFlash');
+
+  // Screens
+  const menuScreen = document.getElementById('menuScreen');
+  const gameoverScreen = document.getElementById('gameoverScreen');
+
+  // Game state
+  let W = 800, H = 600;
+  let cx = W/2, cy = H/2 + 20;
+  let gameState = 'menu'; // menu, playing, gameover
+  let lastTime = 0;
+  let time = 0;
+
+  // Player (kettle spout)
+  let player = { x: cx, y: cy, vx: 0, vy: 0, radius: 10 };
+  let usingKeyboard = false;
+
+  // Target (pour point)
+  let target = { x: cx, y: cy, theta: 0, radius: 0 };
+
+  // Spiral & phase config
+  const PHASES = [
+    { name: 'Bloom', duration: 8, speed: 1.0, innerR: 15, outerR: 90, tolerance: 38, fillRate: 18, drainRate: 6 },
+    { name: 'First Pour', duration: 12, speed: 1.35, innerR: 20, outerR: 190, tolerance: 30, fillRate: 14, drainRate: 8 },
+    { name: 'Second Pour', duration: 12, speed: 1.7, innerR: 30, outerR: 260, tolerance: 24, fillRate: 12, drainRate: 10 },
+  ];
+  let phaseIndex = 0;
+  let phaseTime = 0;
+  let phaseProgress = 0;
+
+  // Score & extraction
+  let extraction = 0; // 0-100
+  let score = 0;
+  let combo = 0; // consecutive seconds on-target
+  let bestCombo = 0;
+  let multiplier = 1;
+  let onTarget = false;
+  let onTargetTime = 0;
+  let totalOnTargetTime = 0;
+
+  // Particles
+  let particles = [];
+  let droplets = [];
+  let sparkles = [];
+  let floatTexts = [];
+
+  // Visuals
+  let pathTrail = []; // recent target positions for trail
+  let coffeeBedRadius = 55;
+  let pulsePhase = 0;
+  let warningTimer = 0;
+  let phaseTransitionTimer = 0;
+  let gameResult = null; // 'gold', 'silver', 'bronze', 'fail'
+
+  // High score
+  const STORAGE_KEY = 'bloom_spiral_best';
+  let highScore = 0;
+  try { highScore = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10) || 0; } catch(e) {}
+
+  // Resize
+  function resize() {
+    const maxW = window.innerWidth - 24;
+    const maxH = window.innerHeight - 72;
+    const aspect = W / H;
+    let cw = maxW, ch = maxH;
+    if (cw / ch > aspect) cw = ch * aspect;
+    else ch = cw / aspect;
+    canvas.style.width = Math.floor(cw) + 'px';
+    canvas.style.height = Math.floor(ch) + 'px';
+    canvas.width = W; canvas.height = H;
+  }
+
+  // Input
+  const keys = {};
+  let mousePos = { x: cx, y: cy };
+  let mouseActive = false;
+
+  function setPlayerFromMouse(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    const scaleY = H / rect.height;
+    mousePos.x = (clientX - rect.left) * scaleX;
+    mousePos.y = (clientY - rect.top) * scaleY;
+    usingKeyboard = false;
+    mouseActive = true;
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    if (gameState !== 'playing') return;
+    setPlayerFromMouse(e.clientX, e.clientY);
+  });
+
+  canvas.addEventListener('touchmove', e => {
+    if (gameState !== 'playing') return;
+    e.preventDefault();
+    setPlayerFromMouse(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
+
+  canvas.addEventListener('touchstart', e => {
+    if (gameState !== 'playing') return;
+    e.preventDefault();
+    setPlayerFromMouse(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
+
+  window.addEventListener('keydown', e => {
+    keys[e.key] = true;
+    if (e.key === ' ' || e.key === 'Enter') {
+      if (gameState === 'menu') { e.preventDefault(); startGame(); }
+      else if (gameState === 'gameover') { e.preventDefault(); startGame(); }
+    }
+    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)) {
+      usingKeyboard = true;
+    }
+  });
+  window.addEventListener('keyup', e => { keys[e.key] = false; });
+
+  // Particle helpers
+  function addSteam(x, y, amount) {
+    for (let i = 0; i < amount; i++) {
+      particles.push({
+        x: x + (Math.random()-0.5)*16,
+        y: y + (Math.random()-0.5)*16,
+        vx: (Math.random()-0.5)*0.8,
+        vy: -0.5 - Math.random()*1.2,
+        life: 0.6 + Math.random()*0.8,
+        maxLife: 1,
+        size: 2 + Math.random()*5,
+        color: Math.random() > 0.5 ? 'rgba(196,168,130,' : 'rgba(0,212,170,'
+      });
+    }
+  }
+
+  function addDroplet(x, y) {
+    droplets.push({
+      x: x, y: y,
+      vx: (Math.random()-0.5)*0.6,
+      vy: 0.4 + Math.random()*0.6,
+      life: 0.4 + Math.random()*0.4,
+      size: 1.5 + Math.random()*2
+    });
+  }
+
+  function addSparkle(x, y, color) {
+    for (let i = 0; i < 8; i++) {
+      const angle = (Math.PI*2/8)*i + Math.random()*0.5;
+      const speed = 1 + Math.random()*3;
+      sparkles.push({
+        x: x, y: y,
+        vx: Math.cos(angle)*speed,
+        vy: Math.sin(angle)*speed,
+        life: 0.5 + Math.random()*0.5,
+        size: 1.5 + Math.random()*2,
+        color: color || 'rgba(0,212,170,'
+      });
+    }
+  }
+
+  function addFloatText(text, x, y, color) {
+    floatTexts.push({
+      text, x, y,
+      vy: -1.2,
+      life: 1.2,
+      color: color || '#ffd700'
+    });
+  }
+
+  // Phase transition pulse
+  function triggerPhaseTransition() {
+    phaseTransitionTimer = 0.6;
+    addSparkle(cx, cy, 'rgba(0,212,170,');
+    addSparkle(cx, cy, 'rgba(196,168,130,');
+  }
+
+  // Start game
+  function startGame() {
+    gameState = 'playing';
+    time = 0;
+    phaseIndex = 0;
+    phaseTime = 0;
+    phaseProgress = 0;
+    extraction = 0;
+    score = 0;
+    combo = 0;
+    bestCombo = 0;
+    multiplier = 1;
+    onTarget = false;
+    onTargetTime = 0;
+    totalOnTargetTime = 0;
+    particles = []; droplets = []; sparkles = []; floatTexts = [];
+    pathTrail = [];
+    warningTimer = 0;
+    phaseTransitionTimer = 0;
+    gameResult = null;
+
+    player.x = cx; player.y = cy - 30;
+    mousePos.x = cx; mousePos.y = cy - 30;
+    usingKeyboard = false; mouseActive = false;
+
+    target.theta = -Math.PI/2;
+    updateTargetPosition();
+
+    menuScreen.classList.remove('active');
+    gameoverScreen.classList.remove('active');
+    hud.style.display = 'flex';
+    updateHUD();
+  }
+
+  function updateTargetPosition() {
+    const cfg = PHASES[phaseIndex];
+    const p = phaseProgress; // 0-1 through phase
+    // Spiral: theta increases with progress
+    const revs = 3.5; // total revolutions in this phase
+    target.theta = -Math.PI/2 + p * revs * Math.PI * 2;
+    // Radius expands from inner to outer
+    target.radius = cfg.innerR + (cfg.outerR - cfg.innerR) * p;
+    target.x = cx + Math.cos(target.theta) * target.radius;
+    target.y = cy + Math.sin(target.theta) * target.radius;
+  }
+
+  function update(dt) {
+    if (gameState !== 'playing') return;
+    time += dt;
+    pulsePhase += dt * 3;
+
+    // Phase progression
+    const cfg = PHASES[phaseIndex];
+    phaseTime += dt;
+    phaseProgress = Math.min(1, phaseTime / cfg.duration);
+
+    // Update target
+    updateTargetPosition();
+    pathTrail.push({ x: target.x, y: target.y, life: 1 });
+    if (pathTrail.length > 60) pathTrail.shift();
+
+    // Phase transition
+    if (phaseProgress >= 1) {
+      if (phaseIndex < PHASES.length - 1) {
+        phaseIndex++;
+        phaseTime = 0;
+        phaseProgress = 0;
+        triggerPhaseTransition();
+        addFloatText(PHASES[phaseIndex].name + '!', cx, cy - 80, '#00D4AA');
+      } else {
+        // All phases done — evaluate result
+        endGame();
+        return;
+      }
+    }
+
+    // Player movement
+    if (usingKeyboard) {
+      const speed = 220 * dt;
+      if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= speed;
+      if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += speed;
+      if (keys['ArrowUp'] || keys['w'] || keys['W']) player.y -= speed;
+      if (keys['ArrowDown'] || keys['s'] || keys['S']) player.y += speed;
+    } else if (mouseActive) {
+      // Smooth lerp toward mouse
+      const lerp = 1 - Math.pow(0.001, dt);
+      player.x += (mousePos.x - player.x) * lerp;
+      player.y += (mousePos.y - player.y) * lerp;
+    }
+
+    // Clamp player
+    const margin = 20;
+    player.x = Math.max(margin, Math.min(W-margin, player.x));
+    player.y = Math.max(margin, Math.min(H-margin, player.y));
+
+    // Distance to target
+    const dx = player.x - target.x;
+    const dy = player.y - target.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const tolerance = cfg.tolerance;
+
+    // On-target logic
+    const wasOnTarget = onTarget;
+    onTarget = dist < tolerance;
+
+    if (onTarget) {
+      onTargetTime += dt;
+      totalOnTargetTime += dt;
+      combo += dt;
+      if (combo > bestCombo) bestCombo = combo;
+
+      // Multiplier tiers
+      if (combo >= 6) multiplier = 4;
+      else if (combo >= 4) multiplier = 3;
+      else if (combo >= 2) multiplier = 2;
+      else multiplier = 1;
+
+      // Fill extraction
+      const accuracy = 1 - Math.min(1, dist / tolerance);
+      const fill = cfg.fillRate * accuracy * multiplier * dt;
+      extraction = Math.min(100, extraction + fill);
+      score += Math.floor(fill * 10);
+
+      // Visuals
+      if (Math.random() < 0.4) addSteam(player.x, player.y, 1);
+      if (Math.random() < 0.3) addDroplet(player.x, player.y + 6);
+      if (combo >= 2 && Math.floor(combo*10)%10 === 0 && Math.floor(combo) !== Math.floor(combo - dt)) {
+        addFloatText('x' + multiplier, player.x, player.y - 25, '#ffd700');
+      }
+      if (!wasOnTarget) {
+        addSparkle(player.x, player.y, 'rgba(0,212,170,');
+      }
+      warningTimer = 0;
+    } else {
+      combo = 0;
+      multiplier = 1;
+      onTargetTime = 0;
+      // Drain extraction slowly
+      extraction = Math.max(0, extraction - cfg.drainRate * dt);
+      warningTimer += dt;
+    }
+
+    // Lose condition
+    if (extraction <= 0 && time > 1.5) {
+      endGame();
+      return;
+    }
+
+    // Warning flash
+    if (warningTimer > 1.2 && onTarget === false) {
+      warningFlash.classList.add('on');
+      if (Math.floor(time * 4) % 2 === 0) {
+        warningFlash.style.opacity = '0.25';
+      } else {
+        warningFlash.style.opacity = '0.1';
+      }
+    } else {
+      warningFlash.classList.remove('on');
+      warningFlash.style.opacity = '0';
+    }
+
+    // Phase transition visual
+    if (phaseTransitionTimer > 0) {
+      phaseTransitionTimer -= dt;
+    }
+
+    // Update particles
+    particles.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy; p.life -= dt;
+      p.vx *= 0.98;
+    });
+    particles = particles.filter(p => p.life > 0);
+
+    droplets.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy; p.life -= dt;
+      p.vy += dt * 2;
+    });
+    droplets = droplets.filter(p => p.life > 0);
+
+    sparkles.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy; p.life -= dt;
+      p.vx *= 0.92; p.vy *= 0.92;
+    });
+    sparkles = sparkles.filter(p => p.life > 0);
+
+    floatTexts.forEach((p, i) => {
+      p.y += p.vy * dt * 60;
+      p.life -= dt;
+    });
+    floatTexts = floatTexts.filter(p => p.life > 0);
+
+    pathTrail.forEach(p => p.life -= dt * 1.5);
+    pathTrail = pathTrail.filter(p => p.life > 0);
+
+    updateHUD();
+  }
+
+  function updateHUD() {
+    extractionFill.style.width = extraction + '%';
+    extractionText.textContent = Math.floor(extraction) + '%';
+    phaseBadge.textContent = PHASES[phaseIndex].name;
+    comboDisplay.textContent = 'x' + multiplier.toFixed(1);
+    scoreDisplay.textContent = score.toLocaleString();
+
+    // Combo popup
+    if (multiplier >= 2) {
+      comboPopup.textContent = 'x' + multiplier;
+      comboPopup.classList.add('show');
+      comboPopup.style.left = (player.x / W * 100) + '%';
+      comboPopup.style.top = (player.y / H * 100) + '%';
+    } else {
+      comboPopup.classList.remove('show');
+    }
+  }
+
+  function endGame() {
+    gameState = 'gameover';
+    if (extraction >= 100) gameResult = 'gold';
+    else if (extraction >= 85) gameResult = 'silver';
+    else if (extraction >= 70) gameResult = 'bronze';
+    else gameResult = 'fail';
+
+    if (score > highScore) {
+      highScore = score;
+      try { localStorage.setItem(STORAGE_KEY, String(highScore)); } catch(e) {}
+    }
+
+    const medalEl = document.getElementById('medal');
+    const goTitle = document.getElementById('goTitle');
+    const goSubtitle = document.getElementById('goSubtitle');
+
+    if (gameResult === 'gold') {
+      medalEl.className = 'medal medal--gold';
+      medalEl.textContent = 'Gold';
+      goTitle.textContent = 'Perfect Extraction';
+      goSubtitle.textContent = 'Your pour was flawless. The coffee bed is evenly saturated with beautiful clarity.';
+    } else if (gameResult === 'silver') {
+      medalEl.className = 'medal medal--silver';
+      medalEl.textContent = 'Silver';
+      goTitle.textContent = 'Great Pour';
+      goSubtitle.textContent = 'Solid technique. A few uneven spots, but the cup will still shine.';
+    } else if (gameResult === 'bronze') {
+      medalEl.className = 'medal medal--bronze';
+      medalEl.textContent = 'Bronze';
+      goTitle.textContent = 'Under-Extracted';
+      goSubtitle.textContent = 'The pour had some channeling. Tighten your spiral and stay closer to the path.';
+    } else {
+      medalEl.className = 'medal';
+      medalEl.style.background = 'var(--bg-elevated)';
+      medalEl.style.border = '2px solid var(--border)';
+      medalEl.style.color = 'var(--text-faint)';
+      medalEl.textContent = '—';
+      goTitle.textContent = 'Channeling Detected';
+      goSubtitle.textContent = 'The water found cracks and bypassed the grounds. Try to stay on the spiral path.';
+    }
+
+    document.getElementById('goExtraction').textContent = Math.floor(extraction) + '%';
+    document.getElementById('goCombo').textContent = 'x' + (1 + bestCombo * 0.5).toFixed(1);
+    document.getElementById('goScore').textContent = score.toLocaleString();
+
+    hud.style.display = 'none';
+    gameoverScreen.classList.add('active');
+
+    // Burst effect
+    for (let i = 0; i < 30; i++) {
+      addSparkle(cx + (Math.random()-0.5)*200, cy + (Math.random()-0.5)*200,
+        gameResult === 'gold' ? 'rgba(255,215,0,' : gameResult === 'silver' ? 'rgba(192,192,192,' : 'rgba(0,212,170,');
+    }
+  }
+
+  // Drawing
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background vignette
+    const grad = ctx.createRadialGradient(cx, cy, 80, cx, cy, 400);
+    grad.addColorStop(0, 'rgba(22,27,34,0.4)');
+    grad.addColorStop(1, 'rgba(13,17,23,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Coffee bed
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, coffeeBedRadius, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(60,40,20,0.6)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(196,168,130,0.15)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Grounds texture dots
+    for (let i = 0; i < 40; i++) {
+      const angle = (i / 40) * Math.PI * 2 + time * 0.1;
+      const r = coffeeBedRadius * (0.3 + 0.7 * ((i * 37) % 100)/100);
+      ctx.beginPath();
+      ctx.arc(cx + Math.cos(angle)*r, cy + Math.sin(angle)*r, 1.2, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(100,70,40,0.4)';
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // Path trail
+    if (pathTrail.length > 1) {
+      ctx.save();
+      for (let i = 1; i < pathTrail.length; i++) {
+        const p0 = pathTrail[i-1];
+        const p1 = pathTrail[i];
+        const alpha = p0.life * 0.4;
+        ctx.beginPath();
+        ctx.moveTo(p0.x, p0.y);
+        ctx.lineTo(p1.x, p1.y);
+        ctx.strokeStyle = `rgba(196,168,130,${alpha})`;
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // Phase transition ring
+    if (phaseTransitionTimer > 0) {
+      const t = 1 - phaseTransitionTimer / 0.6;
+      const ringR = 40 + t * 300;
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(0,212,170,${0.3 * (1-t)})`;
+      ctx.lineWidth = 2 + t * 3;
+      ctx.stroke();
+    }
+
+    // Target indicator (glowing dot)
+    const cfg = PHASES[phaseIndex];
+    const targetPulse = 1 + Math.sin(pulsePhase) * 0.15;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(target.x, target.y, 6 * targetPulse, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,215,0,0.9)';
+    ctx.shadowColor = 'rgba(255,215,0,0.5)';
+    ctx.shadowBlur = 16;
+    ctx.fill();
+    ctx.restore();
+
+    // Tolerance ring around target
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(target.x, target.y, cfg.tolerance, 0, Math.PI*2);
+    ctx.strokeStyle = onTarget ? 'rgba(0,212,170,0.18)' : 'rgba(255,107,107,0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.restore();
+
+    // Player (kettle spout)
+    ctx.save();
+    // Glow
+    const playerColor = onTarget ? 'rgba(0,212,170,0.8)' : 'rgba(255,107,107,0.8)';
+    const playerGlow = onTarget ? 'rgba(0,212,170,0.4)' : 'rgba(255,107,107,0.3)';
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.radius + 4, 0, Math.PI*2);
+    ctx.fillStyle = playerGlow;
+    ctx.shadowColor = playerColor;
+    ctx.shadowBlur = 20;
+    ctx.fill();
+    // Core
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2);
+    ctx.fillStyle = onTarget ? '#00D4AA' : '#ff6b6b';
+    ctx.fill();
+    // White center
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, 4, 0, Math.PI*2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    ctx.restore();
+
+    // Kettle spout visual (small triangle pointing down)
+    ctx.save();
+    ctx.translate(player.x, player.y - 2);
+    ctx.beginPath();
+    ctx.moveTo(-4, -8);
+    ctx.lineTo(4, -8);
+    ctx.lineTo(0, -2);
+    ctx.closePath();
+    ctx.fillStyle = onTarget ? 'rgba(0,212,170,0.6)' : 'rgba(255,107,107,0.5)';
+    ctx.fill();
+    ctx.restore();
+
+    // Particles (steam)
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
+      ctx.fillStyle = p.color + (p.life * 0.4) + ')';
+      ctx.fill();
+    });
+
+    // Droplets
+    droplets.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(196,168,130,${p.life * 0.7})`;
+      ctx.fill();
+    });
+
+    // Sparkles
+    sparkles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
+      ctx.fillStyle = p.color + (p.life * 0.9) + ')';
+      ctx.shadowColor = p.color + '0.5)';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+    });
+    ctx.shadowBlur = 0;
+
+    // Float texts
+    floatTexts.forEach(p => {
+      ctx.save();
+      ctx.font = '700 16px "DM Serif Display", Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.fillText(p.text, p.x, p.y);
+      ctx.restore();
+    });
+
+    // Phase info on canvas (small)
+    ctx.save();
+    ctx.font = '500 12px "DM Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(139,148,158,0.5)';
+    ctx.fillText('Phase ' + (phaseIndex+1) + ' of ' + PHASES.length, cx, H - 16);
+    ctx.restore();
+  }
+
+  function loop(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    const dt = Math.min(0.05, (timestamp - lastTime) / 1000);
+    lastTime = timestamp;
+
+    update(dt);
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // Button handlers
+  document.getElementById('startBtn').addEventListener('click', startGame);
+  document.getElementById('restartBtn').addEventListener('click', startGame);
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

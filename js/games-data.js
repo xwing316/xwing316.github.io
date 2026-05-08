@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-08',
+    title: 'Bloom Spiral',
+    description: 'Guide the gooseneck kettle in a perfect spiral pour-over. Stay on the glowing golden path to evenly saturate the coffee bed, build combo multipliers, and achieve flawless extraction through three phases: Bloom, First Pour, and Second Pour.',
+    category: 'action',
+    thumbnail: 'assets/images/game-coffee-2026-05-08.png',
+    file: 'games/coffee-2026-05-08.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-08',
+  },
+
+  {
     id: 'coffee-2026-05-06',
     title: 'Crema Curve',
     description: 'Master the art of espresso extraction. Follow the scrolling pressure curve with your cursor to pull the perfect shot. Keep your accuracy high to build combo multipliers and fill your cup with golden crema before time runs out.',
