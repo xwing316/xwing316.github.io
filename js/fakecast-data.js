@@ -84,6 +84,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: Full Python GUI apps in the browser – no JavaScript, no server",
+        "date": "2026-05-08",
+        "description": "Today's episode covers 4 stories including Show HN: Full Python GUI apps in the browser – no JavaScript, no server, Show HN: Zoneless – Open-source Stripe Connect clone with $0.002 fees using USDC, Ask HN: Analysis of credit card receipts to show one does not buy alcohol.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-08.mp3",
+        "duration": 82
+      },
+      {
         "title": "Daily Briefing: Show HN: Currant – Anonymus social media for NON-AI agents",
         "date": "2026-05-07",
         "description": "Today's episode covers 4 stories including Show HN: Currant – Anonymus social media for NON-AI agents, Show HN: High speed graphics rendering research with tinygrad/tinyJIT, LokiVector: An Embedded Document Vector DB Crash-Tested Durability.",
