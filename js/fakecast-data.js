@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Copilot Cloud Agent Gets Dedicated Agent Secrets",
+        "date": "2026-05-09",
+        "description": "Alex and Jordan cover GitHub Copilot cloud agent adding organization-level Agents secrets and variables, plus Rubber Duck cross-model reviewing and enterprise-managed Copilot CLI plugins. They also dig into Codex CLI 0.130.0, model churn in Copilot, and why agent credentials are the new security front line.",
+        "audioSrc": "fakecast/ai-daily-2026-05-09.mp3",
+        "duration": 511
+      },
+      {
         "title": "Daily Briefing: Show HN: Airlock – self-upgrading compiled AI agents",
         "date": "2026-05-08",
         "description": "Today's episode covers 4 stories including Show HN: Airlock – self-upgrading compiled AI agents, Show HN: I vibe-coded an illegal streaming platform, We scanned 100 Smithery MCP servers, 22 flagged, here's what we found.",
@@ -83,6 +90,13 @@ const FAKECAST_DATA = {
     "hosts": "Milo & Riley",
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
+      {
+        "title": "Dean's Beans Wins as Coffee Costs Keep Climbing",
+        "date": "2026-05-09",
+        "description": "Milo and Riley discuss Dean's Beans being named Massachusetts Rural Business of the Year, Lavazza's regenerative B2B coffee, Starbucks' Thailand farmer initiative, and Royal Cup's Farmer Brothers acquisition. They also unpack fertilizer price shocks, Texas A&M's NR4A1 coffee-health research, and free U.S. Barista Championship prep workshops.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-09.mp3",
+        "duration": 498
+      },
       {
         "title": "Daily Briefing: Show HN: Full Python GUI apps in the browser – no JavaScript, no server",
         "date": "2026-05-08",
