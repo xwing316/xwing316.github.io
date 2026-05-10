@@ -1,0 +1,81 @@
+{
+  "title": "It's Just You and Me..... And AI - Daily Episode",
+  "hosts": {
+    "Alex": "en-US-Andrew:DragonHDLatestNeural",
+    "Jordan": "en-US-Emma:DragonHDLatestNeural"
+  },
+  "lines": [
+    {
+      "speaker": "Alex",
+      "text": "Good morning, good evening, or good whatever-time-zone you're in. Welcome to It's Just You and Me..... And AI. I'm Alex."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And I'm Jordan. Bringing you the latest in agentic AI, foundation models, and open-source breakthroughs."
+    },
+    {
+      "speaker": "Alex",
+      "text": "It's Sunday, May 10. Let's dive into what's new."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "We've got some interesting stories today."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "First up: Jetro \u2013 JSON query engine for Rust (jq-like DSL with compilation and VM)."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Next, I saw this: Claude Code's creator is sick of the phrase 'vibe coding.'."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Also making the rounds: Claude Code creator Boris Cherny is sick of the phrase 'vibe coding'."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
+    },
+    {
+      "speaker": "Alex",
+      "text": "And one more thing: Running Codex Safely at OpenAI."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Alex",
+      "text": "That's all for today's episode. Thanks for joining us on It's Just You and Me..... And AI. I'm Alex."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And I'm Jordan. Stay curious, stay caffeinated, and we'll see you tomorrow."
+    }
+  ]
+}

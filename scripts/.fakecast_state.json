@@ -179,6 +179,36 @@
       "title": "Anthropic response to 1-click pwn: Shouldn't have clicked 'ok'",
       "url": "https://www.theregister.com/security/2026/05/07/claude-code-trust-prompt-can-trigger-one-click-rce/5235319",
       "date": "2026-05-08T06:00:20.866645+00:00"
+    },
+    {
+      "title": "Jetro \u2013 JSON query engine for Rust (jq-like DSL with compilation and VM)",
+      "url": "https://github.com/mitghi/jetro",
+      "date": "2026-05-10T06:01:10.500600+00:00"
+    },
+    {
+      "title": "Claude Code's creator is sick of the phrase 'vibe coding.'",
+      "url": "https://www.businessinsider.com/claude-code-creator-boris-cherny-vibe-coding-anthropic-ai-2026-5",
+      "date": "2026-05-10T06:01:10.500600+00:00"
+    },
+    {
+      "title": "Claude Code creator Boris Cherny is sick of the phrase 'vibe coding'",
+      "url": "https://www.businessinsider.com/claude-code-creator-boris-cherny-vibe-coding-anthropic-ai-2026-5",
+      "date": "2026-05-10T06:01:10.500600+00:00"
+    },
+    {
+      "title": "Running Codex Safely at OpenAI",
+      "url": "https://openai.com/index/running-codex-safely/",
+      "date": "2026-05-10T06:01:10.500600+00:00"
+    },
+    {
+      "title": "Show HN: An agent that tunes its own cache",
+      "url": "",
+      "date": "2026-05-10T06:01:10.500600+00:00"
+    },
+    {
+      "title": "SpaceXAI prepares Grok Build desktop app to rival OpenAI Codex",
+      "url": "https://www.testingcatalog.com/spacexai-prepares-grok-build-desktop-app-to-rival-openai-codex/",
+      "date": "2026-05-10T06:01:10.500600+00:00"
     }
   ],
   "coffee": [

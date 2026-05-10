@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Jetro – JSON query engine for Rust (jq-like DSL with compilation and VM)",
+        "date": "2026-05-10",
+        "description": "Today's episode covers 4 stories including Jetro – JSON query engine for Rust (jq-like DSL with compilation and VM), Claude Code's creator is sick of the phrase 'vibe coding.', Claude Code creator Boris Cherny is sick of the phrase 'vibe coding'.",
+        "audioSrc": "fakecast/ai-daily-2026-05-10.mp3",
+        "duration": 88
+      },
+      {
         "title": "Copilot Cloud Agent Gets Dedicated Agent Secrets",
         "date": "2026-05-09",
         "description": "Alex and Jordan cover GitHub Copilot cloud agent adding organization-level Agents secrets and variables, plus Rubber Duck cross-model reviewing and enterprise-managed Copilot CLI plugins. They also dig into Codex CLI 0.130.0, model churn in Copilot, and why agent credentials are the new security front line.",
