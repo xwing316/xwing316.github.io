@@ -98,6 +98,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Why Snow Globe Cups Are Popular–and Why This Design Makes Sense",
+        "date": "2026-05-10",
+        "description": "Today's episode covers 4 stories including Why Snow Globe Cups Are Popular–and Why This Design Makes Sense, Show HN: My AI agents bully each other to prevent context drift, Tell HN: Class action investigation into Google withholding Play developer funds.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-10.mp3",
+        "duration": 73
+      },
+      {
         "title": "Dean's Beans Wins as Coffee Costs Keep Climbing",
         "date": "2026-05-09",
         "description": "Milo and Riley discuss Dean's Beans being named Massachusetts Rural Business of the Year, Lavazza's regenerative B2B coffee, Starbucks' Thailand farmer initiative, and Royal Cup's Farmer Brothers acquisition. They also unpack fertilizer price shocks, Texas A&M's NR4A1 coffee-health research, and free U.S. Barista Championship prep workshops.",

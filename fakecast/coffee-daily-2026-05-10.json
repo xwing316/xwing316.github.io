@@ -1,0 +1,81 @@
+{
+  "title": "The Daily Grind - Daily Episode",
+  "hosts": {
+    "Milo": "en-US-Davis:DragonHDLatestNeural",
+    "Riley": "en-US-Phoebe:DragonHDLatestNeural"
+  },
+  "lines": [
+    {
+      "speaker": "Milo",
+      "text": "Welcome to The Daily Grind, your daily dose of specialty coffee news. I'm Milo."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And I'm Riley. If your cup is empty, now's the time to fix that."
+    },
+    {
+      "speaker": "Milo",
+      "text": "It's Sunday, May 10. Let's dive into what's new."
+    },
+    {
+      "speaker": "Riley",
+      "text": "We've got some interesting stories today."
+    },
+    {
+      "speaker": "Riley",
+      "text": "First up: Why Snow Globe Cups Are Popular\u2013and Why This Design Makes Sense."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Next, I saw this: Show HN: My AI agents bully each other to prevent context drift."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Also making the rounds: Tell HN: Class action investigation into Google withholding Play developer funds."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Milo",
+      "text": "And one more thing: Ask HN: Paid ambient/background noise for focus?."
+    },
+    {
+      "speaker": "Riley",
+      "text": "That's a fascinating development. Worth keeping an eye on."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Definitely. The pace of change in this space is just incredible."
+    },
+    {
+      "speaker": "Milo",
+      "text": "That's all for The Daily Grind today. I'm Milo."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And I'm Riley. Brew something beautiful, and we'll catch you tomorrow."
+    }
+  ]
+}
