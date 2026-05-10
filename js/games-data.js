@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-10',
+    title: 'Grind Rush',
+    description: 'The morning rush is here! Beans fall down three grinder lanes. Tap or press the matching key when a bean hits the cyan grind zone. Build your combo for massive scores. Three misses and the shift ends.',
+    category: 'action',
+    thumbnail: 'assets/images/game-coffee-2026-05-10.png',
+    file: 'games/coffee-2026-05-10.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-10',
+  },
+
+  {
     id: 'coffee-2026-05-08',
     title: 'Bloom Spiral',
     description: 'Guide the gooseneck kettle in a perfect spiral pour-over. Stay on the glowing golden path to evenly saturate the coffee bed, build combo multipliers, and achieve flawless extraction through three phases: Bloom, First Pour, and Second Pour.',
