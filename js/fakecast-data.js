@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Tell HN: Claude claims the AGPLv3 license violates it's content policy",
+        "date": "2026-05-11",
+        "description": "Today's episode covers 4 stories including Tell HN: Claude claims the AGPLv3 license violates it's content policy, Ask HN: Best foundation model for CLM fine-tuning?, Show HN: Cactus – Ollama for Smartphones.",
+        "audioSrc": "fakecast/ai-daily-2026-05-11.mp3",
+        "duration": 90
+      },
+      {
         "title": "Daily Briefing: Jetro – JSON query engine for Rust (jq-like DSL with compilation and VM)",
         "date": "2026-05-10",
         "description": "Today's episode covers 4 stories including Jetro – JSON query engine for Rust (jq-like DSL with compilation and VM), Claude Code's creator is sick of the phrase 'vibe coding.', Claude Code creator Boris Cherny is sick of the phrase 'vibe coding'.",
