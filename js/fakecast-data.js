@@ -105,6 +105,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: GPU Perpetual Futures Prototype",
+        "date": "2026-05-11",
+        "description": "Today's episode covers 4 stories including Show HN: GPU Perpetual Futures Prototype, Show HN: Been Ski – Track ski resort visits across 4,500 resorts worldwide, Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-11.mp3",
+        "duration": 74
+      },
+      {
         "title": "Daily Briefing: Why Snow Globe Cups Are Popular–and Why This Design Makes Sense",
         "date": "2026-05-10",
         "description": "Today's episode covers 4 stories including Why Snow Globe Cups Are Popular–and Why This Design Makes Sense, Show HN: My AI agents bully each other to prevent context drift, Tell HN: Class action investigation into Google withholding Play developer funds.",
