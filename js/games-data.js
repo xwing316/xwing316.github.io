@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-11',
+    title: 'Espresso Blaster',
+    description: 'Pilot your espresso cup through the morning rush. Blast descending decaf beans, ice cubes, and stale pastries with steaming hot espresso shots. Collect spread, rapid, and shield power-ups, chain combos for massive score multipliers, and survive the escalating waves.',
+    category: 'action',
+    thumbnail: 'assets/images/game-coffee-2026-05-11.png',
+    file: 'games/coffee-2026-05-11.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-11',
+  },
+
+  {
     id: 'coffee-2026-05-10',
     title: 'Grind Rush',
     description: 'The morning rush is here! Beans fall down three grinder lanes. Tap or press the matching key when a bean hits the cyan grind zone. Build your combo for massive scores. Three misses and the shift ends.',
