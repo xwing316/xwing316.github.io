@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-12',
+    title: 'Barista Defense',
+    description: 'Defend the Fresh Pot from waves of decaf invaders, stale pastries, and watery brews. Place coffee equipment towers along the golden path, chain combos for massive scores, and survive all 10 waves including the final Mega Latte boss.',
+    category: 'strategy',
+    thumbnail: 'assets/images/game-coffee-2026-05-12.png',
+    file: 'games/coffee-2026-05-12.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-12',
+  },
+
+  {
     id: 'coffee-2026-05-11',
     title: 'Espresso Blaster',
     description: 'Pilot your espresso cup through the morning rush. Blast descending decaf beans, ice cubes, and stale pastries with steaming hot espresso shots. Collect spread, rapid, and shield power-ups, chain combos for massive score multipliers, and survive the escalating waves.',

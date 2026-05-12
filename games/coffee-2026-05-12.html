@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barista Defense</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --bg-elevated: #161b22;
+  --coffee: #C4A882;
+  --coffee-glow: rgba(196,168,130,0.25);
+  --cyan: #00D4AA;
+  --cyan-glow: rgba(0,212,170,0.3);
+  --text: #e6edf3;
+  --text-soft: #8b949e;
+  --text-faint: #6e7681;
+  --border: rgba(139,148,158,0.12);
+  --danger: #ff6b6b;
+  --danger-glow: rgba(255,107,107,0.3);
+  --warning: #f5a623;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.back-link {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  color: var(--cyan);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s, transform 0.2s;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.back-link:hover { color: var(--coffee); transform: translateX(-3px); }
+.back-link svg { width: 16px; height: 16px; }
+
+.game-wrapper {
+  width: 100%;
+  max-width: 960px;
+  padding: 72px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stat-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.stat-group .label { color: var(--text-faint); font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-group .value { color: var(--cyan); font-variant-numeric: tabular-nums; }
+.stat-group .value.coffee { color: var(--coffee); }
+.stat-group .value.danger { color: var(--danger); }
+
+.wave-badge {
+  background: rgba(0,212,170,0.1);
+  color: var(--cyan);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(0,212,170,0.2);
+}
+
+.canvas-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 800 / 520;
+  background: #0a0e14;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,212,170,0.06), inset 0 0 60px rgba(0,0,0,0.4);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: rgba(13,17,23,0.92);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.overlay-screen.active { opacity: 1; pointer-events: auto; }
+
+.overlay-screen h2 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  color: var(--text);
+  text-align: center;
+}
+.overlay-screen p { color: var(--text-soft); text-align: center; max-width: 420px; line-height: 1.6; font-size: 0.95rem; padding: 0 16px; }
+.overlay-screen .big-stat { font-size: 2.2rem; font-weight: 700; color: var(--cyan); font-variant-numeric: tabular-nums; }
+
+.btn {
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: none;
+  font-family: inherit;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn--primary {
+  background: var(--cyan);
+  color: var(--bg);
+  box-shadow: 0 4px 20px var(--cyan-glow);
+}
+.btn--primary:hover { box-shadow: 0 6px 28px var(--cyan-glow); }
+.btn--outline {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+.btn--outline:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.tower-bar {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tower-btn {
+  flex: 1 1 140px;
+  max-width: 180px;
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  color: var(--text);
+}
+.tower-btn:hover { border-color: var(--cyan); transform: translateY(-2px); }
+.tower-btn.selected {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0,212,170,0.15), 0 4px 16px var(--cyan-glow);
+}
+.tower-btn .tower-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.tower-btn .tower-name { font-size: 0.78rem; font-weight: 600; }
+.tower-btn .tower-cost { font-size: 0.72rem; color: var(--coffee); font-weight: 600; }
+.tower-btn .tower-desc { font-size: 0.68rem; color: var(--text-faint); text-align: center; line-height: 1.3; }
+
+.instructions {
+  width: 100%;
+  max-width: 800px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+.instructions strong { color: var(--text); }
+.instructions kbd {
+  background: rgba(139,148,158,0.12);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--cyan);
+}
+
+.wave-announce {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--cyan);
+  text-shadow: 0 0 24px var(--cyan-glow), 0 0 48px var(--cyan-glow);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 5;
+  text-align: center;
+  white-space: nowrap;
+}
+.wave-announce.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+@media (max-width: 640px) {
+  .game-wrapper { padding-top: 64px; }
+  .header-bar { padding: 10px 14px; }
+  .tower-btn { flex: 1 1 100px; max-width: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="../games.html" class="back-link">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+  Games
+</a>
+
+<div class="game-wrapper">
+  <div class="header-bar">
+    <div class="stat-group">
+      <span class="label">Score</span>
+      <span class="value" id="scoreVal">0</span>
+    </div>
+    <div class="stat-group">
+      <span class="label">Beans</span>
+      <span class="value coffee" id="moneyVal">120</span>
+    </div>
+    <div class="stat-group">
+      <span class="label">Pot Health</span>
+      <span class="value danger" id="livesVal">20</span>
+    </div>
+    <div class="wave-badge" id="waveBadge">Wave 1 / 10</div>
+    <button class="btn btn--primary" id="waveBtn" onclick="startNextWave()">Start Wave</button>
+  </div>
+
+  <div class="canvas-container" id="canvasContainer">
+    <canvas id="gameCanvas" width="800" height="520"></canvas>
+    <div class="wave-announce" id="waveAnnounce"></div>
+
+    <div class="overlay-screen active" id="startScreen">
+      <h2>Barista Defense</h2>
+      <p>Defend the Fresh Pot from waves of decaf invaders, stale pastries, and watery brews. Place coffee equipment towers along the path and survive all 10 waves.</p>
+      <button class="btn btn--primary" onclick="startGame()">Start Brewing</button>
+    </div>
+
+    <div class="overlay-screen" id="gameOverScreen">
+      <h2 id="goTitle">Game Over</h2>
+      <p id="goMessage">The Fresh Pot has been compromised.</p>
+      <div class="big-stat" id="goScore">0</div>
+      <p style="color: var(--text-faint); font-size: 0.85rem;">Final Score</p>
+      <div style="display:flex; gap:10px; margin-top:8px;">
+        <button class="btn btn--primary" onclick="restartGame()">Replay</button>
+      </div>
+    </div>
+
+    <div class="overlay-screen" id="pauseScreen">
+      <h2>Paused</h2>
+      <p>Take a breather. The beans won't grind themselves.</p>
+      <button class="btn btn--primary" onclick="togglePause()">Resume</button>
+    </div>
+  </div>
+
+  <div class="tower-bar" id="towerBar"></div>
+
+  <div class="instructions">
+    <strong>How to play:</strong> Select a tower below, then click/tap an empty grid cell to place it. Enemies follow the golden path toward your Fresh Pot. Towers automatically attack enemies in range.
+    Start each wave with the <strong>Start Wave</strong> button. <kbd>1</kbd>–<kbd>4</kbd> select towers, <kbd>P</kbd> to pause, <kbd>R</kbd> to restart. On touch: tap tower buttons, then tap grid.
+  </div>
+</div>
+
+<script src="../js/game-header.js?v=3"></script>
+<script>
+/* ========== CONFIG ========== */
+const COLS = 16, ROWS = 10, CS = 50;
+const W = COLS * CS, H = ROWS * CS;
+const PATH = [
+  {x:0,y:2},{x:1,y:2},{x:2,y:2},{x:3,y:2},{x:3,y:3},{x:3,y:4},
+  {x:4,y:4},{x:5,y:4},{x:6,y:4},{x:7,y:4},{x:7,y:3},{x:7,y:2},
+  {x:8,y:2},{x:9,y:2},{x:10,y:2},{x:11,y:2},{x:11,y:3},{x:11,y:4},
+  {x:11,y:5},{x:11,y:6},{x:10,y:6},{x:9,y:6},{x:8,y:6},{x:7,y:6},
+  {x:6,y:6},{x:5,y:6},{x:4,y:6},{x:3,y:6},{x:3,y:7},{x:3,y:8},
+  {x:4,y:8},{x:5,y:8},{x:6,y:8},{x:7,y:8},{x:8,y:8},{x:9,y:8},
+  {x:10,y:8},{x:11,y:8},{x:12,y:8},{x:13,y:8},{x:14,y:8},{x:15,y:8}
+];
+const POT = PATH[PATH.length-1];
+
+const TOWERS = [
+  { key:1, name:'Grinder', cost:40, dmg:12, range:120, rate:25, color:'#C4A882', glow:'rgba(196,168,130,0.35)', desc:'Fast, low damage' },
+  { key:2, name:'Espresso', cost:80, dmg:45, range:140, rate:55, color:'#8B5E3C', glow:'rgba(139,94,60,0.35)', desc:'Slow, high damage' },
+  { key:3, name:'Steam', cost:120, dmg:18, range:110, rate:35, color:'#00D4AA', glow:'rgba(0,212,170,0.35)', desc:'Area splash damage', splash:true },
+  { key:4, name:'Pour-Over', cost:100, dmg:22, range:180, rate:40, color:'#E8A838', glow:'rgba(232,168,56,0.35)', desc:'Long range, slows', slow:true }
+];
+
+const ENEMY_TYPES = [
+  { name:'Decaf', hp:35, speed:0.8, reward:8, color:'#6e7681', r:10 },
+  { name:'Stale', hp:70, speed:0.5, reward:14, color:'#8b6914', r:12 },
+  { name:'Watery', hp:25, speed:1.4, reward:6, color:'#58a6ff', r:9 },
+  { name:'MegaLatte', hp:300, speed:0.35, reward:50, color:'#ff6b6b', r:16, boss:true }
+];
+
+const WAVES = [
+  { count:6, types:[0], interval:900 },
+  { count:10, types:[0,0,2], interval:800 },
+  { count:12, types:[0,2,1], interval:750 },
+  { count:14, types:[1,1,2], interval:700 },
+  { count:16, types:[0,1,2,2], interval:650 },
+  { count:12, types:[1,1,3], interval:900 },
+  { count:20, types:[0,1,2,2,2], interval:550 },
+  { count:18, types:[1,1,3,2], interval:600 },
+  { count:24, types:[0,1,2,3], interval:500 },
+  { count:1, types:[3], interval:300, bossWave:true }
+];
+
+/* ========== STATE ========== */
+let canvas, ctx, animId;
+let towers = [], enemies = [], projectiles = [], particles = [], floatTexts = [];
+let score = 0, money = 120, lives = 20, wave = 0, waveActive = false, gameOver = false, paused = false, won = false;
+let selectedTowerIdx = 0;
+let waveTimer = 0, spawnQueue = [], spawnTimer = 0;
+let mouse = {x:0,y:0,cellX:-1,cellY:-1,down:false};
+let highScore = parseInt(localStorage.getItem('baristaDefenseHS')||'0');
+
+/* ========== INIT ========== */
+window.onload = () => {
+  canvas = document.getElementById('gameCanvas');
+  ctx = canvas.getContext('2d');
+  buildTowerBar();
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  canvas.addEventListener('mousemove', e => { updateMouse(e); });
+  canvas.addEventListener('mousedown', e => { updateMouse(e); handleClick(); });
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); updateTouch(e); handleClick(); }, {passive:false});
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); updateTouch(e); }, {passive:false});
+  document.addEventListener('keydown', onKey);
+  requestAnimationFrame(loop);
+};
+
+function resizeCanvas() {
+  const rect = document.getElementById('canvasContainer').getBoundingClientRect();
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+}
+
+function buildTowerBar() {
+  const bar = document.getElementById('towerBar');
+  bar.innerHTML = '';
+  TOWERS.forEach((t,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tower-btn' + (i===0?' selected':'');
+    btn.innerHTML = `
+      <div class="tower-icon" style="background:${t.color}20;color:${t.color}">${t.key}</div>
+      <div class="tower-name">${t.name}</div>
+      <div class="tower-cost">${t.cost} beans</div>
+      <div class="tower-desc">${t.desc}</div>
+    `;
+    btn.onclick = () => selectTower(i);
+    bar.appendChild(btn);
+  });
+}
+
+function selectTower(i) {
+  selectedTowerIdx = i;
+  document.querySelectorAll('.tower-btn').forEach((b,idx) => b.classList.toggle('selected', idx===i));
+}
+
+function updateMouse(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width, scaleY = H / rect.height;
+  mouse.x = (e.clientX - rect.left) * scaleX;
+  mouse.y = (e.clientY - rect.top) * scaleY;
+  mouse.cellX = Math.floor(mouse.x / CS);
+  mouse.cellY = Math.floor(mouse.y / CS);
+}
+
+function updateTouch(e) {
+  const t = e.touches[0];
+  if (!t) return;
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width, scaleY = H / rect.height;
+  mouse.x = (t.clientX - rect.left) * scaleX;
+  mouse.y = (t.clientY - rect.top) * scaleY;
+  mouse.cellX = Math.floor(mouse.x / CS);
+  mouse.cellY = Math.floor(mouse.y / CS);
+}
+
+function onKey(e) {
+  if (e.key === 'p' || e.key === 'P') { togglePause(); return; }
+  if (e.key === 'r' || e.key === 'R') { if (gameOver||won) restartGame(); return; }
+  if (e.key === ' ') { if (!waveActive && !gameOver && !won && !paused) startNextWave(); return; }
+  const n = parseInt(e.key);
+  if (n >= 1 && n <= 4) selectTower(n-1);
+}
+
+/* ========== GAME FLOW ========== */
+function startGame() {
+  document.getElementById('startScreen').classList.remove('active');
+  resetState();
+}
+
+function resetState() {
+  towers=[]; enemies=[]; projectiles=[]; particles=[]; floatTexts=[];
+  score=0; money=120; lives=20; wave=0; waveActive=false; gameOver=false; paused=false; won=false;
+  spawnQueue=[]; spawnTimer=0;
+  updateUI();
+  document.getElementById('gameOverScreen').classList.remove('active');
+  document.getElementById('waveBtn').textContent = 'Start Wave';
+  document.getElementById('waveBtn').disabled = false;
+}
+
+function restartGame() {
+  resetState();
+  document.getElementById('gameOverScreen').classList.remove('active');
+}
+
+function togglePause() {
+  if (gameOver || won) return;
+  paused = !paused;
+  document.getElementById('pauseScreen').classList.toggle('active', paused);
+}
+
+function startNextWave() {
+  if (waveActive || gameOver || won || paused) return;
+  wave++;
+  if (wave > WAVES.length) { winGame(); return; }
+  waveActive = true;
+  const w = WAVES[wave-1];
+  spawnQueue = [];
+  for (let i=0;i<w.count;i++) spawnQueue.push(randPick(w.types));
+  spawnTimer = 0;
+  updateUI();
+  announce(w.bossWave ? 'BOSS WAVE!' : `Wave ${wave}`);
+  document.getElementById('waveBtn').disabled = true;
+  document.getElementById('waveBtn').textContent = 'Wave Active';
+}
+
+function announce(text) {
+  const el = document.getElementById('waveAnnounce');
+  el.textContent = text;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+function endWave() {
+  waveActive = false;
+  const bonus = 20 + wave * 10;
+  money += bonus;
+  score += bonus;
+  spawnFloatText(W/2, H/2, `+${bonus} Wave Bonus`, '#00D4AA', 22);
+  if (wave >= WAVES.length) { winGame(); return; }
+  updateUI();
+  document.getElementById('waveBtn').disabled = false;
+  document.getElementById('waveBtn').textContent = 'Start Wave';
+}
+
+function winGame() {
+  won = true; waveActive = false;
+  if (score > highScore) { highScore = score; localStorage.setItem('baristaDefenseHS', String(highScore)); }
+  document.getElementById('goTitle').textContent = 'Victory!';
+  document.getElementById('goTitle').style.color = 'var(--cyan)';
+  document.getElementById('goMessage').textContent = `The Fresh Pot is safe. All ${WAVES.length} waves cleared! High score: ${highScore}`;
+  document.getElementById('goScore').textContent = score;
+  document.getElementById('gameOverScreen').classList.add('active');
+}
+
+function loseGame() {
+  gameOver = true; waveActive = false;
+  if (score > highScore) { highScore = score; localStorage.setItem('baristaDefenseHS', String(highScore)); }
+  document.getElementById('goTitle').textContent = 'Game Over';
+  document.getElementById('goTitle').style.color = 'var(--danger)';
+  document.getElementById('goMessage').textContent = `The Fresh Pot has been compromised. Waves survived: ${wave}. High score: ${highScore}`;
+  document.getElementById('goScore').textContent = score;
+  document.getElementById('gameOverScreen').classList.add('active');
+}
+
+function updateUI() {
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('moneyVal').textContent = money;
+  document.getElementById('livesVal').textContent = lives;
+  document.getElementById('waveBadge').textContent = `Wave ${Math.min(wave+1, WAVES.length)} / ${WAVES.length}`;
+}
+
+/* ========== LOOP ========== */
+function loop(ts) {
+  if (!paused && !gameOver && !won) {
+    update(ts);
+  }
+  draw();
+  animId = requestAnimationFrame(loop);
+}
+
+function update(ts) {
+  /* spawning */
+  if (waveActive && spawnQueue.length > 0) {
+    spawnTimer++;
+    const w = WAVES[wave-1];
+    if (spawnTimer >= w.interval * 0.06) { // approx frames at 60fps
+      spawnTimer = 0;
+      const typeIdx = spawnQueue.shift();
+      spawnEnemy(typeIdx);
+    }
+  }
+
+  /* enemies */
+  for (let i=enemies.length-1;i>=0;i--) {
+    const e = enemies[i];
+    moveEnemy(e);
+    if (e.pathIdx >= PATH.length) {
+      lives -= e.boss ? 5 : 1;
+      spawnParticles(e.x, e.y, e.color, 8);
+      enemies.splice(i,1);
+      if (lives <= 0) { lives = 0; loseGame(); }
+    }
+  }
+
+  /* towers firing */
+  towers.forEach(t => {
+    if (t.cooldown > 0) t.cooldown--;
+    if (t.cooldown <= 0) {
+      const target = findTarget(t);
+      if (target) {
+        fire(t, target);
+        t.cooldown = t.rate;
+      }
+    }
+  });
+
+  /* projectiles */
+  for (let i=projectiles.length-1;i>=0;i--) {
+    const p = projectiles[i];
+    const dx = p.tx - p.x, dy = p.ty - p.y, dist = Math.hypot(dx,dy);
+    if (dist < p.speed) {
+      hitProjectile(p);
+      projectiles.splice(i,1);
+    } else {
+      p.x += (dx/dist) * p.speed;
+      p.y += (dy/dist) * p.speed;
+    }
+  }
+
+  /* particles */
+  for (let i=particles.length-1;i>=0;i--) {
+    const pt = particles[i];
+    pt.x += pt.vx; pt.y += pt.vy; pt.life -= pt.decay; pt.vy += 0.05;
+    if (pt.life <= 0) particles.splice(i,1);
+  }
+
+  /* float texts */
+  for (let i=floatTexts.length-1;i>=0;i--) {
+    const ft = floatTexts[i];
+    ft.y -= ft.vy; ft.life -= ft.decay;
+    if (ft.life <= 0) floatTexts.splice(i,1);
+  }
+
+  if (waveActive && spawnQueue.length===0 && enemies.length===0) {
+    endWave();
+  }
+
+  updateUI();
+}
+
+/* ========== SPAWNING & MOVEMENT ========== */
+function spawnEnemy(typeIdx) {
+  const t = ENEMY_TYPES[typeIdx];
+  const start = PATH[0];
+  enemies.push({
+    x: start.x*CS + CS/2, y: start.y*CS + CS/2,
+    hp: t.hp * (1 + (wave-1)*0.12), maxHp: t.hp * (1 + (wave-1)*0.12),
+    speed: t.speed, reward: t.reward, color: t.color, r: t.r,
+    typeIdx, pathIdx: 0, progress: 0, boss: t.boss||false, slowTimer: 0
+  });
+}
+
+function moveEnemy(e) {
+  let spd = e.speed;
+  if (e.slowTimer > 0) { spd *= 0.6; e.slowTimer--; }
+  e.progress += spd;
+  const curr = PATH[e.pathIdx];
+  const next = PATH[e.pathIdx+1];
+  if (!next) return;
+  const need = CS;
+  if (e.progress >= need) {
+    e.progress -= need;
+    e.pathIdx++;
+    if (e.pathIdx >= PATH.length) return;
+  }
+  const a = PATH[e.pathIdx], b = PATH[e.pathIdx+1] || a;
+  const t = e.progress / need;
+  e.x = (a.x + (b.x - a.x)*t)*CS + CS/2;
+  e.y = (a.y + (b.y - a.y)*t)*CS + CS/2;
+}
+
+/* ========== TOWERS ========== */
+function handleClick() {
+  if (gameOver || won || paused) return;
+  const cx = mouse.cellX, cy = mouse.cellY;
+  if (cx < 0 || cx >= COLS || cy < 0 || cy >= ROWS) return;
+  if (isPathCell(cx,cy)) return;
+  if (towers.some(t => t.cx===cx && t.cy===cy)) return;
+  const t = TOWERS[selectedTowerIdx];
+  if (money < t.cost) {
+    spawnFloatText(mouse.x, mouse.y, 'Not enough beans!', '#ff6b6b', 14);
+    return;
+  }
+  money -= t.cost;
+  towers.push({
+    cx, cy, x: cx*CS+CS/2, y: cy*CS+CS/2,
+    dmg: t.dmg, range: t.range, rate: t.rate, color: t.color, glow: t.glow,
+    splash: t.splash||false, slow: t.slow||false, cooldown: 0
+  });
+  spawnParticles(cx*CS+CS/2, cy*CS+CS/2, t.color, 12, true);
+  spawnFloatText(cx*CS+CS/2, cy*CS, `-${t.cost}`, '#C4A882', 14);
+}
+
+function findTarget(tower) {
+  let best = null, bestDist = Infinity;
+  for (const e of enemies) {
+    const d = Math.hypot(e.x - tower.x, e.y - tower.y);
+    if (d <= tower.range && d < bestDist) {
+      bestDist = d; best = e;
+    }
+  }
+  return best;
+}
+
+function fire(t, e) {
+  projectiles.push({
+    x: t.x, y: t.y, tx: e.x, ty: e.y,
+    speed: 9, dmg: t.dmg, color: t.color,
+    splash: t.splash, slow: t.slow, splashRange: t.splash?70:0
+  });
+}
+
+function hitProjectile(p) {
+  if (p.splash) {
+    spawnParticles(p.x, p.y, p.color, 16);
+    enemies.forEach(e => {
+      if (Math.hypot(e.x-p.x, e.y-p.y) <= p.splashRange) damageEnemy(e, p.dmg);
+    });
+  } else if (p.slow) {
+    const e = enemies.find(en => Math.hypot(en.x-p.x, en.y-p.y) < 20);
+    if (e) { damageEnemy(e, p.dmg); e.slowTimer = 90; }
+  } else {
+    const e = enemies.find(en => Math.hypot(en.x-p.x, en.y-p.y) < 20);
+    if (e) damageEnemy(e, p.dmg);
+  }
+}
+
+function damageEnemy(e, dmg) {
+  e.hp -= dmg;
+  if (e.hp <= 0) {
+    money += e.reward;
+    score += e.reward * 10;
+    spawnParticles(e.x, e.y, e.color, e.boss?30:12);
+    spawnFloatText(e.x, e.y, `+${e.reward*10}`, '#00D4AA', e.boss?20:14);
+    if (e.boss) spawnFloatText(e.x, e.y-20, 'BOSS DOWN!', '#ff6b6b', 18);
+    const idx = enemies.indexOf(e);
+    if (idx > -1) enemies.splice(idx,1);
+  }
+}
+
+/* ========== FX ========== */
+function spawnParticles(x,y,color,n,burst=false) {
+  for (let i=0;i<n;i++) {
+    const angle = Math.random()*Math.PI*2;
+    const speed = burst ? 1+Math.random()*3 : 0.5+Math.random()*2;
+    particles.push({
+      x, y,
+      vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed - (burst?1.5:0),
+      life: 1, decay: 0.02+Math.random()*0.03,
+      color, size: 1.5+Math.random()*2.5
+    });
+  }
+}
+
+function spawnFloatText(x,y,text,color,fontSize=14) {
+  floatTexts.push({x,y,text,color,fontSize,life:1,decay:0.015,vy:0.8});
+}
+
+function isPathCell(cx,cy) {
+  return PATH.some(p => p.x===cx && p.y===cy);
+}
+function randPick(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+
+/* ========== DRAW ========== */
+function draw() {
+  ctx.clearRect(0,0,W,H);
+
+  /* grid */
+  ctx.strokeStyle = 'rgba(139,148,158,0.06)';
+  ctx.lineWidth = 1;
+  for (let x=0;x<=W;x+=CS) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y=0;y<=H;y+=CS) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  /* path */
+  ctx.strokeStyle = 'rgba(196,168,130,0.18)';
+  ctx.lineWidth = 28;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.beginPath();
+  PATH.forEach((p,i) => { const px=p.x*CS+CS/2, py=p.y*CS+CS/2; if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); });
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(196,168,130,0.08)';
+  ctx.lineWidth = 40;
+  ctx.stroke();
+
+  /* path nodes glow */
+  PATH.forEach((p,i) => {
+    const px=p.x*CS+CS/2, py=p.y*CS+CS/2;
+    const g = ctx.createRadialGradient(px,py,2,px,py,14);
+    g.addColorStop(0, 'rgba(196,168,130,0.25)');
+    g.addColorStop(1, 'rgba(196,168,130,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(px,py,14,0,Math.PI*2); ctx.fill();
+  });
+
+  /* pot */
+  const potX = POT.x*CS+CS/2, potY = POT.y*CS+CS/2;
+  const pg = ctx.createRadialGradient(potX,potY,4,potX,potY,30);
+  pg.addColorStop(0, 'rgba(0,212,170,0.5)');
+  pg.addColorStop(1, 'rgba(0,212,170,0)');
+  ctx.fillStyle = pg;
+  ctx.beginPath(); ctx.arc(potX,potY,30,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#00D4AA';
+  ctx.beginPath(); ctx.arc(potX,potY,8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#0d1117';
+  ctx.beginPath(); ctx.arc(potX,potY,4,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(0,212,170,0.7)';
+  ctx.font = 'bold 11px DM Sans';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('POT', potX, potY+22);
+
+  /* hover range + placement preview */
+  if (!gameOver && !won && !paused) {
+    const cx = mouse.cellX, cy = mouse.cellY;
+    if (cx>=0 && cx<COLS && cy>=0 && cy<ROWS) {
+      const t = TOWERS[selectedTowerIdx];
+      const canPlace = !isPathCell(cx,cy) && !towers.some(tw => tw.cx===cx && tw.cy===cy);
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle = canPlace ? t.color : '#ff6b6b';
+      ctx.fillRect(cx*CS+2, cy*CS+2, CS-4, CS-4);
+      ctx.globalAlpha = 1;
+      if (canPlace) {
+        ctx.strokeStyle = t.color;
+        ctx.globalAlpha = 0.2;
+        ctx.beginPath(); ctx.arc(cx*CS+CS/2, cy*CS+CS/2, t.range, 0, Math.PI*2); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+
+  /* towers */
+  towers.forEach(t => {
+    /* range glow */
+    const rg = ctx.createRadialGradient(t.x,t.y,2,t.x,t.y,t.range);
+    rg.addColorStop(0, t.glow); rg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = rg;
+    ctx.beginPath(); ctx.arc(t.x,t.y,t.range,0,Math.PI*2); ctx.fill();
+
+    /* base */
+    ctx.fillStyle = 'rgba(22,27,34,0.9)';
+    ctx.strokeStyle = t.color;
+    ctx.lineWidth = 2;
+    roundRect(ctx, t.x-18, t.y-18, 36, 36, 8);
+    ctx.fill(); ctx.stroke();
+
+    /* icon */
+    ctx.fillStyle = t.color;
+    ctx.font = 'bold 16px DM Sans';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(t.slow?'PO':t.splash?'ST':t.dmg>30?'ES':'GR', t.x, t.y);
+
+    /* subtle pulse */
+    const pulse = Math.sin(Date.now()*0.005)*2;
+    ctx.strokeStyle = t.color;
+    ctx.globalAlpha = 0.15;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(t.x,t.y,20+pulse,0,Math.PI*2); ctx.stroke();
+    ctx.globalAlpha = 1;
+  });
+
+  /* enemies */
+  enemies.forEach(e => {
+    const nearEnd = e.pathIdx >= PATH.length - 5;
+    if (nearEnd) {
+      const g = ctx.createRadialGradient(e.x,e.y,2,e.x,e.y,28);
+      g.addColorStop(0, 'rgba(255,107,107,0.3)');
+      g.addColorStop(1, 'rgba(255,107,107,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(e.x,e.y,28,0,Math.PI*2); ctx.fill();
+    }
+
+    ctx.fillStyle = e.color;
+    ctx.shadowColor = e.color;
+    ctx.shadowBlur = 10;
+    ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur = 0;
+
+    /* hp bar */
+    const bw = e.r*2, bh = 3, bx = e.x - e.r, by = e.y - e.r - 8;
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(bx, by, bw, bh);
+    ctx.fillStyle = e.hp/e.maxHp > 0.4 ? '#00D4AA' : '#ff6b6b';
+    ctx.fillRect(bx, by, bw * Math.max(0, e.hp/e.maxHp), bh);
+  });
+
+  /* projectiles */
+  projectiles.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.shadowColor = p.color;
+    ctx.shadowBlur = 8;
+    ctx.beginPath(); ctx.arc(p.x,p.y,3.5,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur = 0;
+    /* trail */
+    ctx.strokeStyle = p.color;
+    ctx.globalAlpha = 0.25;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x-(p.tx-p.x)*0.1, p.y-(p.ty-p.y)*0.1); ctx.stroke();
+    ctx.globalAlpha = 1;
+  });
+
+  /* particles */
+  particles.forEach(pt => {
+    ctx.globalAlpha = pt.life;
+    ctx.fillStyle = pt.color;
+    ctx.beginPath(); ctx.arc(pt.x,pt.y,pt.size,0,Math.PI*2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  /* float texts */
+  floatTexts.forEach(ft => {
+    ctx.globalAlpha = Math.max(0, ft.life);
+    ctx.fillStyle = ft.color;
+    ctx.font = `bold ${ft.fontSize}px DM Sans`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(ft.text, ft.x, ft.y);
+  });
+  ctx.globalAlpha = 1;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+</script>
+</body>
+</html>
