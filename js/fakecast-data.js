@@ -112,6 +112,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: Tool to check risks of your startup",
+        "date": "2026-05-12",
+        "description": "Today's episode covers 4 stories including Show HN: Tool to check risks of your startup, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-12.mp3",
+        "duration": 72
+      },
+      {
         "title": "Daily Briefing: Show HN: GPU Perpetual Futures Prototype",
         "date": "2026-05-11",
         "description": "Today's episode covers 4 stories including Show HN: GPU Perpetual Futures Prototype, Show HN: Been Ski – Track ski resort visits across 4,500 resorts worldwide, Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers.",
