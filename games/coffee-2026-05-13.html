@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Cascara Sort</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --bg-elevated: #161b22;
+  --coffee: #C4A882;
+  --coffee-glow: rgba(196,168,130,0.25);
+  --coffee-dim: rgba(196,168,130,0.10);
+  --cyan: #00D4AA;
+  --cyan-glow: rgba(0,212,170,0.3);
+  --cyan-dim: rgba(0,212,170,0.10);
+  --text: #e6edf3;
+  --text-soft: #8b949e;
+  --text-faint: #6e7681;
+  --border: rgba(139,148,158,0.12);
+  --danger: #ff6b6b;
+  --danger-glow: rgba(255,107,107,0.3);
+  --warning: #f5a623;
+  --natural: #E85D4E;
+  --honey: #D4A853;
+  --compost: #5a6069;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  touch-action: manipulation;
+}
+
+.game-wrapper {
+  width: 100%;
+  max-width: 800px;
+  padding: 64px 12px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.canvas-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 4/3;
+  background: linear-gradient(180deg, #0a0e14 0%, #0d1117 40%, #111820 100%);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* HUD overlay */
+.hud-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.hud-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hud-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-family: 'JetBrains Mono', Consolas, monospace;
+}
+
+.hud-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.hud-value--score { color: var(--cyan); text-shadow: 0 0 12px var(--cyan-glow); }
+.hud-value--combo { color: var(--coffee); text-shadow: 0 0 12px var(--coffee-glow); }
+
+.lives-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.life-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--coffee), #A08060);
+  box-shadow: 0 0 8px var(--coffee-glow);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.life-icon.lost {
+  opacity: 0.2;
+  transform: scale(0.8);
+  box-shadow: none;
+}
+
+.level-badge {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-soft);
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  z-index: 10;
+}
+.level-badge span { color: var(--cyan); }
+
+/* Start / Game Over screens */
+.menu-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(13,17,23,0.92);
+  backdrop-filter: blur(8px);
+  z-index: 20;
+  padding: 24px;
+  text-align: center;
+  transition: opacity 0.4s ease;
+}
+.menu-overlay.hidden { opacity: 0; pointer-events: none; }
+
+.menu-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.menu-title .accent { color: var(--coffee); }
+
+.menu-subtitle {
+  font-size: 14px;
+  color: var(--text-soft);
+  max-width: 380px;
+  line-height: 1.6;
+}
+
+.instruction-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  margin: 4px 0;
+}
+
+.instruction-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.instruction-key {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 1px solid;
+}
+
+.key-washed { background: var(--cyan-dim); color: var(--cyan); border-color: var(--cyan-glow); }
+.key-honey { background: var(--coffee-dim); color: var(--coffee); border-color: var(--coffee-glow); }
+.key-natural { background: rgba(232,93,78,0.12); color: var(--natural); border-color: rgba(232,93,78,0.25); }
+.key-compost { background: rgba(90,96,105,0.15); color: var(--compost); border-color: rgba(90,96,105,0.3); }
+
+.btn {
+  padding: 12px 32px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btn--primary {
+  background: var(--cyan);
+  color: var(--bg);
+  box-shadow: 0 2px 16px var(--cyan-glow);
+}
+.btn--primary:hover { transform: translateY(-2px); box-shadow: 0 4px 24px var(--cyan-glow); }
+
+.btn--outline {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1.5px solid var(--border);
+}
+.btn--outline:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.stat-box {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.stat-box .stat-num {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-box .stat-label {
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+/* Mobile touch controls */
+.touch-controls {
+  width: 100%;
+  max-width: 800px;
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.touch-btn {
+  padding: 14px 4px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-soft);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.touch-btn:active { transform: scale(0.96); }
+
+.touch-btn--washed { color: var(--cyan); }
+.touch-btn--washed.active,
+.touch-btn--washed:active {
+  background: var(--cyan-dim);
+  border-color: var(--cyan);
+  box-shadow: 0 0 16px var(--cyan-glow);
+}
+
+.touch-btn--honey { color: var(--coffee); }
+.touch-btn--honey.active,
+.touch-btn--honey:active {
+  background: var(--coffee-dim);
+  border-color: var(--coffee);
+  box-shadow: 0 0 16px var(--coffee-glow);
+}
+
+.touch-btn--natural { color: var(--natural); }
+.touch-btn--natural.active,
+.touch-btn--natural:active {
+  background: rgba(232,93,78,0.12);
+  border-color: var(--natural);
+  box-shadow: 0 0 16px rgba(232,93,78,0.2);
+}
+
+.touch-btn--compost { color: var(--compost); }
+.touch-btn--compost.active,
+.touch-btn--compost:active {
+  background: rgba(90,96,105,0.15);
+  border-color: var(--compost);
+  box-shadow: 0 0 16px rgba(90,96,105,0.2);
+}
+
+.touch-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .game-wrapper { padding-top: 56px; }
+  .canvas-container { border-radius: 12px; }
+  .touch-controls { display: grid; }
+  .instruction-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .menu-title { font-size: 1.6rem; }
+  .touch-btn { font-size: 11px; padding: 12px 2px; }
+}
+</style>
+</head>
+<body>
+
+<div class="game-wrapper">
+  <div class="canvas-container" id="canvasContainer">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div class="hud-overlay" id="hudOverlay">
+      <div class="hud-group">
+        <div class="hud-label">Score</div>
+        <div class="hud-value hud-value--score" id="scoreDisplay">0</div>
+      </div>
+      <div class="hud-group" style="align-items:center;">
+        <div class="hud-label">Combo</div>
+        <div class="hud-value hud-value--combo" id="comboDisplay">x1</div>
+      </div>
+      <div class="hud-group" style="align-items:flex-end;">
+        <div class="hud-label">Lives</div>
+        <div class="lives-row" id="livesRow">
+          <div class="life-icon"></div>
+          <div class="life-icon"></div>
+          <div class="life-icon"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="level-badge" id="levelBadge">Level <span>1</span></div>
+
+    <!-- Start Screen -->
+    <div class="menu-overlay" id="startScreen">
+      <div class="menu-title">Cascara <span class="accent">Sort</span></div>
+      <div class="menu-subtitle">
+        Coffee cherries are falling fast. Sort each cascara into the correct processing bin before it hits the ground.
+      </div>
+      <div class="instruction-grid">
+        <div class="instruction-item">
+          <div class="instruction-key key-washed">Q</div>
+          <span>Washed</span>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-key key-honey">W</div>
+          <span>Honey</span>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-key key-natural">E</div>
+          <span>Natural</span>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-key key-compost">R</div>
+          <span>Defect</span>
+        </div>
+      </div>
+      <div class="menu-subtitle" style="font-size:12px;color:var(--text-faint);">
+        Or use keys 1 / 2 / 3 / 4. On mobile, tap the colored buttons below.
+      </div>
+      <button class="btn btn--primary" id="startBtn">Start Brewing</button>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div class="menu-overlay hidden" id="gameOverScreen">
+      <div class="menu-title">Shift <span class="accent">Over</span></div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-num" id="finalScore">0</div>
+          <div class="stat-label">Score</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="finalLevel">1</div>
+          <div class="stat-label">Level</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="finalBest">0</div>
+          <div class="stat-label">Best</div>
+        </div>
+      </div>
+      <div class="menu-subtitle" id="gameOverMsg" style="font-size:13px;">
+        Great effort! The cascara waits for no one.
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn--primary" id="restartBtn">Brew Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touch controls -->
+  <div class="touch-controls" id="touchControls">
+    <button class="touch-btn touch-btn--washed" data-type="washed">
+      <div class="touch-dot" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan-glow);"></div>
+      <span>Washed</span>
+    </button>
+    <button class="touch-btn touch-btn--honey" data-type="honey">
+      <div class="touch-dot" style="background:var(--coffee);box-shadow:0 0 8px var(--coffee-glow);"></div>
+      <span>Honey</span>
+    </button>
+    <button class="touch-btn touch-btn--natural" data-type="natural">
+      <div class="touch-dot" style="background:var(--natural);box-shadow:0 0 8px rgba(232,93,78,0.3);"></div>
+      <span>Natural</span>
+    </button>
+    <button class="touch-btn touch-btn--compost" data-type="compost">
+      <div class="touch-dot" style="background:var(--compost);box-shadow:0 0 8px rgba(90,96,105,0.3);"></div>
+      <span>Defect</span>
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// ── Game Config ───────────────────────────────────────────────────────────
+const TYPES = {
+  washed:  { color: '#00D4AA', glow: 'rgba(0,212,170,0.4)', label: 'WASHED',  keys: ['q','1'] },
+  honey:   { color: '#C4A882', glow: 'rgba(196,168,130,0.4)', label: 'HONEY',   keys: ['w','2'] },
+  natural: { color: '#E85D4E', glow: 'rgba(232,93,78,0.4)',    label: 'NATURAL', keys: ['e','3'] },
+  compost: { color: '#5a6069', glow: 'rgba(90,96,105,0.4)',    label: 'DEFECT',  keys: ['r','4'] },
+};
+const TYPE_KEYS = Object.keys(TYPES);
+const BIN_COUNT = 4;
+const SPAWN_MARGIN = 60;
+
+// ── State ─────────────────────────────────────────────────────────────────
+let state = 'title'; // title | playing | gameover
+let score = 0;
+let highScore = parseInt(localStorage.getItem('cascaraSortHigh')) || 0;
+let lives = 3;
+let level = 1;
+let combo = 0;
+let maxCombo = 0;
+let cascaras = [];
+let particles = [];
+let popups = [];
+let bgLeaves = [];
+let shakeFrames = 0;
+let flashRedFrames = 0;
+let flashCyanFrames = 0;
+let speedUpText = null; // {text, life, maxLife}
+let lastSpawnTime = 0;
+let spawnInterval = 1300;
+let fallSpeed = 1.6;
+let targetScore = 150;
+let totalCaught = 0;
+let totalMissed = 0;
+let animId = null;
+let binGlows = { washed:0, honey:0, natural:0, compost:0 };
+
+// ── Setup background leaves ───────────────────────────────────────────────
+function initBgLeaves() {
+  bgLeaves = [];
+  for (let i = 0; i < 8; i++) {
+    bgLeaves.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: 20 + Math.random() * 40,
+      speed: 0.2 + Math.random() * 0.4,
+      opacity: 0.03 + Math.random() * 0.04,
+      angle: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.005,
+    });
+  }
+}
+initBgLeaves();
+
+// ── Classes ───────────────────────────────────────────────────────────────
+class Cascara {
+  constructor(type) {
+    const typeInfo = TYPES[type];
+    this.type = type;
+    this.x = SPAWN_MARGIN + Math.random() * (canvas.width - SPAWN_MARGIN * 2);
+    this.y = -30;
+    this.r = 14 + Math.random() * 4;
+    this.vy = fallSpeed * (0.9 + Math.random() * 0.2);
+    this.rotation = Math.random() * Math.PI * 2;
+    this.vRot = (Math.random() - 0.5) * 0.04;
+    this.caught = false;
+    this.missed = false;
+    this.glow = 0;
+    this.wobble = Math.random() * Math.PI * 2;
+    this.stemCurve = (Math.random() - 0.5) * 0.3;
+  }
+
+  update() {
+    if (this.caught || this.missed) return;
+    this.y += this.vy;
+    this.rotation += this.vRot;
+    this.wobble += 0.05;
+
+    // Glow intensifies in catch zone (bottom 22%)
+    const catchZoneY = canvas.height * 0.78;
+    if (this.y > catchZoneY) {
+      this.glow = Math.min(1, this.glow + 0.08);
+    } else {
+      this.glow = Math.max(0, this.glow - 0.05);
+    }
+
+    // Miss check
+    if (this.y > canvas.height + this.r) {
+      this.missed = true;
+      handleMiss(this);
+    }
+  }
+
+  draw(ctx) {
+    if (this.caught) return;
+    const t = TYPES[this.type];
+    const wobbleX = Math.sin(this.wobble) * 3;
+    const x = this.x + wobbleX;
+    const y = this.y;
+
+    // Glow in catch zone
+    if (this.glow > 0.01) {
+      ctx.save();
+      ctx.globalAlpha = this.glow * 0.35;
+      ctx.shadowColor = t.color;
+      ctx.shadowBlur = 20;
+      ctx.beginPath();
+      ctx.arc(x, y, this.r + 6, 0, Math.PI * 2);
+      ctx.fillStyle = t.color;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Main cherry body
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(this.rotation);
+
+    // Shadow
+    ctx.beginPath();
+    ctx.arc(2, 2, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fill();
+
+    // Cherry
+    const grad = ctx.createRadialGradient(-this.r*0.3, -this.r*0.3, this.r*0.2, 0, 0, this.r);
+    grad.addColorStop(0, lighten(t.color, 30));
+    grad.addColorStop(0.5, t.color);
+    grad.addColorStop(1, darken(t.color, 20));
+    ctx.beginPath();
+    ctx.arc(0, 0, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Highlight
+    ctx.beginPath();
+    ctx.arc(-this.r*0.25, -this.r*0.3, this.r*0.35, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.fill();
+
+    // Stem
+    ctx.beginPath();
+    ctx.moveTo(0, -this.r + 2);
+    ctx.quadraticCurveTo(this.stemCurve * 10, -this.r - 8, this.stemCurve * 16, -this.r - 12);
+    ctx.strokeStyle = darken(t.color, 40);
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // Leaf for non-compost
+    if (this.type !== 'compost') {
+      ctx.beginPath();
+      ctx.ellipse(this.stemCurve * 14 + 4, -this.r - 10, 6, 3, this.stemCurve, 0, Math.PI * 2);
+      ctx.fillStyle = darken(t.color, 25);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+}
+
+class Particle {
+  constructor(x, y, color, speed = 1) {
+    this.x = x;
+    this.y = y;
+    const angle = Math.random() * Math.PI * 2;
+    const spd = (1 + Math.random() * 3) * speed;
+    this.vx = Math.cos(angle) * spd;
+    this.vy = Math.sin(angle) * spd - 1;
+    this.life = 1;
+    this.decay = 0.015 + Math.random() * 0.02;
+    this.r = 2 + Math.random() * 3;
+    this.color = color;
+    this.gravity = 0.08;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy += this.gravity;
+    this.life -= this.decay;
+    this.r *= 0.98;
+  }
+  draw(ctx) {
+    if (this.life <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = this.life;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, Math.max(0.5, this.r), 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+class PopupText {
+  constructor(x, y, text, color, scale = 1) {
+    this.x = x;
+    this.y = y;
+    this.text = text;
+    this.color = color;
+    this.life = 1;
+    this.vy = -1.2;
+    this.scale = scale;
+  }
+  update() {
+    this.y += this.vy;
+    this.life -= 0.02;
+    this.vy *= 0.97;
+  }
+  draw(ctx) {
+    if (this.life <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.life);
+    ctx.font = `bold ${Math.floor(16 * this.scale)}px "DM Sans", sans-serif`;
+    ctx.fillStyle = this.color;
+    ctx.textAlign = 'center';
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = 8;
+    ctx.fillText(this.text, this.x, this.y);
+    ctx.restore();
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function lighten(hex, amt) {
+  const num = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, (num >> 16) + amt);
+  const g = Math.min(255, ((num >> 8) & 0x00FF) + amt);
+  const b = Math.min(255, (num & 0x0000FF) + amt);
+  return `rgb(${r},${g},${b})`;
+}
+function darken(hex, amt) {
+  const num = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, (num >> 16) - amt);
+  const g = Math.max(0, ((num >> 8) & 0x00FF) - amt);
+  const b = Math.max(0, (num & 0x0000FF) - amt);
+  return `rgb(${r},${g},${b})`;
+}
+function randRange(a, b) { return a + Math.random() * (b - a); }
+
+// ── Game Logic ────────────────────────────────────────────────────────────
+function getSpawnType() {
+  const pool = [];
+  if (level >= 1) { pool.push('washed', 'washed', 'honey', 'honey'); }
+  if (level >= 2) { pool.push('natural', 'natural'); }
+  if (level >= 3) { pool.push('compost'); }
+  if (level >= 4) { pool.push('compost'); }
+  // Weight more defects at higher levels
+  if (level >= 5) { pool.push('compost'); }
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function spawnCascara() {
+  const type = getSpawnType();
+  cascaras.push(new Cascara(type));
+}
+
+function handleCatch(c, perfect) {
+  c.caught = true;
+  combo++;
+  if (combo > maxCombo) maxCombo = combo;
+  const basePoints = perfect ? 15 : 10;
+  const mult = 1 + Math.floor(combo / 5) * 0.5;
+  const pts = Math.round(basePoints * mult);
+  score += pts;
+  totalCaught++;
+
+  // Particles
+  const t = TYPES[c.type];
+  for (let i = 0; i < 12; i++) {
+    particles.push(new Particle(c.x, c.y, t.color, 1.2));
+  }
+  // Sparkle particles
+  for (let i = 0; i < 6; i++) {
+    particles.push(new Particle(c.x, c.y, '#ffffff', 0.8));
+  }
+
+  // Popup
+  const popupText = perfect ? `PERFECT +${pts}` : `+${pts}`;
+  const popupColor = perfect ? '#ffd700' : t.color;
+  popups.push(new PopupText(c.x, c.y - 20, popupText, popupColor, perfect ? 1.3 : 1));
+  if (combo > 1 && combo % 5 === 0) {
+    popups.push(new PopupText(canvas.width/2, canvas.height/2 - 40, `${combo} COMBO!`, '#ffd700', 1.8));
+  }
+
+  // Bin glow
+  binGlows[c.type] = 1;
+
+  updateHUD();
+  checkLevelUp();
+}
+
+function handleMiss(c) {
+  lives--;
+  combo = 0;
+  totalMissed++;
+  shakeFrames = 12;
+  flashRedFrames = 15;
+
+  // Red particles
+  for (let i = 0; i < 8; i++) {
+    particles.push(new Particle(c.x, canvas.height - 20, '#ff6b6b', 1));
+  }
+
+  popups.push(new PopupText(c.x, canvas.height - 40, 'MISS', '#ff6b6b', 1));
+  updateHUD();
+
+  if (lives <= 0) {
+    endGame();
+  }
+}
+
+function handleWrong() {
+  lives--;
+  combo = 0;
+  shakeFrames = 10;
+  flashRedFrames = 12;
+  popups.push(new PopupText(canvas.width/2, canvas.height/2, 'WRONG!', '#ff6b6b', 1.2));
+  updateHUD();
+  if (lives <= 0) endGame();
+}
+
+function tryCatch(type) {
+  if (state !== 'playing') return;
+  binGlows[type] = 1;
+
+  // Find lowest catchable cascara of matching type
+  const catchZoneY = canvas.height * 0.78;
+  let target = null;
+  let maxY = -Infinity;
+
+  for (const c of cascaras) {
+    if (c.caught || c.missed) continue;
+    if (c.type !== type) continue;
+    if (c.y < catchZoneY) continue; // not in catch zone yet
+    if (c.y > maxY) {
+      maxY = c.y;
+      target = c;
+    }
+  }
+
+  if (target) {
+    // Perfect if caught near center of bin zone
+    const binW = canvas.width / BIN_COUNT;
+    const binIdx = TYPE_KEYS.indexOf(type);
+    const binCx = binW * binIdx + binW / 2;
+    const dist = Math.abs(target.x - binCx);
+    const perfect = dist < binW * 0.25;
+    handleCatch(target, perfect);
+  } else {
+    // Penalize pressing key with nothing to catch (only if cascara of wrong type is in zone)
+    let wrongTypeInZone = false;
+    for (const c of cascaras) {
+      if (c.caught || c.missed) continue;
+      if (c.y >= catchZoneY) {
+        wrongTypeInZone = true;
+        break;
+      }
+    }
+    if (wrongTypeInZone) {
+      handleWrong();
+    }
+    // If zone is empty, no penalty (prevents spam punishment)
+  }
+}
+
+function checkLevelUp() {
+  if (score >= targetScore) {
+    level++;
+    targetScore = Math.floor(targetScore * 1.7 + 100);
+    fallSpeed += 0.35;
+    spawnInterval = Math.max(450, spawnInterval - 120);
+    flashCyanFrames = 30;
+    speedUpText = { text: `LEVEL ${level} — SPEED UP!`, life: 60, maxLife: 60 };
+    popups.push(new PopupText(canvas.width/2, canvas.height/2 - 60, `LEVEL ${level}`, '#00D4AA', 2));
+    updateHUD();
+  }
+}
+
+function endGame() {
+  state = 'gameover';
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem('cascaraSortHigh', highScore);
+  }
+
+  // Massive particle burst
+  for (let i = 0; i < 60; i++) {
+    const color = ['#00D4AA', '#C4A882', '#E85D4E', '#5a6069'][Math.floor(Math.random()*4)];
+    particles.push(new Particle(canvas.width/2, canvas.height/2, color, 2.5));
+  }
+
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('finalLevel').textContent = level;
+  document.getElementById('finalBest').textContent = highScore;
+
+  const msg = document.getElementById('gameOverMsg');
+  if (score >= highScore && score > 0) {
+    msg.textContent = 'New high score! You are a true coffee cherry master.';
+    msg.style.color = '#00D4AA';
+  } else if (level >= 5) {
+    msg.textContent = 'Incredible sorting skills! The harvest is in good hands.';
+  } else if (level >= 3) {
+    msg.textContent = 'Solid performance. Keep practicing those reflexes.';
+  } else {
+    msg.textContent = 'Every barista starts somewhere. Try again!';
+  }
+
+  setTimeout(() => {
+    document.getElementById('gameOverScreen').classList.remove('hidden');
+  }, 800);
+}
+
+function resetGame() {
+  score = 0;
+  lives = 3;
+  level = 1;
+  combo = 0;
+  maxCombo = 0;
+  totalCaught = 0;
+  totalMissed = 0;
+  cascaras = [];
+  particles = [];
+  popups = [];
+  shakeFrames = 0;
+  flashRedFrames = 0;
+  flashCyanFrames = 0;
+  speedUpText = null;
+  lastSpawnTime = 0;
+  spawnInterval = 1300;
+  fallSpeed = 1.6;
+  targetScore = 150;
+  binGlows = { washed:0, honey:0, natural:0, compost:0 };
+  state = 'playing';
+  updateHUD();
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('gameOverScreen').classList.add('hidden');
+}
+
+// ── HUD ───────────────────────────────────────────────────────────────────
+function updateHUD() {
+  document.getElementById('scoreDisplay').textContent = score;
+  const mult = 1 + Math.floor(combo / 5) * 0.5;
+  document.getElementById('comboDisplay').textContent = `x${mult.toFixed(1)}`;
+  document.getElementById('levelBadge').innerHTML = `Level <span>${level}</span>`;
+
+  const lifeIcons = document.querySelectorAll('#livesRow .life-icon');
+  lifeIcons.forEach((icon, i) => {
+    icon.classList.toggle('lost', i >= lives);
+  });
+}
+
+// ── Drawing ───────────────────────────────────────────────────────────────
+function drawBackground() {
+  // Base
+  ctx.fillStyle = '#0a0e14';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Subtle radial vignette
+  const vig = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 100, canvas.width/2, canvas.height/2, canvas.width);
+  vig.addColorStop(0, 'rgba(13,17,23,0)');
+  vig.addColorStop(1, 'rgba(0,0,0,0.5)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Floating leaves
+  for (const leaf of bgLeaves) {
+    leaf.y += leaf.speed;
+    leaf.angle += leaf.rotSpeed;
+    if (leaf.y > canvas.height + leaf.size) {
+      leaf.y = -leaf.size;
+      leaf.x = Math.random() * canvas.width;
+    }
+    ctx.save();
+    ctx.globalAlpha = leaf.opacity;
+    ctx.translate(leaf.x, leaf.y);
+    ctx.rotate(leaf.angle);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, leaf.size, leaf.size * 0.6, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a2332';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Catch zone line
+  const czY = canvas.height * 0.78;
+  ctx.save();
+  ctx.strokeStyle = 'rgba(0,212,170,0.08)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8, 8]);
+  ctx.beginPath();
+  ctx.moveTo(0, czY);
+  ctx.lineTo(canvas.width, czY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+}
+
+function drawBins() {
+  const binW = canvas.width / BIN_COUNT;
+  const binH = canvas.height * 0.18;
+  const binY = canvas.height - binH;
+
+  for (let i = 0; i < BIN_COUNT; i++) {
+    const type = TYPE_KEYS[i];
+    const t = TYPES[type];
+    const x = i * binW;
+    const glow = binGlows[type];
+
+    ctx.save();
+
+    // Glow when active
+    if (glow > 0.01) {
+      ctx.shadowColor = t.color;
+      ctx.shadowBlur = 20 * glow;
+    }
+
+    // Bin background
+    const grad = ctx.createLinearGradient(x, binY, x, canvas.height);
+    grad.addColorStop(0, 'rgba(22,27,34,0.6)');
+    grad.addColorStop(1, 'rgba(22,27,34,0.9)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x + 4, binY, binW - 8, binH);
+
+    // Bin border
+    ctx.strokeStyle = glow > 0.1 ? t.color : 'rgba(139,148,158,0.15)';
+    ctx.lineWidth = glow > 0.1 ? 2 : 1;
+    ctx.strokeRect(x + 4, binY, binW - 8, binH);
+
+    // Top accent line
+    ctx.beginPath();
+    ctx.moveTo(x + 4, binY);
+    ctx.lineTo(x + binW - 4, binY);
+    ctx.strokeStyle = t.color;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.4 + glow * 0.6;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Label
+    ctx.font = 'bold 11px "JetBrains Mono", monospace';
+    ctx.fillStyle = glow > 0.1 ? t.color : 'rgba(139,148,158,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText(t.label, x + binW/2, binY + 18);
+
+    // Key hint
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = 'rgba(139,148,158,0.35)';
+    ctx.fillText(t.keys[0].toUpperCase(), x + binW/2, binY + 32);
+
+    // Small indicator dot
+    ctx.beginPath();
+    ctx.arc(x + binW/2, binY + 46, 5, 0, Math.PI*2);
+    ctx.fillStyle = t.color;
+    ctx.globalAlpha = 0.5 + glow * 0.5;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    ctx.restore();
+  }
+}
+
+function drawFlashOverlays() {
+  if (flashRedFrames > 0) {
+    ctx.save();
+    ctx.globalAlpha = (flashRedFrames / 15) * 0.25;
+    ctx.fillStyle = '#ff0000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    flashRedFrames--;
+  }
+  if (flashCyanFrames > 0) {
+    ctx.save();
+    ctx.globalAlpha = (flashCyanFrames / 30) * 0.15;
+    ctx.fillStyle = '#00D4AA';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    flashCyanFrames--;
+  }
+}
+
+function drawSpeedUp() {
+  if (!speedUpText) return;
+  speedUpText.life--;
+  if (speedUpText.life <= 0) { speedUpText = null; return; }
+
+  const alpha = Math.min(1, speedUpText.life / 20);
+  const scale = 1 + (1 - speedUpText.life / speedUpText.maxLife) * 0.3;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.font = `bold ${Math.floor(22 * scale)}px "DM Sans", sans-serif`;
+  ctx.fillStyle = '#00D4AA';
+  ctx.textAlign = 'center';
+  ctx.shadowColor = '#00D4AA';
+  ctx.shadowBlur = 20;
+  ctx.fillText(speedUpText.text, canvas.width/2, canvas.height/2);
+  ctx.restore();
+}
+
+// ── Main Loop ─────────────────────────────────────────────────────────────
+function update() {
+  if (state !== 'playing') {
+    // Still update particles and bg for visual appeal
+    particles.forEach(p => p.update());
+    particles = particles.filter(p => p.life > 0);
+    popups.forEach(p => p.update());
+    popups = popups.filter(p => p.life > 0);
+    bgLeaves.forEach(l => { l.y += l.speed; l.angle += l.rotSpeed; if (l.y > canvas.height + l.size) { l.y = -l.size; l.x = Math.random() * canvas.width; } });
+    if (shakeFrames > 0) shakeFrames--;
+    if (flashRedFrames > 0) flashRedFrames--;
+    if (flashCyanFrames > 0) flashCyanFrames--;
+    if (speedUpText) { speedUpText.life--; if (speedUpText.life <= 0) speedUpText = null; }
+    for (const k in binGlows) binGlows[k] = Math.max(0, binGlows[k] - 0.08);
+    return;
+  }
+
+  const now = performance.now();
+  if (now - lastSpawnTime > spawnInterval) {
+    spawnCascara();
+    lastSpawnTime = now;
+  }
+
+  cascaras.forEach(c => c.update());
+  cascaras = cascaras.filter(c => !c.caught && !c.missed);
+
+  particles.forEach(p => p.update());
+  particles = particles.filter(p => p.life > 0);
+
+  popups.forEach(p => p.update());
+  popups = popups.filter(p => p.life > 0);
+
+  bgLeaves.forEach(l => {
+    l.y += l.speed;
+    l.angle += l.rotSpeed;
+    if (l.y > canvas.height + l.size) { l.y = -l.size; l.x = Math.random() * canvas.width; }
+  });
+
+  for (const k in binGlows) binGlows[k] = Math.max(0, binGlows[k] - 0.08);
+  if (shakeFrames > 0) shakeFrames--;
+}
+
+function draw() {
+  ctx.save();
+
+  // Screen shake
+  if (shakeFrames > 0) {
+    const intensity = shakeFrames * 0.5;
+    ctx.translate(randRange(-intensity, intensity), randRange(-intensity, intensity));
+  }
+
+  drawBackground();
+  drawBins();
+
+  cascaras.forEach(c => c.draw(ctx));
+  particles.forEach(p => p.draw(ctx));
+  popups.forEach(p => p.draw(ctx));
+  drawSpeedUp();
+  drawFlashOverlays();
+
+  ctx.restore();
+}
+
+function loop() {
+  update();
+  draw();
+  animId = requestAnimationFrame(loop);
+}
+
+// ── Input ─────────────────────────────────────────────────────────────────
+function handleKey(e) {
+  const key = e.key.toLowerCase();
+  for (const type of TYPE_KEYS) {
+    if (TYPES[type].keys.includes(key)) {
+      e.preventDefault();
+      tryCatch(type);
+      // Touch button visual feedback
+      const btn = document.querySelector(`.touch-btn[data-type="${type}"]`);
+      if (btn) {
+        btn.classList.add('active');
+        setTimeout(() => btn.classList.remove('active'), 150);
+      }
+      return;
+    }
+  }
+}
+
+function handleTouch(type) {
+  tryCatch(type);
+}
+
+// Keyboard
+window.addEventListener('keydown', handleKey);
+
+// Touch buttons
+document.querySelectorAll('.touch-btn').forEach(btn => {
+  const type = btn.dataset.type;
+  const activate = () => {
+    btn.classList.add('active');
+    handleTouch(type);
+  };
+  const deactivate = () => btn.classList.remove('active');
+
+  btn.addEventListener('touchstart', (e) => { e.preventDefault(); activate(); });
+  btn.addEventListener('touchend', (e) => { e.preventDefault(); deactivate(); });
+  btn.addEventListener('mousedown', (e) => { e.preventDefault(); activate(); });
+  btn.addEventListener('mouseup', deactivate);
+  btn.addEventListener('mouseleave', deactivate);
+});
+
+// Canvas click (desktop fallback — click near a bin to catch)
+canvas.addEventListener('mousedown', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const x = (e.clientX - rect.left) * scaleX;
+  const binW = canvas.width / BIN_COUNT;
+  const idx = Math.floor(x / binW);
+  if (idx >= 0 && idx < BIN_COUNT) {
+    const type = TYPE_KEYS[idx];
+    tryCatch(type);
+    const btn = document.querySelector(`.touch-btn[data-type="${type}"]`);
+    if (btn) {
+      btn.classList.add('active');
+      setTimeout(() => btn.classList.remove('active'), 150);
+    }
+  }
+});
+
+// Menu buttons
+document.getElementById('startBtn').addEventListener('click', resetGame);
+document.getElementById('restartBtn').addEventListener('click', resetGame);
+
+// ── Resize handling ───────────────────────────────────────────────────────
+function resize() {
+  const container = document.getElementById('canvasContainer');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = container.getBoundingClientRect();
+  // Keep internal resolution fixed, CSS handles display size
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ── Start ─────────────────────────────────────────────────────────────────
+updateHUD();
+loop();
+
+})();
+</script>
+<script src="../js/game-header.js?v=3"></script>
+</body>
+</html>

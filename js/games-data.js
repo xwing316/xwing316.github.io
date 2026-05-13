@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-13',
+    title: 'Cascara Sort',
+    description: 'Sort cascara berries and coffee cherries into matching cups before they overflow! Drag and drop colorful coffee fruits into the right containers, chain combos for bonus points, and race against the clock across 10 increasingly frantic levels.',
+    category: 'puzzle',
+    thumbnail: 'assets/images/game-coffee-2026-05-13.png',
+    file: 'games/coffee-2026-05-13.html',
+    difficulty: 'Easy',
+    emoji: '',
+    createdAt: '2026-05-13',
+  },
+
+  {
     id: 'coffee-2026-05-12',
     title: 'Barista Defense',
     description: 'Defend the Fresh Pot from waves of decaf invaders, stale pastries, and watery brews. Place coffee equipment towers along the golden path, chain combos for massive scores, and survive all 10 waves including the final Mega Latte boss.',
