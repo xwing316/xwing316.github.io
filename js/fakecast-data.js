@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: agent-dash: TUI for managing Claude Code and OpenCode in tmux",
+        "date": "2026-05-13",
+        "description": "Today's episode covers 4 stories including agent-dash: TUI for managing Claude Code and OpenCode in tmux, Show HN: Kimiflare, Kimi K2.6 as a Coding Agent on Cloudflare Workers AI, Preview bill is now available.",
+        "audioSrc": "fakecast/ai-daily-2026-05-13.mp3",
+        "duration": 92
+      },
+      {
         "title": "Daily Briefing: Why 157,000 developers are hedging against Anthropic with OpenCode",
         "date": "2026-05-12",
         "description": "Today's episode covers 4 stories including Why 157,000 developers are hedging against Anthropic with OpenCode, GitHub Copilot is deprecating Grok Code Fast 1, Show HN: BrowserCode – Run Claude Code in the Browser via WebAssembly.",
