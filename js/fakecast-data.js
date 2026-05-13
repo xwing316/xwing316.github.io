@@ -119,6 +119,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Jaho Coffee Roaster",
+        "date": "2026-05-13",
+        "description": "Today's episode covers 4 stories including Jaho Coffee Roaster, Trump's tariffs are brewing trouble for coffee roasters, Show HN: A Digital Twin of my coffee roaster that runs in the browser.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-13.mp3",
+        "duration": 74
+      },
+      {
         "title": "Daily Briefing: Show HN: Tool to check risks of your startup",
         "date": "2026-05-12",
         "description": "Today's episode covers 4 stories including Show HN: Tool to check risks of your startup, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
