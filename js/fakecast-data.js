@@ -126,6 +126,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: The math of brewing a better espresso (2020)",
+        "date": "2026-05-14",
+        "description": "Today's episode covers 4 stories including The math of brewing a better espresso (2020), Show HN: AI powered social media for creatives and innovators, Show HN: Fulgent AI – Most Advance AI Headshot Generator.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-14.mp3",
+        "duration": 74
+      },
+      {
         "title": "Daily Briefing: Jaho Coffee Roaster",
         "date": "2026-05-13",
         "description": "Today's episode covers 4 stories including Jaho Coffee Roaster, Trump's tariffs are brewing trouble for coffee roasters, Show HN: A Digital Twin of my coffee roaster that runs in the browser.",
