@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barista Blitz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --bg-elevated: #161b22;
+    --bg-card: rgba(22,27,34,0.85);
+    --coffee: #C4A882;
+    --coffee-dim: rgba(196,168,130,0.15);
+    --cyan: #00D4AA;
+    --cyan-dim: rgba(0,212,170,0.12);
+    --cyan-glow: rgba(0,212,170,0.35);
+    --text: #e6edf3;
+    --text-soft: #8b949e;
+    --text-faint: #6e7681;
+    --border: rgba(139,148,158,0.15);
+    --danger: #ff6b6b;
+    --danger-dim: rgba(255,107,107,0.15);
+    --warning: #f0c040;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    height: 100%;
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+
+  .game-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    position: relative;
+  }
+
+  /* HUD */
+  .hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    backdrop-filter: blur(10px);
+  }
+  .hud__group { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+  .hud__label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-weight: 600; }
+  .hud__value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .hud__value--score { color: var(--cyan); }
+  .hud__value--combo { color: var(--coffee); }
+  .hud__lives { display: flex; gap: 4px; margin-top: 2px; }
+  .life {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--danger); box-shadow: 0 0 6px var(--danger);
+  }
+  .life.lost { background: #333; box-shadow: none; }
+
+  /* Orders */
+  .orders {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .orders__title {
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-faint); font-weight: 600; padding-left: 4px;
+  }
+  .order {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+    min-height: 64px;
+  }
+  .order--warning { border-color: rgba(240,192,64,0.4); animation: pulseWarning 0.8s infinite; }
+  .order--danger { border-color: rgba(255,107,107,0.5); animation: pulseDanger 0.5s infinite; }
+  .order--completed { animation: orderPop 0.4s ease-out forwards; }
+  @keyframes pulseWarning { 0%,100% { box-shadow: 0 0 0 rgba(240,192,64,0); } 50% { box-shadow: 0 0 12px rgba(240,192,64,0.2); } }
+  @keyframes pulseDanger { 0%,100% { box-shadow: 0 0 0 rgba(255,107,107,0); } 50% { box-shadow: 0 0 16px rgba(255,107,107,0.3); } }
+  @keyframes orderPop { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(0.95); opacity: 0; } }
+
+  .order__icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--coffee-dim); border: 1.5px solid var(--coffee);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: var(--coffee); flex-shrink: 0;
+  }
+  .order__meta { flex: 1; min-width: 0; }
+  .order__name { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .order__sequence { display: flex; gap: 6px; flex-wrap: wrap; }
+  .order__seq-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--bg-elevated); border: 1.5px solid var(--border);
+    transition: all 0.2s;
+  }
+  .order__seq-dot--filled { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 6px var(--cyan-glow); }
+  .order__seq-dot--wrong { background: var(--danger); border-color: var(--danger); animation: shake 0.3s; }
+
+  .order__patience {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: rgba(255,255,255,0.05); border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    overflow: hidden;
+  }
+  .order__patience-bar {
+    height: 100%; width: 100%; transition: width 0.2s linear, background 0.3s;
+    background: var(--cyan); border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  }
+
+  /* Builder preview */
+  .builder {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; background: rgba(0,212,170,0.06);
+    border: 1px dashed var(--cyan-glow); border-radius: var(--radius-sm);
+    margin-bottom: 10px; min-height: 44px;
+  }
+  .builder__label { font-size: 0.65rem; text-transform: uppercase; color: var(--cyan); font-weight: 600; letter-spacing: 0.06em; }
+  .builder__slots { display: flex; gap: 6px; flex: 1; }
+  .builder__slot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--bg-elevated); border: 1.5px solid var(--border);
+    transition: all 0.2s;
+  }
+  .builder__slot--filled { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow); }
+  .builder__slot--wrong { background: var(--danger); border-color: var(--danger); }
+
+  /* Stations */
+  .stations {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .station {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .station:hover { transform: translateY(-2px); border-color: var(--cyan); }
+  .station:active { transform: translateY(0) scale(0.97); }
+  .station__key {
+    position: absolute; top: 4px; left: 6px;
+    font-size: 0.55rem; color: var(--text-faint);
+    background: var(--bg-elevated); padding: 1px 5px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .station__icon {
+    width: 32px; height: 32px; margin: 0 auto 6px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .station__name { font-size: 0.72rem; font-weight: 600; color: var(--text-soft); }
+
+  .station--espresso .station__icon { background: rgba(196,168,130,0.2); color: var(--coffee); }
+  .station--milk .station__icon { background: rgba(230,237,243,0.1); color: var(--text); }
+  .station--foam .station__icon { background: rgba(230,237,243,0.15); color: #fff; }
+  .station--syrup .station__icon { background: rgba(139,69,19,0.25); color: #d4a574; }
+  .station--ice .station__icon { background: rgba(135,206,235,0.15); color: #87ceeb; }
+  .station--water .station__icon { background: rgba(0,212,170,0.12); color: var(--cyan); }
+
+  /* Messages / Floaters */
+  .floater {
+    position: absolute; pointer-events: none;
+    font-weight: 700; font-size: 1.1rem;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    animation: floatUp 1s ease-out forwards;
+    z-index: 50;
+  }
+  .floater--score { color: var(--cyan); }
+  .floater--combo { color: var(--coffee); font-size: 1.3rem; }
+  .floater--bad { color: var(--danger); }
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-60px) scale(1.1); opacity: 0; }
+  }
+
+  .level-up-banner {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: var(--bg-card); border: 2px solid var(--cyan);
+    border-radius: var(--radius); padding: 18px 36px; text-align: center;
+    box-shadow: 0 0 40px var(--cyan-glow);
+    animation: levelIn 0.5s ease-out;
+    z-index: 60; pointer-events: none;
+  }
+  @keyframes levelIn { from { transform: translate(-50%,-50%) scale(0.5); opacity: 0; } to { transform: translate(-50%,-50%) scale(1); opacity: 1; } }
+  .level-up-banner h2 { color: var(--cyan); font-family: 'DM Serif Display', serif; font-size: 1.6rem; margin-bottom: 4px; }
+  .level-up-banner p { color: var(--text-soft); font-size: 0.85rem; }
+
+  /* Overlays */
+  .overlay {
+    position: absolute; inset: 0; z-index: 100;
+    background: rgba(13,17,23,0.92);
+    backdrop-filter: blur(8px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+  }
+  .overlay--hidden { display: none; }
+  .overlay h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 5vw, 2.8rem); color: var(--text); margin-bottom: 8px; }
+  .overlay h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--coffee); margin-bottom: 12px; }
+  .overlay p { color: var(--text-soft); font-size: 0.92rem; line-height: 1.6; max-width: 420px; margin-bottom: 20px; }
+  .overlay .btn {
+    background: var(--cyan); color: var(--bg); border: none;
+    padding: 12px 32px; border-radius: var(--radius-sm);
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 20px var(--cyan-glow);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .overlay .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px var(--cyan-glow); }
+  .overlay .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; }
+  .stat__label { font-size: 0.6rem; text-transform: uppercase; color: var(--text-faint); letter-spacing: 0.08em; }
+  .stat__value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+
+  .instructions { text-align: left; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; max-width: 420px; }
+  .instructions li { color: var(--text-soft); font-size: 0.85rem; margin-bottom: 6px; list-style: none; padding-left: 18px; position: relative; }
+  .instructions li::before { content: ''; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+
+  /* Shake */
+  .shake { animation: shake 0.35s cubic-bezier(.36,.07,.19,.97) both; }
+  @keyframes shake { 10%,90% { transform: translate3d(-1px,0,0); } 20%,80% { transform: translate3d(2px,0,0); } 30%,50%,70% { transform: translate3d(-4px,0,0); } 40%,60% { transform: translate3d(4px,0,0); } }
+
+  /* Particles canvas */
+  #particles {
+    position: absolute; inset: 0; pointer-events: none; z-index: 40;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .game-wrapper { padding: 8px; }
+    .hud { padding: 8px 10px; }
+    .hud__value { font-size: 0.95rem; }
+    .stations { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .station { padding: 10px 4px; }
+    .station__icon { width: 26px; height: 26px; font-size: 0.85rem; }
+    .station__name { font-size: 0.6rem; }
+    .order { padding: 8px 10px; min-height: 56px; }
+    .order__icon { width: 32px; height: 32px; font-size: 0.85rem; }
+    .order__name { font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="game-wrapper" id="gameWrapper">
+  <canvas id="particles"></canvas>
+
+  <div class="hud">
+    <div class="hud__group">
+      <span class="hud__label">Score</span>
+      <span class="hud__value hud__value--score" id="scoreDisplay">0</span>
+    </div>
+    <div class="hud__group">
+      <span class="hud__label">Level</span>
+      <span class="hud__value" id="levelDisplay">1</span>
+    </div>
+    <div class="hud__group">
+      <span class="hud__label">Combo</span>
+      <span class="hud__value hud__value--combo" id="comboDisplay">x1</span>
+    </div>
+    <div class="hud__group">
+      <span class="hud__label">Lives</span>
+      <div class="hud__lives" id="livesDisplay">
+        <div class="life"></div><div class="life"></div><div class="life"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orders__title">Order Queue</div>
+  <div class="orders" id="ordersContainer">
+    <!-- orders injected here -->
+  </div>
+
+  <div class="builder" id="builder">
+    <span class="builder__label">Building</span>
+    <div class="builder__slots" id="builderSlots"></div>
+  </div>
+
+  <div class="stations" id="stationsContainer">
+    <div class="station station--espresso" data-ing="espresso" data-key="1">
+      <span class="station__key">1</span>
+      <div class="station__icon">E</div>
+      <div class="station__name">Espresso</div>
+    </div>
+    <div class="station station--milk" data-ing="milk" data-key="2">
+      <span class="station__key">2</span>
+      <div class="station__icon">M</div>
+      <div class="station__name">Steamed Milk</div>
+    </div>
+    <div class="station station--foam" data-ing="foam" data-key="3">
+      <span class="station__key">3</span>
+      <div class="station__icon">F</div>
+      <div class="station__name">Foam</div>
+    </div>
+    <div class="station station--syrup" data-ing="syrup" data-key="4">
+      <span class="station__key">4</span>
+      <div class="station__icon">S</div>
+      <div class="station__name">Syrup</div>
+    </div>
+    <div class="station station--ice" data-ing="ice" data-key="5">
+      <span class="station__key">5</span>
+      <div class="station__icon">I</div>
+      <div class="station__name">Ice</div>
+    </div>
+    <div class="station station--water" data-ing="water" data-key="6">
+      <span class="station__key">6</span>
+      <div class="station__icon">W</div>
+      <div class="station__name">Water</div>
+    </div>
+  </div>
+
+  <!-- Start Overlay -->
+  <div class="overlay" id="startOverlay">
+    <h1>Barista Blitz</h1>
+    <p>Fulfill coffee orders before impatient customers walk out. Build each drink by selecting ingredients in the right order. Speed and accuracy build your combo multiplier.</p>
+    <div class="instructions">
+      <li>Watch the order ticket at the top</li>
+      <li>Tap stations (or press 1-6) in the exact sequence</li>
+      <li>Complete orders before the patience bar runs out</li>
+      <li>Wrong ingredients break your combo</li>
+      <li>Survive 3 strikes to keep your shift</li>
+    </div>
+    <button class="btn" id="startBtn">Start Shift</button>
+  </div>
+
+  <!-- Game Over Overlay -->
+  <div class="overlay overlay--hidden" id="gameOverOverlay">
+    <h2>Shift Over</h2>
+    <div class="stats">
+      <div class="stat"><div class="stat__label">Score</div><div class="stat__value" id="finalScore">0</div></div>
+      <div class="stat"><div class="stat__label">Level</div><div class="stat__value" id="finalLevel">1</div></div>
+      <div class="stat"><div class="stat__label">Best Combo</div><div class="stat__value" id="finalCombo">1</div></div>
+      <div class="stat"><div class="stat__label">Orders Served</div><div class="stat__value" id="finalOrders">0</div></div>
+    </div>
+    <button class="btn" id="restartBtn">New Shift</button>
+  </div>
+</div>
+
+<script src="../js/game-header.js?v=3"></script>
+<script>
+(() => {
+  // ── Config ──
+  const INGREDIENTS = [
+    { id: 'espresso', name: 'Espresso', key: '1', icon: 'E' },
+    { id: 'milk', name: 'Steamed Milk', key: '2', icon: 'M' },
+    { id: 'foam', name: 'Foam', key: '3', icon: 'F' },
+    { id: 'syrup', name: 'Syrup', key: '4', icon: 'S' },
+    { id: 'ice', name: 'Ice', key: '5', icon: 'I' },
+    { id: 'water', name: 'Water', key: '6', icon: 'W' },
+  ];
+
+  const DRINKS = [
+    { id: 'espresso', name: 'Espresso', recipe: ['espresso'], unlockLevel: 1 },
+    { id: 'americano', name: 'Americano', recipe: ['espresso','water'], unlockLevel: 1 },
+    { id: 'latte', name: 'Latte', recipe: ['espresso','milk'], unlockLevel: 2 },
+    { id: 'cappuccino', name: 'Cappuccino', recipe: ['espresso','milk','foam'], unlockLevel: 3 },
+    { id: 'mocha', name: 'Mocha', recipe: ['espresso','milk','syrup'], unlockLevel: 4 },
+    { id: 'icedlatte', name: 'Iced Latte', recipe: ['espresso','milk','ice'], unlockLevel: 5 },
+  ];
+
+  const MAX_ORDERS = 3;
+  const BASE_PATIENCE = 12000; // ms
+  const SPAWN_INTERVAL_BASE = 3500; // ms
+
+  // ── State ──
+  let state = {
+    running: false,
+    score: 0,
+    level: 1,
+    combo: 0,
+    bestCombo: 0,
+    lives: 3,
+    ordersServed: 0,
+    orders: [],
+    building: [],
+    lastSpawn: 0,
+    spawnInterval: SPAWN_INTERVAL_BASE,
+    nextId: 1,
+    lastTime: 0,
+  };
+
+  // ── DOM refs ──
+  const wrapper = document.getElementById('gameWrapper');
+  const scoreEl = document.getElementById('scoreDisplay');
+  const levelEl = document.getElementById('levelDisplay');
+  const comboEl = document.getElementById('comboDisplay');
+  const livesEl = document.getElementById('livesDisplay');
+  const ordersContainer = document.getElementById('ordersContainer');
+  const builderSlots = document.getElementById('builderSlots');
+  const startOverlay = document.getElementById('startOverlay');
+  const gameOverOverlay = document.getElementById('gameOverOverlay');
+  const particleCanvas = document.getElementById('particles');
+  const pCtx = particleCanvas.getContext('2d');
+
+  // ── Particles ──
+  let particles = [];
+  function resizeCanvas() {
+    const rect = wrapper.getBoundingClientRect();
+    particleCanvas.width = rect.width;
+    particleCanvas.height = rect.height;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function spawnParticles(x, y, color, count = 16, speed = 3) {
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const spd = Math.random() * speed + 1;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * spd,
+        vy: Math.sin(angle) * spd - 1,
+        life: 1.0,
+        decay: 0.02 + Math.random() * 0.03,
+        color,
+        size: 2 + Math.random() * 3,
+      });
+    }
+  }
+
+  function updateParticles() {
+    pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.08;
+      p.life -= p.decay;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      pCtx.globalAlpha = p.life;
+      pCtx.fillStyle = p.color;
+      pCtx.beginPath();
+      pCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      pCtx.fill();
+    }
+    pCtx.globalAlpha = 1;
+  }
+
+  // ── Utility ──
+  const comboMult = () => Math.min(3, 1 + Math.floor(state.combo / 5) * 0.5);
+  const availableDrinks = () => DRINKS.filter(d => d.unlockLevel <= state.level);
+  const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  function formatNum(n) { return n.toLocaleString(); }
+
+  function createOrder() {
+    const drink = rand(availableDrinks());
+    const patience = Math.max(5000, BASE_PATIENCE - (state.level - 1) * 1200);
+    return {
+      id: state.nextId++,
+      drink: drink,
+      patienceMax: patience,
+      patience: patience,
+      built: [],
+      createdAt: performance.now(),
+    };
+  }
+
+  // ── HUD ──
+  function updateHUD() {
+    scoreEl.textContent = formatNum(state.score);
+    levelEl.textContent = state.level;
+    const mult = comboMult();
+    comboEl.textContent = 'x' + mult.toFixed(1);
+    livesEl.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const div = document.createElement('div');
+      div.className = 'life' + (i >= state.lives ? ' lost' : '');
+      livesEl.appendChild(div);
+    }
+  }
+
+  function renderBuilder() {
+    builderSlots.innerHTML = '';
+    const maxLen = Math.max(1, ...state.orders.map(o => o.drink.recipe.length));
+    for (let i = 0; i < maxLen; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'builder__slot';
+      if (state.building[i]) slot.classList.add('builder__slot--filled');
+      builderSlots.appendChild(slot);
+    }
+  }
+
+  function renderOrders() {
+    ordersContainer.innerHTML = '';
+    state.orders.forEach(order => {
+      const el = document.createElement('div');
+      el.className = 'order';
+      el.dataset.id = order.id;
+      const pct = order.patience / order.patienceMax;
+      if (pct < 0.25) el.classList.add('order--danger');
+      else if (pct < 0.5) el.classList.add('order--warning');
+
+      const seqDots = order.drink.recipe.map((ing, idx) => {
+        const filled = idx < order.built.length;
+        const wrong = order.built[idx] && order.built[idx] !== ing;
+        let cls = 'order__seq-dot';
+        if (wrong) cls += ' order__seq-dot--wrong';
+        else if (filled) cls += ' order__seq-dot--filled';
+        return `<div class="${cls}"></div>`;
+      }).join('');
+
+      el.innerHTML = `
+        <div class="order__icon">${order.drink.name[0]}</div>
+        <div class="order__meta">
+          <div class="order__name">${order.drink.name}</div>
+          <div class="order__sequence">${seqDots}</div>
+        </div>
+        <div class="order__patience"><div class="order__patience-bar" style="width:${Math.max(0,pct*100)}%;background:${pct<0.25?'var(--danger)':pct<0.5?'var(--warning)':'var(--cyan)'}"></div></div>
+      `;
+      ordersContainer.appendChild(el);
+    });
+  }
+
+  // ── Feedback ──
+  function showFloater(text, x, y, type = 'score') {
+    const el = document.createElement('div');
+    el.className = 'floater floater--' + type;
+    el.textContent = text;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    wrapper.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+  }
+
+  function screenShake() {
+    wrapper.classList.add('shake');
+    setTimeout(() => wrapper.classList.remove('shake'), 350);
+  }
+
+  function showLevelUp() {
+    const banner = document.createElement('div');
+    banner.className = 'level-up-banner';
+    banner.innerHTML = `<h2>Level ${state.level}</h2><p>Orders are getting faster</p>`;
+    wrapper.appendChild(banner);
+    spawnParticles(particleCanvas.width/2, particleCanvas.height/2, '#00D4AA', 40, 5);
+    setTimeout(() => banner.remove(), 1500);
+  }
+
+  // ── Game Logic ──
+  function addOrder() {
+    if (state.orders.length >= MAX_ORDERS) return;
+    state.orders.push(createOrder());
+    renderOrders();
+  }
+
+  function completeOrder(order) {
+    const mult = comboMult();
+    const pts = Math.round(100 * state.level * mult);
+    state.score += pts;
+    state.combo++;
+    if (state.combo > state.bestCombo) state.bestCombo = state.combo;
+    state.ordersServed++;
+
+    // level up every 5 orders
+    if (state.ordersServed % 5 === 0) {
+      state.level++;
+      state.spawnInterval = Math.max(1200, SPAWN_INTERVAL_BASE - (state.level - 1) * 400);
+      showLevelUp();
+    }
+
+    // visual feedback
+    const orderEl = ordersContainer.querySelector(`.order[data-id="${order.id}"]`);
+    if (orderEl) {
+      orderEl.classList.add('order--completed');
+      const rect = orderEl.getBoundingClientRect();
+      const wrapRect = wrapper.getBoundingClientRect();
+      spawnParticles(rect.left + rect.width/2 - wrapRect.left, rect.top + rect.height/2 - wrapRect.top, '#00D4AA', 24, 4);
+      showFloater('+' + pts, rect.left + rect.width/2 - wrapRect.left, rect.top - wrapRect.top, 'score');
+      if (state.combo >= 5) {
+        showFloater('COMBO x' + mult.toFixed(1), rect.left + rect.width/2 - wrapRect.left, rect.top - wrapRect.top - 30, 'combo');
+      }
+    }
+
+    state.orders = state.orders.filter(o => o.id !== order.id);
+    state.building = [];
+    updateHUD();
+    renderOrders();
+    renderBuilder();
+  }
+
+  function wrongIngredient(order) {
+    state.combo = 0;
+    state.score = Math.max(0, state.score - 50);
+    screenShake();
+    const orderEl = ordersContainer.querySelector(`.order[data-id="${order.id}"]`);
+    if (orderEl) {
+      const rect = orderEl.getBoundingClientRect();
+      const wrapRect = wrapper.getBoundingClientRect();
+      showFloater('-50', rect.left + rect.width/2 - wrapRect.left, rect.top - wrapRect.top, 'bad');
+      spawnParticles(rect.left + rect.width/2 - wrapRect.left, rect.top + rect.height/2 - wrapRect.top, '#ff6b6b', 12, 3);
+    }
+    order.built = []; // reset this order's progress
+    updateHUD();
+    renderOrders();
+    renderBuilder();
+  }
+
+  function expireOrder(order) {
+    state.lives--;
+    state.combo = 0;
+    state.orders = state.orders.filter(o => o.id !== order.id);
+    screenShake();
+    updateHUD();
+    renderOrders();
+    if (state.lives <= 0) endGame();
+  }
+
+  function handleIngredient(ingId) {
+    if (!state.running || state.orders.length === 0) return;
+
+    // Find first order that needs this ingredient next
+    let target = state.orders.find(o => o.drink.recipe[o.built.length] === ingId);
+    if (!target) {
+      // No order wants this next - penalize and reset all
+      state.combo = 0;
+      state.score = Math.max(0, state.score - 50);
+      screenShake();
+      spawnParticles(particleCanvas.width/2, particleCanvas.height - 80, '#ff6b6b', 12, 3);
+      showFloater('Wrong!', particleCanvas.width/2, particleCanvas.height - 120, 'bad');
+      state.building = [];
+      state.orders.forEach(o => o.built = []);
+      updateHUD();
+      renderOrders();
+      renderBuilder();
+      return;
+    }
+
+    target.built.push(ingId);
+    state.building = target.built.slice();
+
+    if (target.built.length === target.drink.recipe.length) {
+      // verify complete match
+      const correct = target.drink.recipe.every((ing, i) => target.built[i] === ing);
+      if (correct) {
+        completeOrder(target);
+      } else {
+        wrongIngredient(target);
+      }
+    } else {
+      // progress feedback
+      const orderEl = ordersContainer.querySelector(`.order[data-id="${target.id}"]`);
+      if (orderEl) {
+        const rect = orderEl.getBoundingClientRect();
+        const wrapRect = wrapper.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width/2 - wrapRect.left, rect.top + rect.height/2 - wrapRect.top, '#C4A882', 6, 2);
+      }
+      renderOrders();
+      renderBuilder();
+    }
+  }
+
+  // ── Loop ──
+  function gameLoop(now) {
+    if (!state.running) return;
+    const dt = now - state.lastTime;
+    state.lastTime = now;
+
+    // spawn
+    if (now - state.lastSpawn > state.spawnInterval && state.orders.length < MAX_ORDERS) {
+      addOrder();
+      state.lastSpawn = now;
+    }
+
+    // update patience
+    state.orders.forEach(order => {
+      order.patience -= dt;
+      if (order.patience <= 0) expireOrder(order);
+    });
+
+    // update patience bars
+    state.orders.forEach(order => {
+      const el = ordersContainer.querySelector(`.order[data-id="${order.id}"]`);
+      if (!el) return;
+      const bar = el.querySelector('.order__patience-bar');
+      const pct = Math.max(0, order.patience / order.patienceMax);
+      bar.style.width = (pct * 100) + '%';
+      bar.style.background = pct < 0.25 ? 'var(--danger)' : pct < 0.5 ? 'var(--warning)' : 'var(--cyan)';
+      el.classList.toggle('order--danger', pct < 0.25);
+      el.classList.toggle('order--warning', pct >= 0.25 && pct < 0.5);
+    });
+
+    updateParticles();
+    requestAnimationFrame(gameLoop);
+  }
+
+  // ── Start / End ──
+  function startGame() {
+    state = {
+      running: true,
+      score: 0,
+      level: 1,
+      combo: 0,
+      bestCombo: 0,
+      lives: 3,
+      ordersServed: 0,
+      orders: [],
+      building: [],
+      lastSpawn: performance.now(),
+      spawnInterval: SPAWN_INTERVAL_BASE,
+      nextId: 1,
+      lastTime: performance.now(),
+    };
+    startOverlay.classList.add('overlay--hidden');
+    gameOverOverlay.classList.add('overlay--hidden');
+    updateHUD();
+    renderOrders();
+    renderBuilder();
+    addOrder();
+    requestAnimationFrame(gameLoop);
+  }
+
+  function endGame() {
+    state.running = false;
+    document.getElementById('finalScore').textContent = formatNum(state.score);
+    document.getElementById('finalLevel').textContent = state.level;
+    document.getElementById('finalCombo').textContent = 'x' + comboMult().toFixed(1) + ' (' + state.bestCombo + ' streak)';
+    document.getElementById('finalOrders').textContent = state.ordersServed;
+    gameOverOverlay.classList.remove('overlay--hidden');
+  }
+
+  // ── Input ──
+  document.querySelectorAll('.station').forEach(station => {
+    station.addEventListener('click', () => {
+      handleIngredient(station.dataset.ing);
+    });
+    station.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handleIngredient(station.dataset.ing);
+    });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (!state.running) {
+      if (e.key.toLowerCase() === 'r' && !gameOverOverlay.classList.contains('overlay--hidden')) {
+        startGame();
+      }
+      return;
+    }
+    const ing = INGREDIENTS.find(i => i.key === e.key);
+    if (ing) handleIngredient(ing.id);
+  });
+
+  document.getElementById('startBtn').addEventListener('click', startGame);
+  document.getElementById('restartBtn').addEventListener('click', startGame);
+
+  // initial render
+  updateHUD();
+  renderBuilder();
+})();
+</script>
+</body>
+</html>

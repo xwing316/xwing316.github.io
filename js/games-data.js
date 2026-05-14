@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-14',
+    title: 'Barista Blitz',
+    description: 'Fulfill coffee orders before impatient customers walk out! Build each drink by selecting ingredients in the right order. Speed and accuracy build your combo multiplier through escalating levels.',
+    category: 'action',
+    thumbnail: 'assets/images/game-coffee-2026-05-14.png',
+    file: 'games/coffee-2026-05-14.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-14',
+  },
+
+  {
     id: 'coffee-2026-05-13',
     title: 'Cascara Sort',
     description: 'Sort cascara berries and coffee cherries into matching cups before they overflow! Drag and drop colorful coffee fruits into the right containers, chain combos for bonus points, and race against the clock across 10 increasingly frantic levels.',
