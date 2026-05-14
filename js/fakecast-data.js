@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Dungeons & Desktops: Building a Roguelike with GitHub Copilot CLI",
+        "date": "2026-05-14",
+        "description": "Today's episode covers 4 stories including Dungeons & Desktops: Building a Roguelike with GitHub Copilot CLI, GitHub Copilot: Preparing for your move to usage-based billing, Show HN: AgentKanban for VS Code – A task board with agent harness integration.",
+        "audioSrc": "fakecast/ai-daily-2026-05-14.mp3",
+        "duration": 97
+      },
+      {
         "title": "Daily Briefing: agent-dash: TUI for managing Claude Code and OpenCode in tmux",
         "date": "2026-05-13",
         "description": "Today's episode covers 4 stories including agent-dash: TUI for managing Claude Code and OpenCode in tmux, Show HN: Kimiflare, Kimi K2.6 as a Coding Agent on Cloudflare Workers AI, Preview bill is now available.",
