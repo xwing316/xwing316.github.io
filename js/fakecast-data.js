@@ -133,6 +133,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: Mind Focus, an Android app for focus and attention recovery",
+        "date": "2026-05-15",
+        "description": "Today's episode covers 4 stories including Show HN: Mind Focus, an Android app for focus and attention recovery, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-15.mp3",
+        "duration": 73
+      },
+      {
         "title": "Daily Briefing: The math of brewing a better espresso (2020)",
         "date": "2026-05-14",
         "description": "Today's episode covers 4 stories including The math of brewing a better espresso (2020), Show HN: AI powered social media for creatives and innovators, Show HN: Fulgent AI – Most Advance AI Headshot Generator.",
