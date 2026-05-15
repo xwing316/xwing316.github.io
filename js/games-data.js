@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'pong-man',
+    title: 'Pong-Man',
+    description: 'Pong meets Pac-Man! Hit the ball past your opponent, but watch out — Pac-Man is hungry. If he eats the ball while it\'s crossing after YOUR hit, you lose the point. Use SPACE to shake the board and nudge the ball away from danger.',
+    category: 'classic',
+    thumbnail: 'assets/images/game-pong-man.png',
+    file: 'games/pong-man.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-15',
+  },
+
+  {
     id: 'coffee-2026-05-14',
     title: 'Barista Blitz',
     description: 'Fulfill coffee orders before impatient customers walk out! Build each drink by selecting ingredients in the right order. Speed and accuracy build your combo multiplier through escalating levels.',
