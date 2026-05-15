@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Vibecoding – A vibecoding tool for HR who still don't get what vibecoding is",
+        "date": "2026-05-15",
+        "description": "Today's episode covers 4 stories including Vibecoding – A vibecoding tool for HR who still don't get what vibecoding is, GitHub Copilot has released a preview of usage-based billing, Show HN: JDS – a Copilot skill suite for structuring AI coding behavior.",
+        "audioSrc": "fakecast/ai-daily-2026-05-15.mp3",
+        "duration": 93
+      },
+      {
         "title": "Daily Briefing: Dungeons & Desktops: Building a Roguelike with GitHub Copilot CLI",
         "date": "2026-05-14",
         "description": "Today's episode covers 4 stories including Dungeons & Desktops: Building a Roguelike with GitHub Copilot CLI, GitHub Copilot: Preparing for your move to usage-based billing, Show HN: AgentKanban for VS Code – A task board with agent harness integration.",
