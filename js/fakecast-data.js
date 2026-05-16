@@ -140,6 +140,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: GlycemicGPT – Open-source AI-powered diabetes management",
+        "date": "2026-05-16",
+        "description": "Today's episode covers 3 stories including Show HN: GlycemicGPT – Open-source AI-powered diabetes management, Show HN: Subtitle Insights – On-device AI translation for YouTube subtitles, Skeptic impressed by colleague's AI workflow.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-16.mp3",
+        "duration": 61
+      },
+      {
         "title": "Daily Briefing: Show HN: Mind Focus, an Android app for focus and attention recovery",
         "date": "2026-05-15",
         "description": "Today's episode covers 4 stories including Show HN: Mind Focus, an Android app for focus and attention recovery, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
