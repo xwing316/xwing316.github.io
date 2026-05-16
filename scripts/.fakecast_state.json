@@ -349,6 +349,36 @@
       "title": "Improving token efficiency in GitHub Agentic Workflows",
       "url": "https://github.blog/ai-and-ml/github-copilot/improving-token-efficiency-in-github-agentic-workflows/",
       "date": "2026-05-15T06:01:05.699192+00:00"
+    },
+    {
+      "title": "The Coding Harness Behind GitHub Copilot in VS Code",
+      "url": "https://code.visualstudio.com/blogs/2026/05/15/agent-harnesses-github-copilot-vscode",
+      "date": "2026-05-16T13:36:49.086952+00:00"
+    },
+    {
+      "title": "Show HN: One Markdown File to Set Up Claude, Codex, Cursor and Copilot",
+      "url": "https://github.com/kernalix7/ai-project-setup",
+      "date": "2026-05-16T13:36:49.086952+00:00"
+    },
+    {
+      "title": "Anthropic moves Claude Code SDK and claude -p out of subscription plans",
+      "url": "https://twitter.com/ClaudeDevs/status/2054610152817619388",
+      "date": "2026-05-16T13:36:49.086952+00:00"
+    },
+    {
+      "title": "Anthropic is proof that SaaS isn't dead",
+      "url": "https://www.octavehq.com/post/claude-code-wont-replace-saas",
+      "date": "2026-05-16T13:36:49.086952+00:00"
+    },
+    {
+      "title": "Refactor: Unified codebase for better performance by vishxrad- Pull Request #517",
+      "url": "https://github.com/thesysdev/openui/pull/517",
+      "date": "2026-05-16T13:36:49.086952+00:00"
+    },
+    {
+      "title": "Sandboxing Codex on Windows",
+      "url": "https://openai.com/index/building-codex-windows-sandbox/",
+      "date": "2026-05-16T13:36:49.086952+00:00"
     }
   ],
   "coffee": [

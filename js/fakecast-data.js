@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: The Coding Harness Behind GitHub Copilot in VS Code",
+        "date": "2026-05-16",
+        "description": "Today's episode covers 4 stories including The Coding Harness Behind GitHub Copilot in VS Code, Show HN: One Markdown File to Set Up Claude, Codex, Cursor and Copilot, Anthropic moves Claude Code SDK and claude -p out of subscription plans.",
+        "audioSrc": "fakecast/ai-daily-2026-05-16.mp3",
+        "duration": 94
+      },
+      {
         "title": "Daily Briefing: Vibecoding – A vibecoding tool for HR who still don't get what vibecoding is",
         "date": "2026-05-15",
         "description": "Today's episode covers 4 stories including Vibecoding – A vibecoding tool for HR who still don't get what vibecoding is, GitHub Copilot has released a preview of usage-based billing, Show HN: JDS – a Copilot skill suite for structuring AI coding behavior.",
