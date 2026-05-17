@@ -379,6 +379,36 @@
       "title": "Sandboxing Codex on Windows",
       "url": "https://openai.com/index/building-codex-windows-sandbox/",
       "date": "2026-05-16T13:36:49.086952+00:00"
+    },
+    {
+      "title": "Show HN: Built a verifiable, open-source SoC 2 readiness scanner",
+      "url": "https://loxeai.com",
+      "date": "2026-05-17T06:00:34.783780+00:00"
+    },
+    {
+      "title": "Show HN: Strava for AI coding \u2013 analytics on your Copilot/Claude/Codex usage",
+      "url": "https://github.com/microsoft/AI-Engineering-Coach",
+      "date": "2026-05-17T06:00:34.783780+00:00"
+    },
+    {
+      "title": "GitHub takes aim at Claude Code and Codex with its new Copilot app",
+      "url": "https://thenewstack.io/github-copilot-desktop-app/",
+      "date": "2026-05-17T06:00:34.783780+00:00"
+    },
+    {
+      "title": "CC: Anthropic API Error: 500 Internal Server Error",
+      "url": "https://github.com/anthropics/claude-code/issues/59743",
+      "date": "2026-05-17T06:00:34.783780+00:00"
+    },
+    {
+      "title": "Codex Harness in OpenClaw",
+      "url": "https://openclaw.ai/blog/openai-models-in-openclaw-done-right",
+      "date": "2026-05-17T06:00:34.783780+00:00"
+    },
+    {
+      "title": "Build iterative repair loops with Codex",
+      "url": "https://developers.openai.com/cookbook/examples/codex/build_iterative_repair_loops_with_codex",
+      "date": "2026-05-17T06:00:34.783780+00:00"
     }
   ],
   "coffee": [

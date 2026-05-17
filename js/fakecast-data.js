@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: Built a verifiable, open-source SoC 2 readiness scanner",
+        "date": "2026-05-17",
+        "description": "Today's episode covers 4 stories including Show HN: Built a verifiable, open-source SoC 2 readiness scanner, Show HN: Strava for AI coding – analytics on your Copilot/Claude/Codex usage, GitHub takes aim at Claude Code and Codex with its new Copilot app.",
+        "audioSrc": "fakecast/ai-daily-2026-05-17.mp3",
+        "duration": 94
+      },
+      {
         "title": "Daily Briefing: The Coding Harness Behind GitHub Copilot in VS Code",
         "date": "2026-05-16",
         "description": "Today's episode covers 4 stories including The Coding Harness Behind GitHub Copilot in VS Code, Show HN: One Markdown File to Set Up Claude, Codex, Cursor and Copilot, Anthropic moves Claude Code SDK and claude -p out of subscription plans.",
