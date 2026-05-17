@@ -147,6 +147,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: On coffee machine size / strength matrix",
+        "date": "2026-05-17",
+        "description": "Today's episode covers 4 stories including On coffee machine size / strength matrix, Materials Scientists Learn We’ve Been Brewing Espresso All Wrong, Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-17.mp3",
+        "duration": 77
+      },
+      {
         "title": "Daily Briefing: Show HN: GlycemicGPT – Open-source AI-powered diabetes management",
         "date": "2026-05-16",
         "description": "Today's episode covers 3 stories including Show HN: GlycemicGPT – Open-source AI-powered diabetes management, Show HN: Subtitle Insights – On-device AI translation for YouTube subtitles, Skeptic impressed by colleague's AI workflow.",
