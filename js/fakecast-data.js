@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Deep Dive: Ask HN: Which AI harness comes close to Claude Code?",
+        "date": "2026-05-18",
+        "description": "Deep research episode covering 3 stories including Ask HN: Which AI harness comes close to Claude Code?, Spec-Driven Development with math-glyph compression, Ask HN: Could free/low cost LLMs be a momentary thing?.",
+        "audioSrc": "fakecast/ai-daily-2026-05-18.mp3",
+        "duration": 507
+      },
+      {
         "title": "Daily Briefing: Back in My Day",
         "date": "2026-05-18",
         "description": "Today's episode covers 4 stories including Back in My Day, Show HN: Agetor - An open-source Harness Orchestrator, Show HN: Gonfire – Assess how well candidates steer AI coding agents.",

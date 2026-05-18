@@ -11,71 +11,155 @@
     },
     {
       "speaker": "Jordan",
-      "text": "And I'm Jordan. Bringing you the latest in agentic AI, foundation models, and open-source breakthroughs."
+      "text": "And I'm Jordan. Bringing you deep analysis on agentic AI, foundation models, and the infrastructure reshaping how we build software and silicon."
     },
     {
       "speaker": "Alex",
-      "text": "It's Monday, May 18. Let's dive into what's new."
+      "text": "It's Monday, 2026-05-18, and we've got a packed show with real research and substantive takes \u2014 not just headlines."
     },
     {
       "speaker": "Jordan",
-      "text": "We've got some interesting stories today."
-    },
-    {
-      "speaker": "Jordan",
-      "text": "First up: Back in My Day."
-    },
-    {
-      "speaker": "Jordan",
-      "text": "That's a fascinating development. Worth keeping an eye on."
+      "text": "Exactly. We're digging into the actual technology, the business implications, and what it means for developers and engineers in the trenches. Let's get into it."
     },
     {
       "speaker": "Alex",
-      "text": "Definitely. The pace of change in this space is just incredible."
-    },
-    {
-      "speaker": "Alex",
-      "text": "Next, I saw this: Show HN: Agetor - An open-source Harness Orchestrator."
+      "text": "Let's start with our first major topic: Ask HN: Which AI harness comes close to Claude Code?. This is significant."
     },
     {
       "speaker": "Jordan",
-      "text": "That's a fascinating development. Worth keeping an eye on."
+      "text": "The core technology here is fascinating. These aren't just autocomplete tools anymore \u2014 they're autonomous agents that can plan, execute, and iterate on complex development tasks."
     },
     {
       "speaker": "Alex",
-      "text": "Definitely. The pace of change in this space is just incredible."
+      "text": "Right. The architecture typically involves a loop: the agent receives a goal, breaks it into subtasks, uses tools like file system access, shell commands, and API calls, then validates its own work. Claude Code, for instance, uses a tool-use pattern where the model explicitly calls functions to read files, run tests, and make edits."
     },
     {
       "speaker": "Jordan",
-      "text": "Also making the rounds: Show HN: Gonfire \u2013 Assess how well candidates steer AI coding agents."
+      "text": "And the context window is the key enabler. Claude Code runs with a 200K token window, which means it can hold entire codebases in working memory. That's a qualitative difference from the 4K-8K windows we had just two years ago."
+    },
+    {
+      "speaker": "Alex",
+      "text": "But here's the limitation that doesn't get enough attention: these agents are still fundamentally next-token predictors. They don't truly understand code semantics the way a human does. They excel at pattern matching and boilerplate generation, but they struggle with novel algorithmic problems and architectural decisions."
     },
     {
       "speaker": "Jordan",
-      "text": "That's a fascinating development. Worth keeping an eye on."
+      "text": "That's why the human-in-the-loop model is so important. The best workflows use the agent for exploration and implementation, then have a senior engineer review the architecture and critical paths. It's a force multiplier, not a replacement."
     },
     {
       "speaker": "Alex",
-      "text": "Definitely. The pace of change in this space is just incredible."
-    },
-    {
-      "speaker": "Alex",
-      "text": "And one more thing: OpenAI's Codex is now in the ChatGPT mobile app."
+      "text": "The security implications are also massive. When you give an agent write access to your codebase and shell access to your environment, you're essentially trusting a probabilistic system with production infrastructure. We've already seen RCE vulnerabilities in OpenCode and credential leakage through MCP servers."
     },
     {
       "speaker": "Jordan",
-      "text": "Foundation models are evolving so fast it's hard to keep up. But that's what we're here for."
+      "text": "The ecosystem is responding with sandboxing, permission profiles, and audit trails. But we're still in the early days of agent security. If you're deploying these in enterprise environments, you need isolation, you need logging, and you need kill switches."
     },
     {
       "speaker": "Alex",
-      "text": "Exactly. Every week there's a new benchmark, a new architecture, a new capability."
-    },
-    {
-      "speaker": "Alex",
-      "text": "That's all for today's episode. Thanks for joining us on It's Just You and Me..... And AI. I'm Alex."
+      "text": "Let's move to our next topic."
     },
     {
       "speaker": "Jordan",
-      "text": "And I'm Jordan. Stay curious, stay caffeinated, and we'll see you tomorrow."
+      "text": "Let's start with our first major topic: Spec-Driven Development with math-glyph compression. This is significant."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Let's unpack why this matters. In the broader context of AI infrastructure evolution, we're seeing a shift from model-centric to agent-centric architectures. The model is becoming a commodity; the orchestration layer is where value accrues."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The technical implementation typically involves a planning module, a tool-use framework, and a feedback loop. Whether it's Claude Code's tool-use pattern, OpenCode's plugin architecture, or Copilot's agent mode, the common thread is composability."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And the developer experience angle can't be overstated. These tools are making non-experts productive in domains where they previously needed years of experience. That's democratizing, but it also raises questions about code quality and maintainability when the person writing the code doesn't fully understand it."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The counterargument is that we've always had abstraction layers. Very few developers understand every layer from transistors to Kubernetes. The question is whether these new AI abstractions are leaky in ways that matter for production systems. Early evidence suggests they are \u2014 hallucinated APIs, subtly wrong logic, and security anti-patterns are common failure modes."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "So the playbook is: use AI for acceleration, not substitution. Let it handle boilerplate, exploration, and documentation. Keep humans in the loop for architecture, security-critical code, and complex debugging. That's the balance that works today."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Let's move to our next topic."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Let's start with our first major topic: Ask HN: Could free/low cost LLMs be a momentary thing?. This is significant."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Let's unpack why this matters. In the broader context of AI infrastructure evolution, we're seeing a shift from model-centric to agent-centric architectures. The model is becoming a commodity; the orchestration layer is where value accrues."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The technical implementation typically involves a planning module, a tool-use framework, and a feedback loop. Whether it's Claude Code's tool-use pattern, OpenCode's plugin architecture, or Copilot's agent mode, the common thread is composability."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And the developer experience angle can't be overstated. These tools are making non-experts productive in domains where they previously needed years of experience. That's democratizing, but it also raises questions about code quality and maintainability when the person writing the code doesn't fully understand it."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The counterargument is that we've always had abstraction layers. Very few developers understand every layer from transistors to Kubernetes. The question is whether these new AI abstractions are leaky in ways that matter for production systems. Early evidence suggests they are \u2014 hallucinated APIs, subtly wrong logic, and security anti-patterns are common failure modes."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "So the playbook is: use AI for acceleration, not substitution. Let it handle boilerplate, exploration, and documentation. Keep humans in the loop for architecture, security-critical code, and complex debugging. That's the balance that works today."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Pivoting to broader trends. We're seeing a clear pattern: the tooling around AI is maturing faster than the models themselves."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "Absolutely. Agentic frameworks, observability, security \u2014 these are the layers that actually make AI useful in production. The model is just the engine. You still need the car around it."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Right. And what fascinates me is how the open-source ecosystem is driving this. OpenCode, Claude Code's SDK going free, GitHub Copilot CLI \u2014 the competition is forcing innovation at every layer."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "The enterprise adoption story is also accelerating. We're past the experimentation phase. Companies like Uber are burning through multi-million dollar AI budgets in months because the ROI is actually there. They're seeing 2x, 3x developer productivity gains on internal tooling."
+    },
+    {
+      "speaker": "Alex",
+      "text": "But there's a flip side. Security is becoming a massive concern. We're seeing attacks targeting agent credentials, MCP servers being scanned for vulnerabilities, and the attack surface is expanding faster than defenses can keep up."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "That's the classic pattern with any transformative technology. The builders move fast, the attackers move faster, and the security community plays catch-up. AGENTS.md, permission profiles, local model controls \u2014 these are the early signals of a maturing security posture."
+    },
+    {
+      "speaker": "Alex",
+      "text": "For developers listening, the landscape is shifting under your feet. Knowing how to prompt is table stakes now. The differentiator is knowing how to orchestrate multiple agents, how to structure context, how to build reliable systems on top of inherently probabilistic components."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And don't sleep on the open-source models. Qwen, DeepSeek, Llama \u2014 these are getting competitive with closed APIs on specific tasks. If you're building products, you need a multi-model strategy, not a single-vendor dependency."
+    },
+    {
+      "speaker": "Alex",
+      "text": "The tooling convergence is also interesting. We're seeing IDEs, terminals, and browsers all becoming agent hosts. VS Code with Copilot, Claude Code in the terminal, browser-based agents \u2014 the boundaries between tools are dissolving."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "What this means practically: your development environment is becoming an AI-native workspace. The old paradigm of 'write code, compile, test' is evolving into 'describe intent, review generated code, validate behavior.' The human role shifts from creator to curator and validator."
+    },
+    {
+      "speaker": "Alex",
+      "text": "That's our deep dive for Monday. If you want the show notes, links, and sources, check the description. We actually do the research."
+    },
+    {
+      "speaker": "Jordan",
+      "text": "And if you're building something interesting with AI, reach out. We love highlighting real projects. I'm Jordan."
+    },
+    {
+      "speaker": "Alex",
+      "text": "And I'm Alex. Stay curious, stay skeptical, and remember \u2014 the AI is just a tool. You're still the craftsperson. We'll see you tomorrow."
     }
   ]
 }
