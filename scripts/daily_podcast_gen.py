@@ -331,7 +331,26 @@ def update_data_file(show, episode_info):
 
     show_key = show
     data[show_key]["episodes"].insert(0, episode_info)
+
+    # Keep only last 30 episodes
     data[show_key]["episodes"] = data[show_key]["episodes"][:30]
+
+    # Filter out episodes under 5 minutes (300s)
+    before = len(data[show_key]["episodes"])
+    data[show_key]["episodes"] = [ep for ep in data[show_key]["episodes"] if ep.get("duration", 0) >= 300]
+    removed = before - len(data[show_key]["episodes"])
+    if removed:
+        print(f"  Removed {removed} episodes under 5 minutes")
+
+    # Remove duplicate audioSrc entries, keeping first (newest)
+    seen = set()
+    unique = []
+    for ep in data[show_key]["episodes"]:
+        src = ep.get("audioSrc", "")
+        if src not in seen:
+            seen.add(src)
+            unique.append(ep)
+    data[show_key]["episodes"] = unique
 
     json_blob = json.dumps(data, indent=2, ensure_ascii=False)
     new_content = f"const FAKECAST_DATA = {json_blob};\n"
