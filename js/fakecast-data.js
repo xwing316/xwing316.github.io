@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Back in My Day",
+        "date": "2026-05-18",
+        "description": "Today's episode covers 4 stories including Back in My Day, Show HN: Agetor - An open-source Harness Orchestrator, Show HN: Gonfire – Assess how well candidates steer AI coding agents.",
+        "audioSrc": "fakecast/ai-daily-2026-05-18.mp3",
+        "duration": 82
+      },
+      {
         "title": "Daily Briefing: Show HN: Built a verifiable, open-source SoC 2 readiness scanner",
         "date": "2026-05-17",
         "description": "Today's episode covers 4 stories including Show HN: Built a verifiable, open-source SoC 2 readiness scanner, Show HN: Strava for AI coding – analytics on your Copilot/Claude/Codex usage, GitHub takes aim at Claude Code and Codex with its new Copilot app.",
