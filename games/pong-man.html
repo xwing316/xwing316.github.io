@@ -425,6 +425,7 @@
       let ballTrail = [];
       let shockwaves = [];
       let frameCount = 0;
+      let ballCanBeEaten = true; // prevent Pac-Man from eating ball multiple times between paddle hits
 
       // Input
       const keys = {};
@@ -474,6 +475,7 @@
         ball.active = true;
         ballTrail = [];
         lastHitter = null;
+        ballCanBeEaten = true; // reset eat gate for new ball
         updateLastHitIndicator();
       }
 
@@ -599,6 +601,7 @@
           }
 
           lastHitter = isPlayer ? 'player' : 'ai';
+          ballCanBeEaten = true; // paddle hit allows Pac-Man to eat once
           updateLastHitIndicator();
           spawnParticles(ball.x, ball.y, isPlayer ? 'var(--cyan)' : 'var(--coffee)', 15);
 
@@ -702,8 +705,9 @@
           if (pacman.mouthAngle > 0.35) pacman.mouthOpen = false;
           if (pacman.mouthAngle < 0.02) pacman.mouthOpen = true;
 
-          // Pac-Man eats ball
-          if (pDist < PACMAN_EAT_RADIUS + BALL_RADIUS) {
+          // Pac-Man eats ball (once per paddle-hit cycle)
+          if (ballCanBeEaten && pDist < PACMAN_EAT_RADIUS + BALL_RADIUS) {
+            ballCanBeEaten = false; // lock — must be hit by a paddle to eat again
             // Who loses? The last hitter
             if (lastHitter === 'player') {
               aiScore++;
