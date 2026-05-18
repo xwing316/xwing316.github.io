@@ -13,109 +13,11 @@ const FAKECAST_DATA = {
         "duration": 507
       },
       {
-        "title": "Daily Briefing: Back in My Day",
-        "date": "2026-05-18",
-        "description": "Today's episode covers 4 stories including Back in My Day, Show HN: Agetor - An open-source Harness Orchestrator, Show HN: Gonfire – Assess how well candidates steer AI coding agents.",
-        "audioSrc": "fakecast/ai-daily-2026-05-18.mp3",
-        "duration": 82
-      },
-      {
-        "title": "Daily Briefing: Show HN: Built a verifiable, open-source SoC 2 readiness scanner",
-        "date": "2026-05-17",
-        "description": "Today's episode covers 4 stories including Show HN: Built a verifiable, open-source SoC 2 readiness scanner, Show HN: Strava for AI coding – analytics on your Copilot/Claude/Codex usage, GitHub takes aim at Claude Code and Codex with its new Copilot app.",
-        "audioSrc": "fakecast/ai-daily-2026-05-17.mp3",
-        "duration": 94
-      },
-      {
-        "title": "Daily Briefing: The Coding Harness Behind GitHub Copilot in VS Code",
-        "date": "2026-05-16",
-        "description": "Today's episode covers 4 stories including The Coding Harness Behind GitHub Copilot in VS Code, Show HN: One Markdown File to Set Up Claude, Codex, Cursor and Copilot, Anthropic moves Claude Code SDK and claude -p out of subscription plans.",
-        "audioSrc": "fakecast/ai-daily-2026-05-16.mp3",
-        "duration": 94
-      },
-      {
-        "title": "Daily Briefing: Vibecoding – A vibecoding tool for HR who still don't get what vibecoding is",
-        "date": "2026-05-15",
-        "description": "Today's episode covers 4 stories including Vibecoding – A vibecoding tool for HR who still don't get what vibecoding is, GitHub Copilot has released a preview of usage-based billing, Show HN: JDS – a Copilot skill suite for structuring AI coding behavior.",
-        "audioSrc": "fakecast/ai-daily-2026-05-15.mp3",
-        "duration": 93
-      },
-      {
-        "title": "Daily Briefing: Dungeons & Desktops: Building a Roguelike with GitHub Copilot CLI",
-        "date": "2026-05-14",
-        "description": "Today's episode covers 4 stories including Dungeons & Desktops: Building a Roguelike with GitHub Copilot CLI, GitHub Copilot: Preparing for your move to usage-based billing, Show HN: AgentKanban for VS Code – A task board with agent harness integration.",
-        "audioSrc": "fakecast/ai-daily-2026-05-14.mp3",
-        "duration": 97
-      },
-      {
-        "title": "Daily Briefing: agent-dash: TUI for managing Claude Code and OpenCode in tmux",
-        "date": "2026-05-13",
-        "description": "Today's episode covers 4 stories including agent-dash: TUI for managing Claude Code and OpenCode in tmux, Show HN: Kimiflare, Kimi K2.6 as a Coding Agent on Cloudflare Workers AI, Preview bill is now available.",
-        "audioSrc": "fakecast/ai-daily-2026-05-13.mp3",
-        "duration": 92
-      },
-      {
-        "title": "Daily Briefing: Why 157,000 developers are hedging against Anthropic with OpenCode",
-        "date": "2026-05-12",
-        "description": "Today's episode covers 4 stories including Why 157,000 developers are hedging against Anthropic with OpenCode, GitHub Copilot is deprecating Grok Code Fast 1, Show HN: BrowserCode – Run Claude Code in the Browser via WebAssembly.",
-        "audioSrc": "fakecast/ai-daily-2026-05-12.mp3",
-        "duration": 91
-      },
-      {
-        "title": "Daily Briefing: Tell HN: Claude claims the AGPLv3 license violates it's content policy",
-        "date": "2026-05-11",
-        "description": "Today's episode covers 4 stories including Tell HN: Claude claims the AGPLv3 license violates it's content policy, Ask HN: Best foundation model for CLM fine-tuning?, Show HN: Cactus – Ollama for Smartphones.",
-        "audioSrc": "fakecast/ai-daily-2026-05-11.mp3",
-        "duration": 90
-      },
-      {
-        "title": "Daily Briefing: Jetro – JSON query engine for Rust (jq-like DSL with compilation and VM)",
-        "date": "2026-05-10",
-        "description": "Today's episode covers 4 stories including Jetro – JSON query engine for Rust (jq-like DSL with compilation and VM), Claude Code's creator is sick of the phrase 'vibe coding.', Claude Code creator Boris Cherny is sick of the phrase 'vibe coding'.",
-        "audioSrc": "fakecast/ai-daily-2026-05-10.mp3",
-        "duration": 88
-      },
-      {
         "title": "Copilot Cloud Agent Gets Dedicated Agent Secrets",
         "date": "2026-05-09",
         "description": "Alex and Jordan cover GitHub Copilot cloud agent adding organization-level Agents secrets and variables, plus Rubber Duck cross-model reviewing and enterprise-managed Copilot CLI plugins. They also dig into Codex CLI 0.130.0, model churn in Copilot, and why agent credentials are the new security front line.",
         "audioSrc": "fakecast/ai-daily-2026-05-09.mp3",
         "duration": 511
-      },
-      {
-        "title": "Daily Briefing: Show HN: Airlock – self-upgrading compiled AI agents",
-        "date": "2026-05-08",
-        "description": "Today's episode covers 4 stories including Show HN: Airlock – self-upgrading compiled AI agents, Show HN: I vibe-coded an illegal streaming platform, We scanned 100 Smithery MCP servers, 22 flagged, here's what we found.",
-        "audioSrc": "fakecast/ai-daily-2026-05-08.mp3",
-        "duration": 85
-      },
-      {
-        "title": "Daily Briefing: Anthropic raises Claude Code usage limits, credits new deal with SpaceX",
-        "date": "2026-05-07",
-        "description": "Today's episode covers 4 stories including Anthropic raises Claude Code usage limits, credits new deal with SpaceX, Claude Code with Bedrock broken again, Spike in Codex Downloads.",
-        "audioSrc": "fakecast/ai-daily-2026-05-07.mp3",
-        "duration": 88
-      },
-      {
-        "title": "Daily Briefing: Ask HN: The death of software development as a job?",
-        "date": "2026-05-06",
-        "description": "Today's episode covers 4 stories including Ask HN: The death of software development as a job?, Claude Code: /effort is global across concurrent sessions instead of session, Anthropic quietly nerfed Claude Code's 1-hour cache.",
-        "audioSrc": "fakecast/ai-daily-2026-05-06.mp3",
-        "duration": 90
-      },
-      {
-        "title": "Daily Briefing: VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage",
-        "date": "2026-05-06",
-        "description": "Today's episode covers 4 stories including VS Code inserting 'Co-Authored-by Copilot' into commits regardless of usage, Show HN: Filling PDF forms with AI using client-side tool calling, GitHub Copilot: Upcoming Deprecation of GPT-5.2 and GPT-5.2-Codex.",
-        "audioSrc": "fakecast/ai-daily-2026-05-06.mp3",
-        "duration": 95
-      },
-      {
-        "title": "Daily Briefing: Show HN: A CLI to use any model in your coding agent",
-        "date": "2026-05-06",
-        "description": "Today's episode covers 4 stories including Show HN: A CLI to use any model in your coding agent, Ask HN: Claude Code Alternative, Update on \"Co-Authored-By: Copilot\" in Commit Messages – Issue #314311.",
-        "audioSrc": "fakecast/ai-daily-2026-05-06.mp3",
-        "duration": 92
       },
       {
         "title": "Dynatrace Brings Observability to Coding Agents",
@@ -168,109 +70,11 @@ const FAKECAST_DATA = {
         "duration": 446
       },
       {
-        "title": "Daily Briefing: Show HN: Specialty Coffee Discovery Platform",
-        "date": "2026-05-18",
-        "description": "Today's episode covers 4 stories including Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans, Show HN: PyMOL-RS – Rust reimplementation of PyMOL with modern rendering.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-18.mp3",
-        "duration": 74
-      },
-      {
-        "title": "Daily Briefing: On coffee machine size / strength matrix",
-        "date": "2026-05-17",
-        "description": "Today's episode covers 4 stories including On coffee machine size / strength matrix, Materials Scientists Learn We’ve Been Brewing Espresso All Wrong, Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-17.mp3",
-        "duration": 77
-      },
-      {
-        "title": "Daily Briefing: Show HN: GlycemicGPT – Open-source AI-powered diabetes management",
-        "date": "2026-05-16",
-        "description": "Today's episode covers 3 stories including Show HN: GlycemicGPT – Open-source AI-powered diabetes management, Show HN: Subtitle Insights – On-device AI translation for YouTube subtitles, Skeptic impressed by colleague's AI workflow.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-16.mp3",
-        "duration": 61
-      },
-      {
-        "title": "Daily Briefing: Show HN: Mind Focus, an Android app for focus and attention recovery",
-        "date": "2026-05-15",
-        "description": "Today's episode covers 4 stories including Show HN: Mind Focus, an Android app for focus and attention recovery, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-15.mp3",
-        "duration": 73
-      },
-      {
-        "title": "Daily Briefing: The math of brewing a better espresso (2020)",
-        "date": "2026-05-14",
-        "description": "Today's episode covers 4 stories including The math of brewing a better espresso (2020), Show HN: AI powered social media for creatives and innovators, Show HN: Fulgent AI – Most Advance AI Headshot Generator.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-14.mp3",
-        "duration": 74
-      },
-      {
-        "title": "Daily Briefing: Jaho Coffee Roaster",
-        "date": "2026-05-13",
-        "description": "Today's episode covers 4 stories including Jaho Coffee Roaster, Trump's tariffs are brewing trouble for coffee roasters, Show HN: A Digital Twin of my coffee roaster that runs in the browser.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-13.mp3",
-        "duration": 74
-      },
-      {
-        "title": "Daily Briefing: Show HN: Tool to check risks of your startup",
-        "date": "2026-05-12",
-        "description": "Today's episode covers 4 stories including Show HN: Tool to check risks of your startup, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-12.mp3",
-        "duration": 72
-      },
-      {
-        "title": "Daily Briefing: Show HN: GPU Perpetual Futures Prototype",
-        "date": "2026-05-11",
-        "description": "Today's episode covers 4 stories including Show HN: GPU Perpetual Futures Prototype, Show HN: Been Ski – Track ski resort visits across 4,500 resorts worldwide, Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-11.mp3",
-        "duration": 74
-      },
-      {
-        "title": "Daily Briefing: Why Snow Globe Cups Are Popular–and Why This Design Makes Sense",
-        "date": "2026-05-10",
-        "description": "Today's episode covers 4 stories including Why Snow Globe Cups Are Popular–and Why This Design Makes Sense, Show HN: My AI agents bully each other to prevent context drift, Tell HN: Class action investigation into Google withholding Play developer funds.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-10.mp3",
-        "duration": 73
-      },
-      {
         "title": "Dean's Beans Wins as Coffee Costs Keep Climbing",
         "date": "2026-05-09",
         "description": "Milo and Riley discuss Dean's Beans being named Massachusetts Rural Business of the Year, Lavazza's regenerative B2B coffee, Starbucks' Thailand farmer initiative, and Royal Cup's Farmer Brothers acquisition. They also unpack fertilizer price shocks, Texas A&M's NR4A1 coffee-health research, and free U.S. Barista Championship prep workshops.",
         "audioSrc": "fakecast/coffee-daily-2026-05-09.mp3",
         "duration": 498
-      },
-      {
-        "title": "Daily Briefing: Show HN: Full Python GUI apps in the browser – no JavaScript, no server",
-        "date": "2026-05-08",
-        "description": "Today's episode covers 4 stories including Show HN: Full Python GUI apps in the browser – no JavaScript, no server, Show HN: Zoneless – Open-source Stripe Connect clone with $0.002 fees using USDC, Ask HN: Analysis of credit card receipts to show one does not buy alcohol.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-08.mp3",
-        "duration": 82
-      },
-      {
-        "title": "Daily Briefing: Show HN: Currant – Anonymus social media for NON-AI agents",
-        "date": "2026-05-07",
-        "description": "Today's episode covers 4 stories including Show HN: Currant – Anonymus social media for NON-AI agents, Show HN: High speed graphics rendering research with tinygrad/tinyJIT, LokiVector: An Embedded Document Vector DB Crash-Tested Durability.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-07.mp3",
-        "duration": 72
-      },
-      {
-        "title": "Daily Briefing: MyRobot, a Venture Capital Pitch",
-        "date": "2026-05-06",
-        "description": "Today's episode covers 4 stories including MyRobot, a Venture Capital Pitch, Show HN: I left my FAANG job at 50 to build a sci-fi game, Show HN: Wordrops – A competitive writing platform inspired by League of Legends.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-06.mp3",
-        "duration": 72
-      },
-      {
-        "title": "Daily Briefing: Show HN: Free espresso/pourover tool with interactive WCR Flavor Wheel",
-        "date": "2026-05-06",
-        "description": "Today's episode covers 4 stories including Show HN: Free espresso/pourover tool with interactive WCR Flavor Wheel, Show HN: I Built an app to Find and track specialty coffee shops worldwide, Ask HN: Would a list of coffee shops serving good specialty coffee be useful?.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-06.mp3",
-        "duration": 80
-      },
-      {
-        "title": "Daily Briefing: Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers",
-        "date": "2026-05-06",
-        "description": "Today's episode covers 4 stories including Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-06.mp3",
-        "duration": 76
       },
       {
         "title": "Yemeni Cafes Rise as Coffee Gear Gets Wild",
@@ -292,13 +96,6 @@ const FAKECAST_DATA = {
         "description": "Coffee prices hit a 50-year high driven by climate change and speculation, Colombian farmers pivot to cacao as temperatures rise, discovery tools like RoastDB and Brewmind help enthusiasts navigate the market, and vintage La Marzocco machines become hot collector's items.",
         "audioSrc": "fakecast/coffee-daily-2026-05-02.mp3",
         "duration": 384
-      },
-      {
-        "title": "Electrochemistry, RoastDB, and AI Bean Tracking",
-        "date": "2026-05-01",
-        "description": "Scientists discover electrical current can appraise coffee quality, RoastDB catalogs 3,800+ specialty beans, BrewGreat teaches flavor wheel literacy, and BeanBook puts AI to work on your morning ritual.",
-        "audioSrc": "fakecast/coffee-ep1.mp3",
-        "duration": 299
       },
       {
         "title": "Starbucks Barista Battles and Digital Roasting Twins",
