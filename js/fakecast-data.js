@@ -154,6 +154,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Daily Briefing: Show HN: Specialty Coffee Discovery Platform",
+        "date": "2026-05-18",
+        "description": "Today's episode covers 4 stories including Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans, Show HN: PyMOL-RS – Rust reimplementation of PyMOL with modern rendering.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-18.mp3",
+        "duration": 74
+      },
+      {
         "title": "Daily Briefing: On coffee machine size / strength matrix",
         "date": "2026-05-17",
         "description": "Today's episode covers 4 stories including On coffee machine size / strength matrix, Materials Scientists Learn We’ve Been Brewing Espresso All Wrong, Show HN: BigBlueBam, MIT-licensed Work OS where agents are first-class coworkers.",
