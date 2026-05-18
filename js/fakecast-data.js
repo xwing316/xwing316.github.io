@@ -161,6 +161,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "title": "Deep Dive: Show HN: Specialty Coffee Discovery Platform",
+        "date": "2026-05-18",
+        "description": "Deep research episode covering 4 stories including Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans, Why the price of coffee has skyrocketed.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-18.mp3",
+        "duration": 446
+      },
+      {
         "title": "Daily Briefing: Show HN: Specialty Coffee Discovery Platform",
         "date": "2026-05-18",
         "description": "Today's episode covers 4 stories including Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans, Show HN: PyMOL-RS – Rust reimplementation of PyMOL with modern rendering.",

@@ -1,0 +1,153 @@
+{
+  "title": "The Daily Grind - Daily Episode",
+  "hosts": {
+    "Milo": "en-US-Davis:DragonHDLatestNeural",
+    "Riley": "en-US-Phoebe:DragonHDLatestNeural"
+  },
+  "lines": [
+    {
+      "speaker": "Milo",
+      "text": "Welcome to The Daily Grind, your daily deep dive into specialty coffee. I'm Milo."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And I'm Riley. If your cup is empty, now's definitely the time to fix that. We've got a lot to cover."
+    },
+    {
+      "speaker": "Milo",
+      "text": "It's Monday, 2026-05-18. We're going beyond the headlines today with real coffee science, industry analysis, and brewing technique."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Let's start with the science. There's fascinating research happening at the intersection of chemistry, physics, and coffee extraction."
+    },
+    {
+      "speaker": "Milo",
+      "text": "First up: Show HN: Specialty Coffee Discovery Platform. This caught our attention because it actually has substance."
+    },
+    {
+      "speaker": "Riley",
+      "text": "This connects to a broader trend in specialty coffee: the professionalization of home brewing. Equipment that was exclusively commercial five years ago \u2014 precision grinders, flow-profiling machines, refractometers \u2014 is now accessible to enthusiasts."
+    },
+    {
+      "speaker": "Milo",
+      "text": "The data-driven approach is also spreading. Brew ratio calculators, extraction yield measurements, and TDS refractometry are no longer just for competition baristas. Home users are dialing in with the same precision as professionals."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And the community aspect can't be ignored. Online forums, YouTube channels, and local competitions have created a knowledge-sharing ecosystem that accelerates everyone's learning. You don't need a coffee degree anymore \u2014 you need curiosity and an internet connection."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Moving on to our next story."
+    },
+    {
+      "speaker": "Riley",
+      "text": "First up: Built brewmind.coffee because I kept wasting good coffee beans. This caught our attention because it actually has substance."
+    },
+    {
+      "speaker": "Riley",
+      "text": "The science behind this is genuinely interesting. Espresso extraction involves pressure-driven flow through a compressed bed of coffee particles. The physics are complex \u2014 Darcy's law for porous media flow, coupled with soluble extraction kinetics."
+    },
+    {
+      "speaker": "Milo",
+      "text": "What most people don't realize is that espresso is actually an emulsion. The high pressure emulsifies coffee oils into microdroplets that create the crema. Without that pressure \u2014 say, below 6 bars \u2014 you're not making espresso, you're making strong coffee."
+    },
+    {
+      "speaker": "Riley",
+      "text": "The particle size distribution is critical. You need a unimodal distribution centered around 200 to 300 microns for espresso, with minimal fines below 100 microns. Too many fines and you get channeling; too few and the shot runs too fast."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Temperature stability is another underrated factor. A group head that fluctuates by more than 1 degree Celsius during the shot will produce inconsistent extraction. That's why saturated group heads and PID controllers matter."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Moving on to our next story."
+    },
+    {
+      "speaker": "Milo",
+      "text": "First up: Why the price of coffee has skyrocketed. This caught our attention because it actually has substance."
+    },
+    {
+      "speaker": "Riley",
+      "text": "This connects to a broader trend in specialty coffee: the professionalization of home brewing. Equipment that was exclusively commercial five years ago \u2014 precision grinders, flow-profiling machines, refractometers \u2014 is now accessible to enthusiasts."
+    },
+    {
+      "speaker": "Milo",
+      "text": "The data-driven approach is also spreading. Brew ratio calculators, extraction yield measurements, and TDS refractometry are no longer just for competition baristas. Home users are dialing in with the same precision as professionals."
+    },
+    {
+      "speaker": "Riley",
+      "text": "And the community aspect can't be ignored. Online forums, YouTube channels, and local competitions have created a knowledge-sharing ecosystem that accelerates everyone's learning. You don't need a coffee degree anymore \u2014 you need curiosity and an internet connection."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Let's talk extraction science for a minute. The conventional wisdom is that finer grind equals more extraction. But recent research from the University of Portsmouth and UC Davis is challenging that."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Right. The 'fines migration' model shows that ultra-fine particles actually clog the filter bed and create channeling, which leads to uneven extraction. The sweet spot is often coarser than people think, with longer contact time compensating for the larger particle size."
+    },
+    {
+      "speaker": "Milo",
+      "text": "And temperature matters more than most home baristas realize. At 94 degrees Celsius versus 90 degrees, you're accelerating extraction rates by approximately 15 percent for soluble compounds, but you're also increasing the extraction of bitter compounds disproportionately."
+    },
+    {
+      "speaker": "Riley",
+      "text": "The water chemistry angle is also underappreciated. Magnesium ions enhance extraction of fruity acids, while calcium emphasizes body and sweetness. A typical Third Wave Water profile targets about 75 parts per million magnesium and 25 ppm calcium."
+    },
+    {
+      "speaker": "Milo",
+      "text": "For espresso specifically, the 9-bar standard pressure was established decades ago based on equipment limitations, not extraction optimization. Some modern research suggests that lower pressures \u2014 6 to 7 bars \u2014 can produce more balanced shots with the same dose, by reducing the extraction rate differential between the center and edges of the puck."
+    },
+    {
+      "speaker": "Riley",
+      "text": "The Decent espresso machine has been instrumental in this research because it allows pressure profiling. You can start at 3 bars for pre-infusion, ramp to 9, then decline to 6 during the latter half of the shot. The flavor differences are measurable and significant."
+    },
+    {
+      "speaker": "Milo",
+      "text": "On the industry side, green coffee prices are at multi-decade highs. The C-price broke $3.50 per pound earlier this year, driven by climate impacts in Brazil and Vietnam, plus speculative trading."
+    },
+    {
+      "speaker": "Riley",
+      "text": "This is creating real pressure throughout the supply chain. Small roasters are struggling to maintain margins, while consumers are seeing $20 to $25 bags that used to be $16. The question is whether this is a temporary spike or a structural repricing."
+    },
+    {
+      "speaker": "Milo",
+      "text": "Climate change is the underlying driver. Brazil's recent frost events and Vietnam's drought aren't anomalies anymore \u2014 they're patterns. The coffee belt is shifting, and regions that were marginal for Arabica are becoming non-viable."
+    },
+    {
+      "speaker": "Riley",
+      "text": "On the positive side, we're seeing investment in climate-resistant varietals. World Coffee Research has developed hybrid varieties like Starmaya and Centroamerica H1 that combine disease resistance with cup quality. These aren't just survival crops \u2014 they can taste exceptional."
+    },
+    {
+      "speaker": "Milo",
+      "text": "The specialty coffee market is also diversifying. Origins like Yemen, Myanmar, and China are producing competition-level coffees that would have been unthinkable a decade ago. The Yemenis in particular are reclaiming their heritage as the original coffee culture."
+    },
+    {
+      "speaker": "Riley",
+      "text": "For home brewers listening, here's a practical tip: if you're only changing one variable, change your grinder, not your machine. Grinder quality has a higher impact on cup quality than almost any other equipment variable. A mediocre machine with an excellent grinder beats an excellent machine with a mediocre grinder."
+    },
+    {
+      "speaker": "Milo",
+      "text": "And measure everything. A $15 scale will improve your coffee more than a $500 machine. Use a 1 to 16 ratio by weight as your starting point for drip, 1 to 2.2 for espresso, and adjust from there based on taste. Without measurement, you're just guessing."
+    },
+    {
+      "speaker": "Riley",
+      "text": "Finally, freshness matters but not the way most people think. Coffee needs 7 to 14 days post-roast to degas properly. Brewing in the first 48 hours often produces flat, carbonic flavors. But after about 30 days, oxidation becomes the dominant degradation mechanism."
+    },
+    {
+      "speaker": "Milo",
+      "text": "That's our deep dive for Monday. Brew something beautiful, and remember \u2014 great coffee is a combination of good beans, careful technique, and a little bit of obsession."
+    },
+    {
+      "speaker": "Riley",
+      "text": "I'm Riley. Thanks for listening."
+    },
+    {
+      "speaker": "Milo",
+      "text": "And I'm Milo. We'll catch you tomorrow with more coffee science and industry analysis."
+    }
+  ]
+}
