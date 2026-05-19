@@ -62,11 +62,11 @@ function renderShow(showKey, containerId) {
     showHeader.insertBefore(artImg, showHeader.firstChild);
   }
 
-  container.innerHTML = show.episodes.map((ep, idx) => createEpisodeCard(ep, idx + 1, showKey)).join('');
+  container.innerHTML = show.episodes.map((ep, idx) => createEpisodeCard(ep, ep.episode || (idx + 1), showKey)).join('');
 
   // Initialize audio players after rendering
   show.episodes.forEach((ep, idx) => {
-    initAudioPlayer(`${showKey}-ep-${idx + 1}`, ep.audioSrc, ep.duration);
+    initAudioPlayer(`${showKey}-ep-${ep.episode || (idx + 1)}`, ep.audioSrc, ep.duration);
   });
 }
 
