@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Crema Runner</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg-elevated: #161b22;
+    --coffee: #C4A882;
+    --coffee-dim: rgba(196,168,130,0.12);
+    --coffee-glow: rgba(196,168,130,0.25);
+    --cyan: #00D4AA;
+    --cyan-dim: rgba(0,212,170,0.10);
+    --cyan-glow: rgba(0,212,170,0.3);
+    --text: #e6edf3;
+    --text-soft: #8b949e;
+    --text-faint: #6e7681;
+    --border: rgba(139,148,158,0.12);
+    --danger: #f85149;
+    --danger-glow: rgba(248,81,73,0.35);
+    --gold: #ffd700;
+    --gold-glow: rgba(255,215,0,0.35);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #game-wrap {
+    position: relative;
+    width: 100%; max-width: 480px;
+    height: 100vh;
+    margin: 0 auto;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  canvas {
+    display: block;
+    width: 100%; height: 100%;
+  }
+  .ui-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .ui-layer.interactive { pointer-events: auto; }
+  .hud {
+    position: absolute;
+    top: 0; left: 0; width: 100%;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .hud-left, .hud-right {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hud-label {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .hud-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--cyan);
+    text-shadow: 0 0 12px var(--cyan-glow);
+  }
+  .hud-right .hud-value { color: var(--coffee); text-shadow: 0 0 12px var(--coffee-glow); }
+  .combo-bar {
+    position: absolute;
+    top: 56px; left: 18px;
+    width: 120px; height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .combo-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--cyan), var(--gold));
+    border-radius: 2px;
+    transition: width 0.15s ease;
+    box-shadow: 0 0 8px var(--cyan-glow);
+  }
+  .panel {
+    background: rgba(13,17,23,0.92);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 28px;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    animation: panelIn 0.4s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .panel h1 {
+    font-family: Georgia, 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--coffee);
+    margin-bottom: 6px;
+    text-shadow: 0 0 20px var(--coffee-glow);
+  }
+  .panel .tagline {
+    font-size: 0.9rem;
+    color: var(--text-soft);
+    margin-bottom: 22px;
+    line-height: 1.55;
+  }
+  .panel .instructions {
+    text-align: left;
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    background: var(--bg-elevated);
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+  }
+  .panel .instructions strong {
+    color: var(--cyan);
+    font-weight: 600;
+  }
+  .panel .instructions .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .panel .instructions .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .btn {
+    display: inline-block;
+    padding: 13px 36px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s;
+    font-family: inherit;
+  }
+  .btn--primary {
+    background: var(--cyan);
+    color: var(--bg);
+    box-shadow: 0 4px 16px var(--cyan-glow);
+  }
+  .btn--primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px var(--cyan-glow); }
+  .btn--primary:active { transform: translateY(0); }
+  .score-display {
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: var(--cyan);
+    text-shadow: 0 0 30px var(--cyan-glow);
+    margin: 8px 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .best-score {
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    margin-bottom: 20px;
+  }
+  .over-title {
+    font-family: Georgia, 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--coffee);
+    margin-bottom: 4px;
+  }
+  .over-sub {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 16px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    background: var(--bg-elevated);
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid var(--border);
+  }
+  .stat-box .s-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
+  .stat-box .s-val { font-size: 1.15rem; font-weight: 700; color: var(--text); margin-top: 2px; }
+  .warning-flash {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    background: radial-gradient(circle at center, rgba(248,81,73,0.12) 0%, transparent 70%);
+    transition: opacity 0.1s;
+  }
+  .level-badge {
+    position: absolute;
+    top: 56px; right: 18px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(255,215,0,0.08);
+    border: 1px solid rgba(255,215,0,0.15);
+    padding: 4px 10px;
+    border-radius: 20px;
+    z-index: 5;
+    text-shadow: 0 0 8px var(--gold-glow);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .level-badge.show { opacity: 1; }
+  @media (max-width: 380px) {
+    .panel h1 { font-size: 1.8rem; }
+    .panel { padding: 28px 20px; }
+    .score-display { font-size: 2.6rem; }
+  }
+</style>
+</head>
+<body>
+<div id="game-wrap">
+  <canvas id="game"></canvas>
+  <div class="warning-flash" id="warn"></div>
+  <div class="hud" id="hud" style="opacity:0;">
+    <div class="hud-left">
+      <div class="hud-label">Score</div>
+      <div class="hud-value" id="scoreHud">0</div>
+    </div>
+    <div class="level-badge" id="levelBadge">Phase 1</div>
+    <div class="hud-right">
+      <div class="hud-label">Distance</div>
+      <div class="hud-value" id="distHud">0m</div>
+    </div>
+  </div>
+  <div class="combo-bar" id="comboBar" style="opacity:0;">
+    <div class="combo-fill" id="comboFill"></div>
+  </div>
+
+  <!-- Start Screen -->
+  <div class="ui-layer interactive" id="startScreen">
+    <div class="panel">
+      <h1>Crema Runner</h1>
+      <div class="tagline">Guide the golden crema through the espresso bed. Collect bubbles, dodge cracks, and extract perfection.</div>
+      <div class="instructions">
+        <div class="row"><div class="dot" style="background:var(--cyan);"></div><strong>Arrow keys / A D</strong> to steer left and right</div>
+        <div class="row"><div class="dot" style="background:var(--gold);"></div><strong>Collect</strong> crema bubbles for points</div>
+        <div class="row"><div class="dot" style="background:var(--danger);"></div><strong>Avoid</strong> channeling cracks and dry spots</div>
+        <div class="row"><div class="dot" style="background:var(--coffee);"></div><strong>Chain</strong> pickups to build combo multipliers</div>
+        <div class="row"><div class="dot" style="background:var(--cyan);"></div><strong>Touch / Drag</strong> anywhere to steer on mobile</div>
+      </div>
+      <button class="btn btn--primary" id="startBtn">Start Extraction</button>
+    </div>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div class="ui-layer" id="overScreen" style="display:none;">
+    <div class="panel">
+      <div class="over-title" id="overTitle">Extraction Failed</div>
+      <div class="over-sub" id="overSub">The crema broke apart...</div>
+      <div class="score-display" id="finalScore">0</div>
+      <div class="best-score" id="bestScore">Best: 0</div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="s-label">Distance</div><div class="s-val" id="statDist">0m</div></div>
+        <div class="stat-box"><div class="s-label">Best Combo</div><div class="s-val" id="statCombo">x1</div></div>
+        <div class="stat-box"><div class="s-label">Bubbles</div><div class="s-val" id="statBubbles">0</div></div>
+        <div class="stat-box"><div class="s-label">Phase</div><div class="s-val" id="statPhase">1</div></div>
+      </div>
+      <button class="btn btn--primary" id="restartBtn">Extract Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const wrap = document.getElementById('game-wrap');
+  const hud = document.getElementById('hud');
+  const comboBar = document.getElementById('comboBar');
+  const comboFill = document.getElementById('comboFill');
+  const levelBadge = document.getElementById('levelBadge');
+  const warn = document.getElementById('warn');
+  const startScreen = document.getElementById('startScreen');
+  const overScreen = document.getElementById('overScreen');
+  const startBtn = document.getElementById('startBtn');
+  const restartBtn = document.getElementById('restartBtn');
+
+  let W, H, DPR;
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = wrap.clientWidth;
+    H = wrap.clientHeight;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Game State
+  let state = 'start'; // start, playing, over
+  let score = 0, distance = 0, combo = 0, bestCombo = 0, bubbles = 0, phase = 1;
+  let speed = 180; // pixels per second base scroll
+  let bestScore = parseInt(localStorage.getItem('cremaRunnerBest') || '0');
+
+  // Player
+  const player = {
+    x: 0, y: 0, r: 14, targetX: 0,
+    trail: [], angle: 0,
+  };
+  const LANE_W = 80; // logical lane width
+  const NUM_LANES = 5;
+  let laneOffset = 0;
+
+  // Entities
+  let items = [];
+  let cracks = [];
+  let particles = [];
+  let floatingTexts = [];
+  let bgCoffee = [];
+
+  // Input
+  let keys = {};
+  let touchX = null;
+  let mouseX = null;
+  let lastTime = 0;
+  let shake = 0;
+
+  // Audio context for simple beeps
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  function beep(freq, dur, type='sine', vol=0.05) {
+    if (!audioCtx) return;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    g.gain.setValueAtTime(vol, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime + dur);
+  }
+  function sfxCollect() { beep(880, 0.08, 'sine', 0.04); beep(1320, 0.12, 'sine', 0.03); }
+  function sfxCombo() { beep(660, 0.1, 'triangle', 0.04); beep(990, 0.15, 'triangle', 0.03); beep(1320, 0.2, 'triangle', 0.03); }
+  function sfxHit() { beep(150, 0.3, 'sawtooth', 0.06); }
+  function sfxLevel() { beep(528, 0.2, 'sine', 0.04); beep(660, 0.25, 'sine', 0.04); beep(880, 0.35, 'sine', 0.04); }
+
+  // Helpers
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  // Background coffee-bed dots
+  function initBg() {
+    bgCoffee = [];
+    for (let i = 0; i < 120; i++) {
+      bgCoffee.push({
+        x: rand(0, W), y: rand(0, H),
+        r: rand(1.5, 3.5),
+        color: Math.random() > 0.5 ? 'rgba(196,168,130,0.08)' : 'rgba(100,80,60,0.06)',
+        speed: rand(20, 60)
+      });
+    }
+  }
+
+  function resetGame() {
+    score = 0; distance = 0; combo = 0; bestCombo = 0; bubbles = 0; phase = 1;
+    speed = 180;
+    player.x = W / 2;
+    player.targetX = W / 2;
+    player.y = H * 0.78;
+    player.trail = [];
+    player.angle = 0;
+    items = [];
+    cracks = [];
+    particles = [];
+    floatingTexts = [];
+    laneOffset = (W - (NUM_LANES - 1) * LANE_W) / 2;
+    initBg();
+    updateHUD();
+    comboFill.style.width = '0%';
+    levelBadge.textContent = 'Phase 1';
+    levelBadge.classList.add('show');
+  }
+
+  function spawnItem(y) {
+    const lane = Math.floor(rand(0, NUM_LANES));
+    const x = laneOffset + lane * LANE_W;
+    const type = Math.random() < 0.15 ? 'gold' : 'bubble';
+    items.push({
+      x, y, r: type === 'gold' ? 10 : 8,
+      type, alive: true,
+      wobble: rand(0, Math.PI * 2),
+      glow: 0
+    });
+  }
+
+  function spawnCrack(y) {
+    const lane = Math.floor(rand(0, NUM_LANES));
+    const x = laneOffset + lane * LANE_W;
+    const w = rand(40, 80);
+    cracks.push({
+      x, y, w, h: rand(40, 90),
+      alive: true,
+      warning: true,
+      warnTimer: 1.2,
+      angle: rand(-0.15, 0.15)
+    });
+  }
+
+  function spawnParticles(x, y, color, count, speedMult=1) {
+    for (let i = 0; i < count; i++) {
+      const a = rand(0, Math.PI * 2);
+      const s = rand(40, 120) * speedMult;
+      particles.push({
+        x, y,
+        vx: Math.cos(a) * s,
+        vy: Math.sin(a) * s - rand(20, 60),
+        life: 1,
+        decay: rand(1.5, 3),
+        r: rand(1.5, 3.5),
+        color
+      });
+    }
+  }
+
+  function addFloatingText(x, y, text, color) {
+    floatingTexts.push({ x, y, text, color, life: 1, vy: -40 });
+  }
+
+  function updateHUD() {
+    document.getElementById('scoreHud').textContent = Math.floor(score).toLocaleString();
+    document.getElementById('distHud').textContent = Math.floor(distance) + 'm';
+  }
+
+  function setPhase() {
+    const newPhase = Math.min(5, 1 + Math.floor(distance / 400));
+    if (newPhase !== phase) {
+      phase = newPhase;
+      levelBadge.textContent = 'Phase ' + phase;
+      levelBadge.classList.add('show');
+      sfxLevel();
+      setTimeout(() => levelBadge.classList.remove('show'), 2500);
+      // Speed bump
+      speed = 180 + (phase - 1) * 50;
+    }
+  }
+
+  function gameOver(reason) {
+    state = 'over';
+    hud.style.opacity = '0';
+    comboBar.style.opacity = '0';
+    levelBadge.classList.remove('show');
+    document.getElementById('overTitle').textContent = reason === 'win' ? 'Perfect Extraction!' : 'Extraction Failed';
+    document.getElementById('overSub').textContent = reason === 'win' ? 'The cup is full of golden crema.' : 'The crema broke apart...';
+    document.getElementById('finalScore').textContent = Math.floor(score).toLocaleString();
+    if (score > bestScore) {
+      bestScore = Math.floor(score);
+      localStorage.setItem('cremaRunnerBest', bestScore.toString());
+    }
+    document.getElementById('bestScore').textContent = 'Best: ' + bestScore.toLocaleString();
+    document.getElementById('statDist').textContent = Math.floor(distance) + 'm';
+    document.getElementById('statCombo').textContent = 'x' + bestCombo;
+    document.getElementById('statBubbles').textContent = bubbles;
+    document.getElementById('statPhase').textContent = phase;
+    overScreen.style.display = 'flex';
+    overScreen.classList.add('interactive');
+    sfxHit();
+  }
+
+  function update(dt) {
+    if (state !== 'playing') return;
+
+    // Distance & phase
+    distance += (speed * dt) / 60;
+    score += (speed * dt) / 120; // passive score
+    setPhase();
+
+    // Input smoothing
+    let inputX = player.targetX;
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) inputX -= 320 * dt;
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) inputX += 320 * dt;
+    if (touchX !== null) inputX = touchX;
+    if (mouseX !== null && !('ontouchstart' in window)) inputX = mouseX;
+
+    player.targetX = clamp(inputX, laneOffset - LANE_W/2, laneOffset + (NUM_LANES-1)*LANE_W + LANE_W/2);
+    player.x = lerp(player.x, player.targetX, 1 - Math.pow(0.001, dt));
+    player.angle = (player.targetX - player.x) * 0.02;
+
+    // Trail
+    player.trail.push({ x: player.x, y: player.y, life: 1 });
+    if (player.trail.length > 18) player.trail.shift();
+    for (const t of player.trail) t.life -= dt * 3;
+    player.trail = player.trail.filter(t => t.life > 0);
+
+    // Spawn entities
+    const spawnRate = clamp(1.2 - phase * 0.15, 0.35, 1.2);
+    if (Math.random() < spawnRate * dt) spawnItem(-40);
+    if (Math.random() < (0.3 + phase * 0.1) * dt) spawnCrack(-80);
+
+    // Update items
+    for (const it of items) {
+      it.y += speed * dt;
+      it.wobble += dt * 3;
+      it.x += Math.sin(it.wobble) * 10 * dt;
+      it.glow = (Math.sin(it.wobble * 2) + 1) / 2;
+      if (!it.alive) continue;
+      const dx = player.x - it.x;
+      const dy = player.y - it.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < player.r + it.r + 4) {
+        it.alive = false;
+        const pts = it.type === 'gold' ? 150 : 50;
+        combo = Math.min(combo + 1, 20);
+        if (combo > bestCombo) bestCombo = combo;
+        const mult = 1 + combo * 0.15;
+        const gained = Math.floor(pts * mult);
+        score += gained;
+        bubbles++;
+        if (it.type === 'gold') {
+          spawnParticles(it.x, it.y, '#ffd700', 18, 1.5);
+          addFloatingText(it.x, it.y - 20, '+' + gained + ' GOLD', '#ffd700');
+          sfxCombo();
+        } else {
+          spawnParticles(it.x, it.y, '#00D4AA', 10, 1);
+          addFloatingText(it.x, it.y - 16, '+' + gained + (combo > 1 ? ' x' + combo.toFixed(1) : ''), '#00D4AA');
+          sfxCollect();
+        }
+        comboFill.style.width = Math.min(100, combo * 5) + '%';
+      }
+    }
+    items = items.filter(it => it.y < H + 40 && it.alive);
+
+    // Update cracks
+    for (const c of cracks) {
+      if (c.warning) {
+        c.warnTimer -= dt;
+        if (c.warnTimer <= 0) c.warning = false;
+      }
+      c.y += speed * dt;
+      if (!c.alive) continue;
+      // Collision: treat crack as a rotated rectangle
+      const dx = player.x - c.x;
+      const dy = player.y - c.y;
+      const cos = Math.cos(-c.angle);
+      const sin = Math.sin(-c.angle);
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+      if (Math.abs(rx) < c.w/2 + player.r*0.6 && Math.abs(ry) < c.h/2 + player.r*0.6 && !c.warning) {
+        c.alive = false;
+        combo = 0;
+        comboFill.style.width = '0%';
+        shake = 0.3;
+        spawnParticles(player.x, player.y, '#f85149', 24, 1.3);
+        addFloatingText(player.x, player.y - 30, 'CRACK!', '#f85149');
+        warn.style.opacity = '1';
+        setTimeout(() => warn.style.opacity = '0', 150);
+        sfxHit();
+        gameOver('crack');
+        return;
+      }
+    }
+    cracks = cracks.filter(c => c.y < H + 100);
+
+    // Particles
+    for (const p of particles) {
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 80 * dt;
+      p.life -= p.decay * dt;
+    }
+    particles = particles.filter(p => p.life > 0);
+
+    // Floating texts
+    for (const ft of floatingTexts) {
+      ft.y += ft.vy * dt;
+      ft.life -= dt * 1.5;
+    }
+    floatingTexts = floatingTexts.filter(ft => ft.life > 0);
+
+    // Combo decay
+    if (combo > 0 && Math.random() < 0.02 * dt) {
+      // gentle decay logic handled implicitly by combo reset on miss
+    }
+
+    // Background
+    for (const b of bgCoffee) {
+      b.y += b.speed * dt;
+      if (b.y > H + 10) { b.y = -10; b.x = rand(0, W); }
+    }
+
+    // Shake decay
+    if (shake > 0) shake = Math.max(0, shake - dt);
+
+    updateHUD();
+
+    // Win condition (very far)
+    if (distance > 3000) {
+      gameOver('win');
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Shake offset
+    let ox = 0, oy = 0;
+    if (shake > 0) {
+      ox = rand(-4, 4);
+      oy = rand(-4, 4);
+    }
+    ctx.save();
+    ctx.translate(ox, oy);
+
+    // Background coffee bed
+    ctx.fillStyle = '#0a0e14';
+    ctx.fillRect(0, 0, W, H);
+    for (const b of bgCoffee) {
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+      ctx.fillStyle = b.color;
+      ctx.fill();
+    }
+
+    // Lane guides (subtle)
+    ctx.strokeStyle = 'rgba(0,212,170,0.04)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < NUM_LANES; i++) {
+      const x = laneOffset + i * LANE_W;
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, H);
+      ctx.stroke();
+    }
+
+    // Draw cracks
+    for (const c of cracks) {
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.angle);
+      if (c.warning) {
+        const pulse = (Math.sin(Date.now() / 100) + 1) / 2;
+        ctx.fillStyle = `rgba(248,81,73,${0.12 + pulse * 0.15})`;
+        ctx.strokeStyle = `rgba(248,81,73,${0.3 + pulse * 0.3})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-c.w/2, -c.h/2);
+        ctx.lineTo(c.w/2, -c.h/2);
+        ctx.lineTo(c.w/2, c.h/2);
+        ctx.lineTo(-c.w/2, c.h/2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        // Warning chevrons
+        ctx.fillStyle = `rgba(248,81,73,${0.5 + pulse * 0.5})`;
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('!', 0, 5);
+      } else {
+        ctx.fillStyle = 'rgba(30,20,15,0.85)';
+        ctx.strokeStyle = 'rgba(248,81,73,0.5)';
+        ctx.lineWidth = 2;
+        // Jagged crack shape
+        ctx.beginPath();
+        ctx.moveTo(-c.w/2, -c.h/2);
+        ctx.lineTo(c.w/2, -c.h/2);
+        ctx.lineTo(c.w/2 * 0.8, 0);
+        ctx.lineTo(c.w/2, c.h/2);
+        ctx.lineTo(-c.w/2, c.h/2);
+        ctx.lineTo(-c.w/2 * 0.7, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        // Inner glow
+        ctx.strokeStyle = 'rgba(248,81,73,0.18)';
+        ctx.lineWidth = 6;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // Draw items
+    for (const it of items) {
+      if (!it.alive) continue;
+      ctx.save();
+      ctx.translate(it.x, it.y);
+      if (it.type === 'gold') {
+        const g = it.glow;
+        ctx.shadowColor = '#ffd700';
+        ctx.shadowBlur = 12 + g * 8;
+        ctx.fillStyle = '#ffd700';
+        ctx.beginPath();
+        ctx.arc(0, 0, it.r, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(-3, -3, it.r * 0.3, 0, Math.PI*2);
+        ctx.fill();
+      } else {
+        const g = it.glow;
+        ctx.shadowColor = '#00D4AA';
+        ctx.shadowBlur = 10 + g * 6;
+        ctx.fillStyle = '#00D4AA';
+        ctx.beginPath();
+        ctx.arc(0, 0, it.r, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.beginPath();
+        ctx.arc(-2, -2, it.r * 0.35, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // Player trail
+    for (const t of player.trail) {
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, player.r * 0.6 * t.life, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,215,0,${0.25 * t.life})`;
+      ctx.fill();
+    }
+
+    // Player
+    ctx.save();
+    ctx.translate(player.x, player.y);
+    ctx.rotate(player.angle);
+    // Glow
+    ctx.shadowColor = '#ffd700';
+    ctx.shadowBlur = 18;
+    // Main body
+    ctx.beginPath();
+    ctx.ellipse(0, 0, player.r, player.r * 0.85, 0, 0, Math.PI*2);
+    ctx.fillStyle = '#ffd700';
+    ctx.fill();
+    // Highlight
+    ctx.beginPath();
+    ctx.ellipse(-4, -4, player.r * 0.4, player.r * 0.35, -0.5, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fill();
+    // Rim
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, player.r + 2, player.r * 0.85 + 2, 0, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.restore();
+
+    // Particles
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.life;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // Floating texts
+    for (const ft of floatingTexts) {
+      ctx.save();
+      ctx.globalAlpha = clamp(ft.life, 0, 1);
+      ctx.font = 'bold 15px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = ft.color;
+      ctx.shadowColor = ft.color;
+      ctx.shadowBlur = 8;
+      ctx.fillText(ft.text, ft.x, ft.y);
+      ctx.restore();
+    }
+
+    ctx.restore(); // end shake
+  }
+
+  function loop(ts) {
+    const dt = Math.min((ts - lastTime) / 1000, 0.05);
+    lastTime = ts;
+    update(dt);
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // Input handlers
+  window.addEventListener('keydown', e => {
+    keys[e.key] = true;
+    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  });
+  window.addEventListener('keyup', e => { keys[e.key] = false; });
+
+  wrap.addEventListener('touchstart', e => {
+    e.preventDefault();
+    touchX = e.touches[0].clientX - wrap.getBoundingClientRect().left;
+  }, {passive:false});
+  wrap.addEventListener('touchmove', e => {
+    e.preventDefault();
+    touchX = e.touches[0].clientX - wrap.getBoundingClientRect().left;
+  }, {passive:false});
+  wrap.addEventListener('touchend', e => { touchX = null; });
+
+  wrap.addEventListener('mousemove', e => {
+    mouseX = e.clientX - wrap.getBoundingClientRect().left;
+  });
+  wrap.addEventListener('mouseleave', () => { mouseX = null; });
+
+  function startGame() {
+    ensureAudio();
+    resetGame();
+    state = 'playing';
+    startScreen.style.display = 'none';
+    overScreen.style.display = 'none';
+    overScreen.classList.remove('interactive');
+    hud.style.opacity = '1';
+    comboBar.style.opacity = '1';
+    lastTime = performance.now();
+  }
+
+  startBtn.addEventListener('click', startGame);
+  restartBtn.addEventListener('click', startGame);
+
+  // Prevent double-tap zoom on mobile
+  document.addEventListener('touchstart', e => {
+    if (e.touches.length > 1) e.preventDefault();
+  }, {passive:false});
+
+  // Init
+  initBg();
+  requestAnimationFrame(loop);
+})();
+</script>
+<script src="../js/game-header.js?v=3"></script>
+</body>
+</html>

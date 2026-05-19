@@ -1,5 +1,17 @@
 const GAMES = [
   {
+    id: 'coffee-2026-05-19',
+    title: 'Crema Runner',
+    description: 'Guide the golden crema drop through the espresso bed. Collect glowing teal bubbles and golden power bubbles, dodge channeling cracks with warning indicators, and build your combo multiplier through five escalating phases of extraction.',
+    category: 'action',
+    thumbnail: 'assets/images/game-coffee-2026-05-19.png',
+    file: 'games/coffee-2026-05-19.html',
+    difficulty: 'Medium',
+    emoji: '',
+    createdAt: '2026-05-19',
+  },
+
+  {
     id: 'pong-man',
     title: 'Pong-Man',
     description: 'Pong meets Pac-Man! Hit the ball past your opponent, but watch out — Pac-Man is hungry. If he eats the ball while it\'s crossing after YOUR hit, you lose the point. Use SPACE to shake the board and nudge the ball away from danger.',
