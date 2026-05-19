@@ -6,6 +6,13 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "title": "Deep Dive: Bear generates a compilation database for Clang tooling",
+        "date": "2026-05-19",
+        "description": "Deep research episode covering 3 stories including Bear generates a compilation database for Clang tooling, Show HN: TokenShield – cut your Claude Code bill 40-70%, Sieve – scans Cursor/Claude chat history for leaked API keys.",
+        "audioSrc": "fakecast/ai-daily-2026-05-19.mp3",
+        "duration": 495
+      },
+      {
         "title": "Deep Dive: Ask HN: Which AI harness comes close to Claude Code?",
         "date": "2026-05-18",
         "description": "Deep research episode covering 3 stories including Ask HN: Which AI harness comes close to Claude Code?, Spec-Driven Development with math-glyph compression, Ask HN: Could free/low cost LLMs be a momentary thing?.",
