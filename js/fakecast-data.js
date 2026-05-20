@@ -6,20 +6,20 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "episode": 10,
+        "title": "Deep Dive: Google I/O 2026: Agents Over Chatbots — Gemini 3.5 Flash, Spark, and Android CLI",
+        "date": "2026-05-20",
+        "description": "Deep research episode covering 4 stories. Google I/O 2026: Agents Over Chatbots — Gemini 3.5 Flash, Spark, and Android CLI, Mistral Hits $14B Valuation and #7 on CNBC Disruptor 50 While Expanding Vibe Coding Agent, OpenAI Adopts C2PA Provenance Standard and Adds Google Watermarking for AI-Generated Images.",
+        "audioSrc": "fakecast/ai-daily-2026-05-20.mp3",
+        "duration": 370
+      },
+      {
         "episode": 9,
         "title": "Deep Dive: Musk Loses OpenAI Lawsuit as Jury Rules Unanimously",
         "date": "2026-05-19",
         "description": "Deep research episode covering 4 stories including Musk Loses OpenAI Lawsuit as Jury Rules Unanimously, Anthropic Acquires Stainless, Bolstering MCP and Agent Infrastructure, Cursor Launches Composer 2.5 with Targeted RL and 25x More Synthetic Tasks, and Simon Willison's 6 Months in LLMs.",
         "audioSrc": "fakecast/ai-daily-2026-05-19.mp3",
         "duration": 423
-      },
-      {
-        "episode": 8,
-        "title": "Deep Dive: Bear generates a compilation database for Clang tooling",
-        "date": "2026-05-19",
-        "description": "Deep research episode covering 3 stories including Bear generates a compilation database for Clang tooling, Show HN: TokenShield – cut your Claude Code bill 40-70%, Sieve – scans Cursor/Claude chat history for leaked API keys.",
-        "audioSrc": "fakecast/ai-daily-2026-05-19.mp3",
-        "duration": 495
       },
       {
         "episode": 7,
