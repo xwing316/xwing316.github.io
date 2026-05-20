@@ -86,6 +86,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "episode": 10,
+        "title": "Deep Dive: US Retail Coffee Prices Hit All-Time High as Green Costs Soar",
+        "date": "2026-05-20",
+        "description": "Deep research episode covering 4 stories. US Retail Coffee Prices Hit All-Time High as Green Costs Soar, Coffee Grinders Are Evolving — But What Do Baristas Actually Need?, Non-Arabica Species Gain Ground: Robusta, Liberica, and Excelsa Enter Specialty.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-20.mp3",
+        "duration": 428
+      },
+      {
         "episode": 9,
         "title": "Deep Dive: Colombia Announces New Castillo-Based Hybrids With Cup Scores Above 88",
         "date": "2026-05-19",
