@@ -94,14 +94,6 @@ const FAKECAST_DATA = {
         "duration": 519
       },
       {
-        "episode": 7,
-        "title": "Deep Dive: Nestlé's Nespresso invests in the Democratic Republic of Congo's coffee revival",
-        "date": "2026-05-19",
-        "description": "Deep research episode covering 4 stories including Nestlé's Nespresso invests in the Democratic Republic of Congo's coffee revival, Show HN: Specialty Coffee Discovery Platform, Built brewmind.coffee because I kept wasting good coffee beans.",
-        "audioSrc": "fakecast/coffee-daily-2026-05-19.mp3",
-        "duration": 456
-      },
-      {
         "episode": 6,
         "title": "Deep Dive: Show HN: Specialty Coffee Discovery Platform",
         "date": "2026-05-18",
