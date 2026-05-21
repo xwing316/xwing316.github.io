@@ -6,6 +6,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "episode": 11,
+        "title": "Deep Dive: SpaceX IPO Reveals Anthropic's $45B Compute Deal, xAI Burning $6.4B/Year",
+        "date": "2026-05-21",
+        "description": "Deep research episode covering 4 stories. SpaceX IPO Reveals Anthropic's $45B Compute Deal, xAI Burning $6.4B/Year, OpenAI Claims It Solved an 80-Year-Old Math Problem — For Real This Time, Anthropic Raises Claude Code Usage Limits, Product Lead Talks 'Lean Harness' Philosophy.",
+        "audioSrc": "fakecast/ai-daily-2026-05-21.mp3",
+        "duration": 412
+      },
+      {
         "episode": 10,
         "title": "Deep Dive: Google I/O 2026: Agents Over Chatbots — Gemini 3.5 Flash, Spark, and Android CLI",
         "date": "2026-05-20",
