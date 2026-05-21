@@ -94,6 +94,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "episode": 11,
+        "title": "Deep Dive: US Retail Coffee Prices Hit All-Time High as Green Costs Soar",
+        "date": "2026-05-21",
+        "description": "Deep research episode covering 4 stories. US Retail Coffee Prices Hit All-Time High as Green Costs Soar, Bitterness in Coffee Is a Molecular Thing — New Research Cracks the Chemistry, La Marzocco Unveils One-of-a-Kind Officine Fratelli Bambi x Nicki Lange Espresso Machine.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-21.mp3",
+        "duration": 360
+      },
+      {
         "episode": 10,
         "title": "Deep Dive: US Retail Coffee Prices Hit All-Time High as Green Costs Soar",
         "date": "2026-05-20",
