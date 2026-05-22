@@ -6,6 +6,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "episode": 12,
+        "title": "Deep Dive: Bug Bounty Businesses Bombarded with AI Slop",
+        "date": "2026-05-22",
+        "description": "Deep research episode covering 4 stories. Bug Bounty Businesses Bombarded with AI Slop, arXiv Bans AI-Generated Hallucination Submissions, Anthropic Says It's About to Have Its First Profitable Quarter.",
+        "audioSrc": "fakecast/ai-daily-2026-05-22.mp3",
+        "duration": 471
+      },
+      {
         "episode": 11,
         "title": "Deep Dive: SpaceX IPO Reveals Anthropic's $45B Compute Deal, xAI Burning $6.4B/Year",
         "date": "2026-05-21",
