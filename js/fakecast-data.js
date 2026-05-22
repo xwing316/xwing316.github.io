@@ -102,6 +102,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "episode": 12,
+        "title": "Deep Dive: Kew Gardens Discovers Promising New Coffee Hybrid: Coffea × libex",
+        "date": "2026-05-22",
+        "description": "Deep research episode covering 3 stories. Kew Gardens Discovers Promising New Coffee Hybrid: Coffea × libex, Co-Ferment Coffees: The Transparency and Flavor Controversy, Making Black Coffee Cool for Gen Z.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-22.mp3",
+        "duration": 320
+      },
+      {
         "episode": 11,
         "title": "Deep Dive: US Retail Coffee Prices Hit All-Time High as Green Costs Soar",
         "date": "2026-05-21",
