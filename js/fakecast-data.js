@@ -6,6 +6,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "episode": 13,
+        "title": "Deep Dive: Microsoft Reports AI Is More Expensive Than Paying Human Employees",
+        "date": "2026-05-23",
+        "description": "Deep research episode covering 4 stories. Microsoft Reports AI Is More Expensive Than Paying Human Employees, Did Google's AI Agents Actually Build an Operating System for $916?, Cq Exchange: Hosted Knowledge Commons for AI Coding Agents.",
+        "audioSrc": "fakecast/ai-daily-2026-05-23.mp3",
+        "duration": 564
+      },
+      {
         "episode": 12,
         "title": "Deep Dive: Bug Bounty Businesses Bombarded with AI Slop",
         "date": "2026-05-22",
