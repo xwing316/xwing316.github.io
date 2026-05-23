@@ -110,6 +110,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "episode": 13,
+        "title": "Deep Dive: Ducati Just Made a $3,000 Espresso Machine That Only Runs On Coffee Pods",
+        "date": "2026-05-23",
+        "description": "Deep research episode covering 4 stories. Ducati Just Made a $3,000 Espresso Machine That Only Runs On Coffee Pods, Aged Whiskey Reserve Returns to Klatch Coffee for 2026, Coffee Origin Spotlight: Taipei, Taiwan's Specialty Scene.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-23.mp3",
+        "duration": 503
+      },
+      {
         "episode": 12,
         "title": "Deep Dive: Kew Gardens Discovers Promising New Coffee Hybrid: Coffea × libex",
         "date": "2026-05-22",
