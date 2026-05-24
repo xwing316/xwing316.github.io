@@ -118,6 +118,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-coffee.png",
     "episodes": [
       {
+        "episode": 14,
+        "title": "Deep Dive: World Barista Championship 2026 Introduces Mandatory Sustainability Score",
+        "date": "2026-05-24",
+        "description": "Deep research episode covering 4 stories. World Barista Championship 2026 Introduces Mandatory Sustainability Score, New Single-Origin Espresso Blend Challenges Traditional Blending Orthodoxy, Ethiopia Yirgacheffe Micro-Region Sees Record Auction Prices as Quality Differentiation Deepens.",
+        "audioSrc": "fakecast/coffee-daily-2026-05-24.mp3",
+        "duration": 509
+      },
+      {
         "episode": 13,
         "title": "Deep Dive: Ducati Just Made a $3,000 Espresso Machine That Only Runs On Coffee Pods",
         "date": "2026-05-23",
