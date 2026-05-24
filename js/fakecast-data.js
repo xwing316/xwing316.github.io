@@ -6,6 +6,14 @@ const FAKECAST_DATA = {
     "coverArt": "assets/images/podcast-ai.png",
     "episodes": [
       {
+        "episode": 14,
+        "title": "Deep Dive: DeepSeek-R2 Released With Mixture-of-Experts Architecture Matching GPT-5 Benchmarks",
+        "date": "2026-05-24",
+        "description": "Deep research episode covering 4 stories. DeepSeek-R2 Released With Mixture-of-Experts Architecture Matching GPT-5 Benchmarks, GitHub Copilot Workspace Exits Beta With Full Agent Loop Capabilities, Anthropic Publishes MCP Specification 2.0 With Authentication and Rate Limiting.",
+        "audioSrc": "fakecast/ai-daily-2026-05-24.mp3",
+        "duration": 469
+      },
+      {
         "episode": 13,
         "title": "Deep Dive: Microsoft Reports AI Is More Expensive Than Paying Human Employees",
         "date": "2026-05-23",
